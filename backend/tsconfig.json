@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "es2015",
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"baseUrl": "./",
+		"paths": {
+			"@/*": ["src/*"],
+			"src/*": ["src/*"]
+		},
+		"allowJs": true,
+		"sourceMap": true,
+		"outDir": "./dist",
+		"isolatedModules": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": false,
+		"skipLibCheck": true
+	},
+	"include": ["./src"]
+}
