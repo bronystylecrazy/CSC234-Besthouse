@@ -13,9 +13,11 @@
 		"outDir": "./dist",
 		"isolatedModules": true,
 		"esModuleInterop": true,
+		"removeComments": true,
 		"forceConsistentCasingInFileNames": true,
 		"strict": false,
 		"skipLibCheck": true
 	},
-	"include": ["./src"]
+	"include": ["./src", "./global.d.ts"],
+	"exclude": ["./src/test"]
 }
