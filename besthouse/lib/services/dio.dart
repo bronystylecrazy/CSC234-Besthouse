@@ -2,12 +2,15 @@ import 'package:dio/dio.dart';
 import 'constants.dart';
 
 class DioInstance {
-  late Dio dio;
-  void init() async {
+  static late Dio dio;
+  static void init() async {
+    var options = BaseOptions(
+      baseUrl: 'localhost:8080',
+      connectTimeout: 5000,
+      receiveTimeout: 3000,
+    );
     try {
-      var dio = Dio();
-      final response = await dio.get('https://google.com');
-      print(response.data);
+      dio = Dio(options);
     } catch (e) {
       print(e);
     }

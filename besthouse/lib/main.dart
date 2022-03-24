@@ -1,3 +1,13 @@
+import 'package:besthouse/screens/customer_profile.dart';
+import 'package:besthouse/screens/favourite.dart';
+import 'package:besthouse/screens/get_start.dart';
+import 'package:besthouse/screens/guide.dart';
+import 'package:besthouse/screens/home.dart';
+import 'package:besthouse/screens/house_detailed.dart';
+import 'package:besthouse/screens/post_form.dart';
+import 'package:besthouse/screens/search.dart';
+import 'package:besthouse/screens/sign_in.dart';
+import 'package:besthouse/screens/sign_up.dart';
 import 'package:besthouse/services/dio.dart';
 import 'package:besthouse/services/provider.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +24,7 @@ void main() {
       child: const MyApp(),
     ),
   );
-  DioInstance().init();
+  DioInstance.init();
 }
 
 class MyApp extends StatelessWidget {
@@ -38,6 +48,14 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: {
+        HouseDetailed.routeName: (context) => HouseDetailed(),
+        GetStart.routeName: (context) => GetStart(),
+        SignIn.routeName: (context) => SignIn(),
+        SignUp.routeName: (context) => SignUp(),
+        Guide.routeName: (context) => Guide(),
+        PostForm.routeName: (context) => PostForm(),
+      },
     );
   }
 }
@@ -62,7 +80,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
+  static List<Widget> screen = <Widget>[
+    const Home(),
+    const Search(),
+    const Favourite(),
+    const CustomerProfile()
+  ];
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has

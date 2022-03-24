@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PostForm extends StatefulWidget {
-  const PostForm({ Key? key }) : super(key: key);
+  const PostForm({Key? key}) : super(key: key);
   static const routeName = "/post-form";
 
   @override
@@ -11,8 +11,6 @@ class PostForm extends StatefulWidget {
 class _PostFormState extends State<PostForm> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
-    );
+    return Scaffold();
   }
 }

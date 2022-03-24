@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GetStart extends StatefulWidget {
-  const GetStart({ Key? key }) : super(key: key);
+  const GetStart({Key? key}) : super(key: key);
   static const routeName = "/get-start";
 
   @override
@@ -11,8 +11,6 @@ class GetStart extends StatefulWidget {
 class _GetStartState extends State<GetStart> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
-    );
+    return Scaffold();
   }
 }
