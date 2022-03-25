@@ -1,3 +1,4 @@
+require("dotenv").config();
 require("module-alias/register");
 
 /** Internal Modules */
@@ -10,6 +11,10 @@ import authRoute from "@/routes/auth";
 
 /** Misc */
 import AppConfig from "./config";
+// import { House, User } from "./database/models/schema";
+import { func } from "joi";
+import mongoose from "mongoose";
+import { User } from "./database/models";
 
 /** Instantiate Application */
 const app = express();
@@ -25,7 +30,37 @@ app.use(cors());
 /** Routes */
 app.use("/auth", authRoute);
 
-/** Start a server */
-app.listen(AppConfig.PORT, "0.0.0.0", () => {
-	console.log(`Server is running on port ${AppConfig.PORT}`);
+app.get("/api", async (req, res) => {
+	var user1 = new User({
+		email: "baba",
+		password: "asdsadhashed",
+		tel: "1231231",
+		username: "asdasd",
+	});
+	// var house1 = new House({
+	// 	name: "asdsad",
+	// 	picture_url: "sadsad",
+	// 	location: {
+	// 		address: "asdsad",
+	// 		latitude: "asda",
+	// 		longitude: "asdsdcoc",
+	// 	},
+	// });
+	try {
+		const newUser = await user1.save();
+		return res.json(newUser);
+	} catch (e) {
+		return res.status(400).json(e);
+	}
 });
+
+/** Start a server */
+
+mongoose
+	.connect(AppConfig.MONGODB_HOST)
+	.then(() =>
+		app.listen(AppConfig.PORT, "0.0.0.0", () => {
+			console.log(`Server is running on port ${AppConfig.PORT}`);
+		})
+	)
+	.catch((err) => console.error("What the fuck is going on??", err));
