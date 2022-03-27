@@ -56,7 +56,8 @@ class MyApp extends StatelessWidget {
             headline1: GoogleFonts.poppins(
                 fontSize: 38,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF022B3A))),
+                color: Color(0xFF022B3A)),
+            bodyText1: GoogleFonts.poppins(fontSize: 16)),
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       home: SignUp(),

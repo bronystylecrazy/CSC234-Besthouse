@@ -1,3 +1,4 @@
+import 'package:besthouse/widgets/sign_up/bottom_actions.dart';
 import 'package:besthouse/widgets/sign_up/custom_textfield.dart';
 import 'package:besthouse/widgets/sign_up/step_identifyer.dart';
 import 'package:flutter/gestures.dart';
@@ -22,6 +23,12 @@ class _SignUpState extends State<SignUp> {
   final _phoneNumController = TextEditingController();
 
   int _stepIndex = 0;
+  void next() {
+    setState(() {
+      _stepIndex = _stepIndex + 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> stepScreen = <Widget>[
@@ -86,61 +93,9 @@ class _SignUpState extends State<SignUp> {
                   // height: MediaQuery.of(context).size.height * 0.4,
                   padding: const EdgeInsets.all(24),
                   child: stepScreen.elementAt(_stepIndex)),
-              Column(
-                children: [
-                  StepIdentifyer(
-                    stepIndex: _stepIndex,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _stepIndex = _stepIndex + 1;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                    ),
-                    child: Ink(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: <Color>[
-                            Color(0xFF245679),
-                            Color(0xFF173651),
-                          ],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        child: Text(
-                          _stepIndex == 1 ? "Sign up" : "Next",
-                          style: GoogleFonts.poppins(fontSize: 18),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: RichText(
-                      text: TextSpan(
-                          text: 'Already have account ?',
-                          style: const TextStyle(
-                            color: Color(0xFF022B3A),
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              print('Login Text Clicked');
-                            }),
-                    ),
-                  ),
-                ],
+              BottomActions(
+                stepIndex: _stepIndex,
+                next: next,
               ),
             ],
           ),
