@@ -51,7 +51,43 @@ class _SignUpState extends State<SignUp> {
               isObscure: true),
         ],
       ),
-      Text("Form second step"), //TODOS here!
+      Column(
+        children: [
+          CustomTextField(
+            context: context,
+            controller: _firstnameController,
+            label: "Firstname",
+            isObscure: false,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          CustomTextField(
+            context: context,
+            controller: _lastnameController,
+            label: "Lastname",
+            isObscure: false,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          CustomTextField(
+            context: context,
+            controller: _emailController,
+            label: "Email",
+            isObscure: false,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          CustomTextField(
+            context: context,
+            controller: _phoneNumController,
+            label: "Phone",
+            isObscure: false,
+          )
+        ],
+      ), //TODOS here!
     ];
     return Scaffold(
       body: Stack(
@@ -93,9 +129,14 @@ class _SignUpState extends State<SignUp> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        _stepIndex = _stepIndex + 1;
-                      });
+                      if (_stepIndex < stepScreen.length - 1) {
+                        setState(() {
+                          _stepIndex++;
+                        });
+                        return;
+                      }
+
+                      print("TODO: Implement Sign up..");
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(0),
