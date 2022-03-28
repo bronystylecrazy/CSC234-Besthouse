@@ -50,24 +50,20 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blue,
         textTheme: TextTheme(
             headline2: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF24577A)),
+                fontSize: 20, fontWeight: FontWeight.w600, color: const Color(0xFF24577A)),
             headline1: GoogleFonts.poppins(
-                fontSize: 38,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF022B3A)),
+                fontSize: 38, fontWeight: FontWeight.w600, color: const Color(0xFF022B3A)),
             bodyText1: GoogleFonts.poppins(fontSize: 16)),
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: SignUp(),
+      home: const GetStart(),
       routes: {
-        HouseDetailed.routeName: (context) => HouseDetailed(),
-        GetStart.routeName: (context) => GetStart(),
-        SignIn.routeName: (context) => SignIn(),
-        SignUp.routeName: (context) => SignUp(),
-        Guide.routeName: (context) => Guide(),
-        PostForm.routeName: (context) => PostForm(),
+        HouseDetailed.routeName: (context) => const HouseDetailed(),
+        GetStart.routeName: (context) => const GetStart(),
+        SignIn.routeName: (context) => const SignIn(),
+        SignUp.routeName: (context) => const SignUp(),
+        Guide.routeName: (context) => const Guide(),
+        PostForm.routeName: (context) => const PostForm(),
       },
     );
   }
