@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/sign_up/bottom_actions.dart';
-import '../widgets/sign_up/custom_textfield.dart';
+import '../widgets/common/custom_textfield.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -56,8 +56,9 @@ class _SignUpState extends State<SignUp> {
               isObscure: true),
         ],
       ),
-      Text("Form second step"), //TODOS here!
+      const Text("Form second step"), //TODOS here!
     ];
+
     return Scaffold(
       body: Stack(
         children: [

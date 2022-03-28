@@ -18,7 +18,7 @@ class Button extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0),
+          borderRadius: BorderRadius.circular(16),
         ),
       ),
       child: Ink(
@@ -31,10 +31,10 @@ class Button extends StatelessWidget {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
-          borderRadius: BorderRadius.all(Radius.circular(18.0)),
+          borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
         child: Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
           width: MediaQuery.of(context).size.width * 0.6,
           child: Text(
             text,

@@ -15,19 +15,20 @@ class BottomActions extends StatelessWidget {
         StepIdentifyer(
           stepIndex: stepIndex,
         ),
-        Button(clickHandler: next, text: stepIndex == 1 ? "sign uo" : "next"),
+        Button(clickHandler: next, text: stepIndex == 1 ? "sign up" : "next"),
         Padding(
           padding: const EdgeInsets.all(16),
           child: RichText(
             text: TextSpan(
-                text: 'Already have account ?',
-                style: const TextStyle(
-                  color: Color(0xFF022B3A),
-                ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    print('Login Text Clicked');
-                  }),
+              text: 'Already have account ?',
+              style: const TextStyle(
+                color: Color(0xFF022B3A),
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  print('Login Text Clicked');
+                },
+            ),
           ),
         ),
       ],

@@ -50,9 +50,15 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blue,
         textTheme: TextTheme(
             headline2: GoogleFonts.poppins(
-                fontSize: 20, fontWeight: FontWeight.w600, color: const Color(0xFF24577A)),
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF24577A),
+            ),
             headline1: GoogleFonts.poppins(
-                fontSize: 38, fontWeight: FontWeight.w600, color: const Color(0xFF022B3A)),
+              fontSize: 38,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF022B3A),
+            ),
             bodyText1: GoogleFonts.poppins(fontSize: 16)),
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
