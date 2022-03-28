@@ -1,3 +1,4 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:besthouse/screens/customer_profile.dart';
 import 'package:besthouse/screens/favourite.dart';
 import 'package:besthouse/screens/get_start.dart';
@@ -60,7 +61,35 @@ class MyApp extends StatelessWidget {
             bodyText1: GoogleFonts.poppins(fontSize: 16)),
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: SignUp(),
+      home: AnimatedSplashScreen(
+        duration: 3000,
+        splash: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Positioned(
+                child: Image.asset("assets/logo.png", scale: 0.8),
+                top: 50,
+                left: 18,
+              ),
+              SizedBox(height: 20),
+              Text('BestHouse',
+                  style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF24577A))),
+              SizedBox(height: 20),
+              Text('Welcome to BestHouse',
+                  style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF24577A))),
+            ],
+          ),
+        ),
+        nextScreen: SignUp(),
+        splashTransition: SplashTransition.fadeTransition,
+      ),
       routes: {
         HouseDetailed.routeName: (context) => HouseDetailed(),
         GetStart.routeName: (context) => GetStart(),
