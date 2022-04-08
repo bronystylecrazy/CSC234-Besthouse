@@ -14,7 +14,8 @@ import AppConfig from "./config";
 // import { House, User } from "./database/models/schema";
 import { func } from "joi";
 import mongoose from "mongoose";
-import { User } from "./database/models";
+import { User, House } from "./database/models";
+import favoriteRoute from "./routes/favorite";
 
 /** Instantiate Application */
 const app = express();
@@ -29,6 +30,7 @@ app.use(cors());
 
 /** Routes */
 app.use("/auth", authRoute);
+app.use("/favorite", favoriteRoute);
 
 app.get("/api", async (req, res) => {
 	var user1 = new User({
@@ -37,18 +39,19 @@ app.get("/api", async (req, res) => {
 		tel: "1231231",
 		username: "asdasd",
 	});
-	// var house1 = new House({
-	// 	name: "asdsad",
-	// 	picture_url: "sadsad",
-	// 	location: {
-	// 		address: "asdsad",
-	// 		latitude: "asda",
-	// 		longitude: "asdsdcoc",
-	// 	},
-	// });
+	var house1 = new House({
+		name: "asdsad",
+		picture_url: "sadsad",
+		location: {
+			address: "asdsad",
+			latitude: "asda",
+			longitude: "asdsdcoc",
+		},
+	});
 	try {
 		const newUser = await user1.save();
-		return res.json(newUser);
+		const newHouse = await house1.save();
+		return res.json({ newUser, newHouse });
 	} catch (e) {
 		return res.status(400).json(e);
 	}
