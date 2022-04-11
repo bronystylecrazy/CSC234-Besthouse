@@ -42,3 +42,5 @@ profileRoute.patch("/:username", async (req, res) => {
 		});
 	}
 });
+
+export default profileRoute;
