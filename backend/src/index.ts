@@ -14,7 +14,7 @@ import AppConfig from "./config";
 // import { House, User } from "./database/models/schema";
 import { func } from "joi";
 import mongoose from "mongoose";
-import { User, House } from "./database/models";
+import { User, House, Favorite } from "./database/models";
 import favoriteRoute from "./routes/favorite";
 
 /** Instantiate Application */
@@ -34,24 +34,31 @@ app.use("/favorite", favoriteRoute);
 
 app.get("/api", async (req, res) => {
 	var user1 = new User({
-		email: "baba",
-		password: "asdsadhashed",
-		tel: "1231231",
-		username: "asdasd",
+		email: "float@mail.com",
+		password: "12345678",
+		tel: "0891231234",
+		username: "kasemtan",
 	});
 	var house1 = new House({
-		name: "asdsad",
-		picture_url: "sadsad",
+		name: "Condo1",
+		picture_url:
+			"https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/ZFZlzPBXT8GEoefOiG62vz0oLFY7n2gkvbzGwcQsE0G.jpeg",
 		location: {
-			address: "asdsad",
-			latitude: "asda",
-			longitude: "asdsdcoc",
+			address: "---",
+			latitude: "13.736717",
+			longtitude: "100.523186",
 		},
 	});
+
 	try {
-		const newUser = await user1.save();
+		// const newUser = await user1.save();
 		const newHouse = await house1.save();
-		return res.json({ newUser, newHouse });
+		// var favorite1 = new Favorite({
+		// 	house_id: newHouse._id,
+		// 	user_id: newUser._id,
+		// });
+		// const newFavorite = await favorite1.save();
+		return res.json({ newHouse });
 	} catch (e) {
 		return res.status(400).json(e);
 	}
