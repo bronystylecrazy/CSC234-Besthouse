@@ -1,13 +1,13 @@
 import express from "express";
 import { Login } from "@/services/Authentication";
 import { Signin } from "@/interface/api/User";
+import { handler } from "@/services/Handler";
 
 const userRoute = express.Router();
 
 userRoute.post("/signin", async (req, res) => {
 	const { email, password }: Signin = req.body;
-	const [result, error] = await Login(email, password);
-	return response(res, result, error);
+	return handler(res, await Login(email, password));
 });
 
 userRoute.post("/signup", (req, res) => {
