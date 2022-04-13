@@ -12,23 +12,28 @@ favoriteRoute.get("/", async (req, res) => {
 	try {
 		//TODOS get the user id from jwt
 		// var cookie = getcookie(req);
-		var user_id = {
-			_id: new Types.ObjectId("62552d25dda547962d752216"),
-		};
+		var user_id: Types.ObjectId = new Types.ObjectId(
+			"62552d25dda547962d752216"
+		);
 
 		// Fetch houses from favourite
 		// Fetch favorite list from userid
 		Favorite.find({ user_id: user_id }, "house_id").exec(
 			async (err, docs) => {
+				if (err) {
+					return res
+						.status(400)
+						.json({ success: false, data: err.message });
+				}
 				// take result(array) map into ids array of objectId
 				var ids: Schema.Types.ObjectId[] = docs.map((e) => e.house_id);
 
 				var house = await House.find({ _id: { $in: ids } }).exec();
-				return res.json({ success: true, data: house });
+				return res.status(200).json({ success: true, data: house });
 			}
 		);
 	} catch (error) {
-		return res.json({ success: false, error: error });
+		return res.status(400).json({ success: false, error: error });
 	}
 });
 
@@ -50,16 +55,20 @@ favoriteRoute.post("/", async (req, res) => {
 
 		if (favorite) {
 			var deleteFavorite = await favorite.remove();
-			return res.json({ success: true, data: "remove from favorite!" });
+			return res
+				.status(200)
+				.json({ success: true, data: "remove from favorite!" });
 		}
 		var newFavorite = await new Favorite({
 			house_id: body.house_id,
 			user_id: user_id,
 		}).save();
 
-		return res.json({ success: true, data: "Added to favorite!" });
+		return res
+			.status(200)
+			.json({ success: true, data: "Added to favorite!" });
 	} catch (error) {
-		return res.json({ success: false, error: error });
+		return res.status(400).json({ success: false, error: error });
 	}
 });
 
