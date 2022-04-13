@@ -17,6 +17,9 @@ import { func } from "joi";
 import mongoose from "mongoose";
 import { User, House, Favorite } from "./database/models";
 import favoriteRoute from "./routes/favorite";
+import offerRoute from "./routes/offer";
+import userRoute from "./routes/user";
+import houseRoute from "./routes/house";
 
 /** Instantiate Application */
 const app = express();
@@ -33,7 +36,11 @@ app.use(cors());
 app.use("/auth", authRoute);
 app.use("/profile", profileRoute);
 app.use("/favorite", favoriteRoute);
+app.use("/offer", offerRoute);
+app.use("/house", houseRoute);
+app.use("/user", userRoute);
 
+// for test
 app.get("/api", async (req, res) => {
 	var user1 = new User({
 		email: "float@mail.com",
