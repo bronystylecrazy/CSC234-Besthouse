@@ -21,6 +21,8 @@ enum RoomType {
 export const userSchema = new Schema<User>({
 	username: String, // String is shorthand for {type: String}
 	password: String,
+	firstname: String,
+	lastname: String,
 	email: String,
 	tel: String,
 });
