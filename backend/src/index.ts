@@ -8,6 +8,7 @@ import cors from "cors";
 
 /** Routes */
 import authRoute from "@/routes/auth";
+import profileRoute from "./routes/profile";
 
 /** Misc */
 import AppConfig from "./config";
@@ -30,6 +31,7 @@ app.use(cors());
 
 /** Routes */
 app.use("/auth", authRoute);
+app.use("/profile", profileRoute);
 app.use("/favorite", favoriteRoute);
 
 app.get("/api", async (req, res) => {
