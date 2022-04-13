@@ -5,6 +5,8 @@ require("module-alias/register");
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import jwt from "express-jwt";
+import cookieParser from "cookie-parser";
 
 /** Routes */
 import authRoute from "@/routes/auth";
@@ -20,6 +22,7 @@ import favoriteRoute from "./routes/favorite";
 import offerRoute from "./routes/offer";
 import userRoute from "./routes/user";
 import houseRoute from "./routes/house";
+import config from "./config";
 
 /** Instantiate Application */
 const app = express();
@@ -31,7 +34,29 @@ app.use(express.urlencoded({ extended: true }));
 
 /** Plugins */
 app.use(cors());
+app.use(cookieParser());
 
+/** Json Web Token */
+app.use(
+	jwt({
+		secret: config.JWT_SECRET,
+		algorithms: ["HS256"],
+		credentialsRequired: false,
+		getToken: function fromHeaderOrQuerystring(req) {
+			if (
+				req.headers.authorization &&
+				req.headers.authorization.split(" ")[0] === "Bearer"
+			) {
+				return req.headers.authorization.split(" ")[1];
+			} else if (req.query && req.query.token) {
+				return req.query.token;
+			} else if (req.cookies.token) {
+				return req.cookies.token;
+			}
+			return null;
+		},
+	})
+);
 /** Routes */
 app.use("/auth", authRoute);
 app.use("/profile", profileRoute);
@@ -74,7 +99,6 @@ app.get("/api", async (req, res) => {
 });
 
 /** Start a server */
-
 mongoose
 	.connect(AppConfig.MONGODB_HOST)
 	.then(() =>
