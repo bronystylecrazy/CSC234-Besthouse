@@ -4,7 +4,6 @@ import { nanoid } from "nanoid";
 const authRoute = express.Router();
 
 authRoute.get("/", (req, res) => {
-	console.log(req.user);
 	// return res.send(`Auth route ${nanoid(64)}`);
 	return res.json(req.user);
 });

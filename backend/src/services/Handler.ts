@@ -31,7 +31,10 @@ export const infoResponse = async (
 	];
 };
 
-export const handler = (res: Response, resultOrError: [any, ErrorResponse]) => {
+export const responseHandler = (
+	res: Response,
+	resultOrError: [any, ErrorResponse]
+) => {
 	if (resultOrError[1])
 		return res.status(resultOrError[1].status).json(resultOrError[1]);
 	return res.json(resultOrError[0]);

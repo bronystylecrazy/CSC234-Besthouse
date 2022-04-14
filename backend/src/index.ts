@@ -13,16 +13,16 @@ import authRoute from "@/routes/auth";
 import profileRoute from "./routes/profile";
 
 /** Misc */
-import AppConfig from "./config";
+import config from "./config";
+
 // import { House, User } from "./database/models/schema";
 import { func } from "joi";
 import mongoose from "mongoose";
-import { User, House, Favorite } from "./database/models";
+import { User, House } from "./database/models";
 import favoriteRoute from "./routes/favorite";
 import offerRoute from "./routes/offer";
 import userRoute from "./routes/user";
 import houseRoute from "./routes/house";
-import config from "./config";
 
 /** Instantiate Application */
 const app = express();
@@ -100,10 +100,10 @@ app.get("/api", async (req, res) => {
 
 /** Start a server */
 mongoose
-	.connect(AppConfig.MONGODB_HOST)
+	.connect(config.MONGODB_HOST)
 	.then(() =>
-		app.listen(AppConfig.PORT, "0.0.0.0", () => {
-			console.log(`Server is running on port ${AppConfig.PORT}`);
+		app.listen(config.PORT, "0.0.0.0", () => {
+			console.log(`Server is running on port ${config.PORT}`);
 		})
 	)
 	.catch((err) => console.error("What the fuck is going on??", err));
