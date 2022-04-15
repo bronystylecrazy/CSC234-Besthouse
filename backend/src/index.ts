@@ -67,21 +67,24 @@ app.use("/user", userRoute);
 
 // for test
 app.get("/api", async (req, res) => {
-	var user1 = new User({
-		email: "float@mail.com",
-		password: "12345678",
-		tel: "0891231234",
-		username: "kasemtan",
-	});
+	// var user1 = new User({
+	// 	email: "float@mail.com",
+	// 	password: "12345678",
+	// 	tel: "0891231234",
+	// 	username: "kasemtan",
+	// });
 	var house1 = new House({
-		name: "Condo1",
+		name: "Korea Condo",
 		picture_url:
 			"https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/ZFZlzPBXT8GEoefOiG62vz0oLFY7n2gkvbzGwcQsE0G.jpeg",
 		location: {
-			address: "---",
-			latitude: "13.736717",
-			longtitude: "100.523186",
+			type: "Point",
+			coordinates: [36.253573, 126.9152424],
 		},
+		price: 8000,
+		status: true,
+		tags: ["Korea", "Condo"],
+		type: "CONDOMINIUM",
 	});
 
 	try {
