@@ -1,17 +1,21 @@
 import express from "express";
-import { Login } from "@/services/Authentication";
-import { Signin } from "@/interface/api/User";
-import { handler } from "@/services/Handler";
+import { Login, SignUp } from "@/services/Authentication";
+import {
+	SignIn as SignInType,
+	SignUp as SignUpType,
+} from "@/interface/api/User";
+import { responseHandler } from "@/services/Handler";
 
 const userRoute = express.Router();
 
 userRoute.post("/signin", async (req, res) => {
-	const { email, password }: Signin = req.body;
-	return handler(res, await Login(email, password));
+	const { email, password }: SignInType = req.body;
+	return responseHandler(res, await Login(email, password));
 });
 
-userRoute.post("/signup", (req, res) => {
-	return res.send();
+userRoute.post("/signup", async (req, res) => {
+	const data: SignUpType = req.body;
+	return responseHandler(res, await SignUp(data));
 });
 
 userRoute.post("/forgot", (req, res) => {
