@@ -112,7 +112,7 @@ export const houseDetailSchema = new Schema<HouseDetail>({
 	price: {
 		type: Number,
 		required: [true, "Price is required"],
-		min: [0, "Price should not be less than 0"],
+		min: [1, "Price should not be less than 0"],
 	},
 	facilities: [
 		{

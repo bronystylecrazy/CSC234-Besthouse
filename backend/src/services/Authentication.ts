@@ -1,15 +1,12 @@
-import jwt from "jsonwebtoken";
-import config from "@/config";
-
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
 import { User } from "@/database/models";
 
+import { SignUp as SignUpType } from "@/interface/api/User";
 import type { ResultHandler } from "@/interface/handler";
 import { genericError, infoResponse } from "@/services/Handler";
-import { SignUp as SignUpType } from "@/interface/api/User";
-import assert from "assert";
+import { generateJwtToken } from "@/utils";
 
 export const Login = async (email: string, password: string): ResultHandler => {
 	try {
@@ -26,17 +23,7 @@ export const Login = async (email: string, password: string): ResultHandler => {
 			return genericError("Sorry, your password is not correct.", 400);
 
 		// Return token
-		const token = jwt.sign(
-			{
-				user_id: myUser._id,
-				email,
-			},
-			config.JWT_SECRET,
-			{
-				algorithm: "HS256",
-				expiresIn: "7d",
-			}
-		);
+		const token = generateJwtToken(myUser._id, myUser.email);
 
 		return infoResponse(token, "Sign in success");
 	} catch (e) {
@@ -52,6 +39,7 @@ export const SignUp = async (data: SignUpType): ResultHandler => {
 		if (password.length < 4) {
 			return genericError("Password lenght must not less than 4", 400);
 		}
+
 		// Create user
 		const myUser = new User({ ...props, password: hashedPassword });
 		try {
@@ -61,17 +49,7 @@ export const SignUp = async (data: SignUpType): ResultHandler => {
 		}
 
 		// Return token
-		const token = jwt.sign(
-			{
-				user_id: myUser._id,
-				email: myUser.email,
-			},
-			config.JWT_SECRET,
-			{
-				algorithm: "HS256",
-				expiresIn: "7d",
-			}
-		);
+		const token = generateJwtToken(myUser._id, myUser.email);
 
 		return infoResponse(token, "Sign up success");
 	} catch (e) {
