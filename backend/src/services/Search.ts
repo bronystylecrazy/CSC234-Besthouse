@@ -33,23 +33,26 @@ export const SearchHouse = async (data: SearchPost): ResultHandler => {
 		}
 		if (data.facilities) {
 			//@ts-ignore
-			condition.facilities = { $in: data.facilities };
+			condition.facilities = data.facilities;
 		}
 
+		// Get houses from provied condition
 		const houses = await House.find(condition).exec();
 
 		if (houses.length === 0) return infoResponse([], "No house found");
 
+		// Check if user want to get facilities
 		//@ts-ignore
-		if (condition.facilities.lenght > 0) {
+		if (condition.facilities) {
 			var housesDetail = await HouseDetail.find({
 				house_id: { $in: houses.map((house) => house._id) },
 				facilities: { $all: data.facilities },
 			});
 
 			if (housesDetail.length === 0)
-				return infoResponse([], "No house found");
+				return infoResponse([], "No house with the facilities found");
 
+			// Get only houseDetail that match the id from houses
 			var finalHouses = houses.filter((house) => {
 				return housesDetail.find((houseDetail) => {
 					return (
@@ -57,9 +60,11 @@ export const SearchHouse = async (data: SearchPost): ResultHandler => {
 					);
 				});
 			});
+
+			return infoResponse(finalHouses, "Search 2 success");
 		}
 
-		return infoResponse(finalHouses || houses, "Search success");
+		return infoResponse(houses, "Search 1 success");
 	} catch (e) {
 		return genericError(e.message, 503);
 	}
