@@ -61,10 +61,13 @@ export const SearchHouse = async (data: SearchPost): ResultHandler => {
 				});
 			});
 
-			return infoResponse(finalHouses, "Search 2 success");
+			return infoResponse(
+				finalHouses,
+				"Search house with facilities success"
+			);
 		}
 
-		return infoResponse(houses, "Search 1 success");
+		return infoResponse(houses, "Search house success");
 	} catch (e) {
 		return genericError(e.message, 503);
 	}
