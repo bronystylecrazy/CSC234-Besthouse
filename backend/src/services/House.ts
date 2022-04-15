@@ -7,6 +7,35 @@ import { Schema } from "mongoose";
 import { genericError, infoResponse } from "./Handler";
 import { Islogin } from "./Utils";
 
+export const GetOffer = async (req: Request) => {
+	try {
+		if (!Islogin(req)) {
+			return genericError(
+				"Unauthorize: Login is required to do function",
+				400
+			);
+		}
+		//@ts-ignore
+		const user_id = req.user.user_id;
+
+		// List houses detail by user id
+		const houseDetails = await HouseDetail.find(
+			{ user_id: user_id },
+			"house_id"
+		);
+
+		const ids: Schema.Types.ObjectId[] = houseDetails.map(
+			(houseDetail) => houseDetail.house_id
+		);
+
+		// List houses by id of house detail
+		const houses = await House.find({ _id: { $in: ids } });
+		return infoResponse(houses);
+	} catch (error) {
+		return genericError(error.message, 500);
+	}
+};
+
 export const GetOfferInfo = async (house_id: Types.ObjectId) => {
 	try {
 		const house = await House.findById(house_id);
