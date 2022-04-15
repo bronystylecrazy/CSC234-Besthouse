@@ -6,7 +6,6 @@ import { Request } from "express";
 import { Schema } from "mongoose";
 import { genericError, infoResponse } from "./Handler";
 import { Islogin } from "./Utils";
-import { request } from "http";
 
 export const GetOffer = async (req: Request) => {
 	try {
@@ -48,7 +47,7 @@ export const GetOfferInfo = async (house_id: Types.ObjectId) => {
 	}
 };
 
-export const PostOffer =async (req: Request, body: OfferPatch) => {
+export const CreateOffer = async (req: Request, body: OfferPatch) => {
 	try {
 		if (!Islogin(req)) {
 			return genericError(
@@ -57,38 +56,35 @@ export const PostOffer =async (req: Request, body: OfferPatch) => {
 			);
 		}
 		//@ts-ignore
-		const user_id = req.user.user_id ;
+		const user_id = req.user.user_id;
 		console.log(body.location);
-		
+
 		try {
 			const new_house = await House.create({
-				
-					name: body.name,
-					location: body.location,
-					picture_url: body.picture_url,
-					tags: body.tags,
-				
+				name: body.name,
+				location: body.location,
+				picture_url: body.picture_url,
+				price: body.price,
+				tags: body.tags,
+				type: body.type,
 			});
-			const new_housedetail = await HouseDetail.create({
-					user_id: user_id,
-					description: body.description,
-					electric_fee: body.electric_fee,
-					facilities: body.facilities,
-					house_id: new_house._id,
-					price: body.price,
-					rooms: body.rooms,
-					total_size: body.total_size,
-					type: body.type,
-				
+			await HouseDetail.create({
+				user_id: user_id,
+				description: body.description,
+				electric_fee: body.electric_fee,
+				facilities: body.facilities,
+				house_id: new_house._id,
+				rooms: body.rooms,
+				total_size: body.total_size,
 			});
 		} catch (error) {
-			return genericError(error.message, 400)
+			return genericError(error.message, 400);
 		}
-		
-		return infoResponse(null, "offer added!");	
+
+		return infoResponse(null, "offer added!");
 	} catch (error) {
-		return genericError(error.message, 500)
-	}	
+		return genericError(error.message, 500);
+	}
 };
 
 export const UpdateOffer = async (
@@ -125,7 +121,10 @@ export const UpdateOffer = async (
 						name: body.name,
 						location: body.location,
 						picture_url: body.picture_url,
+						price: body.price,
 						tags: body.tags,
+						type: body.type,
+						status: body.status,
 					},
 				}
 			).exec();
@@ -135,11 +134,8 @@ export const UpdateOffer = async (
 						description: body.description,
 						electric_fee: body.electric_fee,
 						facilities: body.facilities,
-						house_id: house_id,
-						price: body.price,
 						rooms: body.rooms,
 						total_size: body.total_size,
-						type: body.type,
 					},
 				})
 				.exec();

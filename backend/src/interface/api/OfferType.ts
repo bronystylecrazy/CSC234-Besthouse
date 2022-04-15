@@ -30,4 +30,5 @@ export interface OfferPatch {
 	electric_fee: 0;
 	likes: 0;
 	total_size: 0;
+	status: true;
 }

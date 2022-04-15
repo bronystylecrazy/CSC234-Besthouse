@@ -15,10 +15,8 @@ import profileRoute from "./routes/profile";
 /** Misc */
 import config from "./config";
 
-// import { House, User } from "./database/models/schema";
-import { func } from "joi";
 import mongoose from "mongoose";
-import { User, House } from "./database/models";
+import { House } from "./database/models";
 import favoriteRoute from "./routes/favorite";
 import offerRoute from "./routes/offer";
 import userRoute from "./routes/user";
