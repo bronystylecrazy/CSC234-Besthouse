@@ -4,6 +4,7 @@ import {
 	DeleteOffer,
 	GetOffer,
 	GetOfferInfo,
+	PostOffer,
 	UpdateOffer,
 } from "@/services/House";
 import express from "express";
@@ -21,7 +22,10 @@ offerRoute.get("/:id", async (req, res) => {
 	return responseHandler(res, await GetOfferInfo(house_id));
 });
 
-offerRoute.post("/", (req, res) => {});
+offerRoute.post("/", async (req, res) => {
+	const body: OfferPatch = req.body;
+	return responseHandler(res, await PostOffer(req, body));
+});
 
 offerRoute.patch("/:id", async (req, res) => {
 	// get params
