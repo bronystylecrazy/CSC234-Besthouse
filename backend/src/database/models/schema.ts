@@ -62,16 +62,24 @@ export const houseSchema = new Schema<House>({
 	picture_url: String,
 	location: {
 		type: {
-			address: String,
-			latitude: String,
-			longtitude: String,
+			type: String, // Don't do `{ location: { type: String } }`
+			enum: ["Point"], // 'location.type' must be 'Point'
+			required: true,
 		},
-		required: [true, "Location required"],
+		coordinates: {
+			type: [Number],
+			required: true,
+		},
 	},
 	price: {
 		type: Number,
 		required: [true, "Price is required"],
 		min: [1, "Price should not be less than 0"],
+	},
+	type: {
+		type: String,
+		enum: Object.values(HouseType),
+		default: HouseType.house,
 	},
 	status: { type: Boolean, default: true },
 	tags: [String],
@@ -87,11 +95,6 @@ export const houseDetailSchema = new Schema<HouseDetail>({
 		type: Types.ObjectId,
 		ref: "User",
 		required: [true, "User id is required"],
-	},
-	type: {
-		type: String,
-		enum: Object.values(HouseType),
-		default: HouseType.house,
 	},
 	rooms: {
 		type: [
@@ -113,12 +116,7 @@ export const houseDetailSchema = new Schema<HouseDetail>({
 		minlength: [1, "At least one room required"],
 	},
 	description: String,
-	facilities: [
-		{
-			name: String,
-			checked: Boolean,
-		},
-	],
+	facilities: [String],
 	electric_fee: Number,
 	likes: { type: Number, default: 0 },
 	total_size: { type: Number, required: [true, "Size is required"] },

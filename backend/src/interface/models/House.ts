@@ -2,11 +2,11 @@ export default interface House {
 	name: string;
 	picture_url: string;
 	location: {
-		address: string;
-		latitude: string;
-		longtitude: string;
+		type: string;
+		coordinates: number[];
 	};
-	status: boolean;
 	price: number;
+	type: string;
+	status: boolean;
 	tags: string[];
 }

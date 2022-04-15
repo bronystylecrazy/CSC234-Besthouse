@@ -1,9 +1,13 @@
 import express from "express";
+import { SearchPost } from "@/interface/api/Search";
+import { SearchHouse } from "@/services/Search";
+import { responseHandler } from "@/services/Handler";
 // eslint-disable-next-line new-cap
 const houseRoute = express.Router();
 
-houseRoute.get("/search", (req, res) => {
-	return res.send();
+houseRoute.post("/search", async (req, res) => {
+	const data: SearchPost = req.body;
+	return responseHandler(res, await SearchHouse(data));
 });
 
 // feature and nearby house are the same api
