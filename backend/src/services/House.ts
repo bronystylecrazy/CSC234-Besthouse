@@ -6,6 +6,36 @@ import { Request } from "express";
 import { Schema } from "mongoose";
 import { genericError, infoResponse } from "./Handler";
 import { Islogin } from "./Utils";
+import { request } from "http";
+
+export const GetOffer = async (req: Request) => {
+	try {
+		if (!Islogin(req)) {
+			return genericError(
+				"Unauthorize: Login is required to do function",
+				400
+			);
+		}
+		//@ts-ignore
+		const user_id = req.user.user_id;
+
+		// List houses detail by user id
+		const houseDetails = await HouseDetail.find(
+			{ user_id: user_id },
+			"house_id"
+		);
+
+		const ids: Schema.Types.ObjectId[] = houseDetails.map(
+			(houseDetail) => houseDetail.house_id
+		);
+
+		// List houses by id of house detail
+		const houses = await House.find({ _id: { $in: ids } });
+		return infoResponse(houses);
+	} catch (error) {
+		return genericError(error.message, 500);
+	}
+};
 
 export const GetOfferInfo = async (house_id: Types.ObjectId) => {
 	try {
@@ -16,6 +46,49 @@ export const GetOfferInfo = async (house_id: Types.ObjectId) => {
 	} catch (error) {
 		return genericError(error.message, 500);
 	}
+};
+
+export const PostOffer =async (req: Request, body: OfferPatch) => {
+	try {
+		if (!Islogin(req)) {
+			return genericError(
+				"Unauthorize: Login is required to do function",
+				400
+			);
+		}
+		//@ts-ignore
+		const user_id = req.user.user_id ;
+		console.log(body.location);
+		
+		try {
+			const new_house = await House.create({
+				
+					name: body.name,
+					location: body.location,
+					picture_url: body.picture_url,
+					tags: body.tags,
+				
+			});
+			const new_housedetail = await HouseDetail.create({
+					user_id: user_id,
+					description: body.description,
+					electric_fee: body.electric_fee,
+					facilities: body.facilities,
+					house_id: new_house._id,
+					price: body.price,
+					rooms: body.rooms,
+					total_size: body.total_size,
+					type: body.type,
+				
+			});
+		} catch (error) {
+			return genericError(error.message, 400)
+		}
+		
+		return infoResponse(null, "offer added!");	
+	} catch (error) {
+		return genericError(error.message, 500)
+	}	
 };
 
 export const UpdateOffer = async (
