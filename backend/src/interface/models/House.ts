@@ -7,5 +7,6 @@ export default interface House {
 		longtitude: string;
 	};
 	status: boolean;
+	price: number;
 	tags: string[];
 }

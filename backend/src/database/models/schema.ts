@@ -68,6 +68,11 @@ export const houseSchema = new Schema<House>({
 		},
 		required: [true, "Location required"],
 	},
+	price: {
+		type: Number,
+		required: [true, "Price is required"],
+		min: [1, "Price should not be less than 0"],
+	},
 	status: { type: Boolean, default: true },
 	tags: [String],
 });
@@ -108,11 +113,6 @@ export const houseDetailSchema = new Schema<HouseDetail>({
 		minlength: [1, "At least one room required"],
 	},
 	description: String,
-	price: {
-		type: Number,
-		required: [true, "Price is required"],
-		min: [1, "Price should not be less than 0"],
-	},
 	facilities: [
 		{
 			name: String,
