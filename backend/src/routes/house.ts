@@ -2,10 +2,6 @@ import express from "express";
 // eslint-disable-next-line new-cap
 const houseRoute = express.Router();
 
-houseRoute.get("/search/:id", (req, res) => {
-	return res.send();
-});
-
 houseRoute.get("/search", (req, res) => {
 	return res.send();
 });

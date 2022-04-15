@@ -3,25 +3,24 @@ import User from "@/interface/models/User";
 import UserProfile from "@/interface/models/UserProfile";
 import House from "@/interface/models/House";
 import HouseDetail from "@/interface/models/HouseDetail";
-import { required } from "joi";
 
 const validateEmail = function (email) {
 	var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 	return re.test(email);
 };
 
-enum HouseType {
-	CONDOMINIUM = "condominium",
-	HOUSE = "house",
-	HOTEL = "hotel",
-	SHOPHOUSE = "shophouse",
+export enum HouseType {
+	condominium = "CONDOMINIUM",
+	house = "HOUSE",
+	hotel = "HOTEL",
+	shophouse = "SHOPHOUSE",
 }
 
-enum RoomType {
-	LIVEING = "living",
-	BED = "bed",
-	KITCHEN = "kitchen",
-	BATH = "bath",
+export enum RoomType {
+	living = "LIVING",
+	bed = "BED",
+	kitchen = "KITCHEN",
+	bath = "BATH",
 }
 
 export const userSchema = new Schema<User>({
@@ -87,7 +86,7 @@ export const houseDetailSchema = new Schema<HouseDetail>({
 	type: {
 		type: String,
 		enum: Object.values(HouseType),
-		default: HouseType.HOUSE,
+		default: HouseType.house,
 	},
 	rooms: {
 		type: [
@@ -112,7 +111,7 @@ export const houseDetailSchema = new Schema<HouseDetail>({
 	price: {
 		type: Number,
 		required: [true, "Price is required"],
-		min: [0, "Price should not be less than 0"],
+		min: [1, "Price should not be less than 0"],
 	},
 	facilities: [
 		{

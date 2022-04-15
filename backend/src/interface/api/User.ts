@@ -1,9 +1,9 @@
-export interface SignIn {
+export interface SignInPost {
 	email: string;
 	password: string;
 }
 
-export interface SignUp {
+export interface SignUpPost {
 	username: string;
 	password: string;
 	email: string;
@@ -12,6 +12,6 @@ export interface SignUp {
 	tel: string;
 }
 
-export interface Forgot {}
+export interface ForgotPost {}
 
-export interface Reset {}
+export interface ResetPatch {}
