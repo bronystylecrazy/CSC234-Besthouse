@@ -98,6 +98,10 @@ app.get("/api", async (req, res) => {
 	}
 });
 
+app.get("/", (req, res) => {
+	return res.send("Hello, we are Float, Art, Ann, Willy, and Spy (FaawS)");
+});
+
 /** Start a server */
 mongoose
 	.connect(config.MONGODB_HOST)
