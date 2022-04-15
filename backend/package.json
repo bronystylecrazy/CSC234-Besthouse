@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "rimraf dist && tsc-watch --onSuccess \"node ./dist/index.js\"",
 		"build": "rimraf dist && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
-		"serve": "serve -s build/index.js",
+		"serve": "nodemon dist/index.js",
 		"test": "jest"
 	},
 	"repository": {
