@@ -1,3 +1,4 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:besthouse/screens/customer_profile.dart';
 import 'package:besthouse/screens/favourite.dart';
 import 'package:besthouse/screens/get_start.dart';
@@ -11,6 +12,7 @@ import 'package:besthouse/screens/sign_up.dart';
 import 'package:besthouse/services/dio.dart';
 import 'package:besthouse/services/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -46,15 +48,58 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
+        primaryColor: Colors.blue,
+        textTheme: TextTheme(
+            headline2: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF24577A),
+            ),
+            headline1: GoogleFonts.poppins(
+              fontSize: 38,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF022B3A),
+            ),
+            bodyText1: GoogleFonts.poppins(fontSize: 16)),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
+
+      home: AnimatedSplashScreen(
+        duration: 3000,
+        splash: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Positioned(
+                child: Image.asset("assets/logo.png", scale: 0.8),
+                top: 50,
+                left: 18,
+              ),
+              SizedBox(height: 20),
+              Text('BestHouse',
+                  style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF24577A))),
+              SizedBox(height: 20),
+              Text('Welcome to BestHouse',
+                  style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF24577A))),
+            ],
+          ),
+        ),
+        nextScreen: GetStart(),
+        splashTransition: SplashTransition.fadeTransition,
+      ),
       routes: {
-        HouseDetailed.routeName: (context) => HouseDetailed(),
-        GetStart.routeName: (context) => GetStart(),
-        SignIn.routeName: (context) => SignIn(),
-        SignUp.routeName: (context) => SignUp(),
-        Guide.routeName: (context) => Guide(),
-        PostForm.routeName: (context) => PostForm(),
+        HouseDetailed.routeName: (context) => const HouseDetailed(),
+        GetStart.routeName: (context) => const GetStart(),
+        SignIn.routeName: (context) => const SignIn(),
+        SignUp.routeName: (context) => const SignUp(),
+        Guide.routeName: (context) => const Guide(),
+        PostForm.routeName: (context) => const PostForm(),
       },
     );
   }
@@ -79,73 +124,58 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   static List<Widget> screen = <Widget>[
     const Home(),
     const Search(),
     const Favourite(),
     const CustomerProfile()
   ];
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: screen.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+            label: 'Home',
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favourite',
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+            backgroundColor: Colors.blue,
+          ),
+        ],
+        showUnselectedLabels: true,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        // showSelectedLabels: false,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

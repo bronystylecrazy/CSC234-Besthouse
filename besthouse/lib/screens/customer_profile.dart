@@ -5,6 +5,8 @@ class CustomerProfile extends StatelessWidget {
   static const routeName = "/customer_profile";
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Text("profile"),
+    );
   }
 }
