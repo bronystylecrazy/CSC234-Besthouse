@@ -23,7 +23,7 @@ export const SearchHouse = async (data: SearchPost): ResultHandler => {
 						type: "Point",
 						coordinates: [data.long, data.lat],
 					},
-					$maxDistance: 10000,
+					$maxDistance: 5000,
 				},
 			};
 		}
