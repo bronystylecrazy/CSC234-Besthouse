@@ -5,7 +5,7 @@ import 'package:besthouse/screens/get_start.dart';
 import 'package:besthouse/screens/guide.dart';
 import 'package:besthouse/screens/home.dart';
 import 'package:besthouse/screens/house_detailed.dart';
-import 'package:besthouse/screens/post_form.dart';
+import 'package:besthouse/screens/offer_form.dart';
 import 'package:besthouse/screens/search.dart';
 import 'package:besthouse/screens/sign_in.dart';
 import 'package:besthouse/screens/sign_up.dart';
@@ -78,15 +78,11 @@ class MyApp extends StatelessWidget {
               SizedBox(height: 20),
               Text('BestHouse',
                   style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF24577A))),
+                      fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xFF24577A))),
               SizedBox(height: 20),
               Text('Welcome to BestHouse',
                   style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF24577A))),
+                      fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF24577A))),
             ],
           ),
         ),
@@ -99,7 +95,7 @@ class MyApp extends StatelessWidget {
         SignIn.routeName: (context) => const SignIn(),
         SignUp.routeName: (context) => const SignUp(),
         Guide.routeName: (context) => const Guide(),
-        PostForm.routeName: (context) => const PostForm(),
+        OfferForm.routeName: (context) => const OfferForm(),
       },
     );
   }
