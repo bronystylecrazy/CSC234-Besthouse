@@ -4,3 +4,8 @@ export interface ProfilePatch {
 	line_id: "String";
 	facebook: "String";
 }
+
+export interface UserPatch {
+	email: "String";
+	tel: "String";
+}
