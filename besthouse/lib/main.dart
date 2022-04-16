@@ -1,6 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:besthouse/screens/customer_profile.dart';
 import 'package:besthouse/screens/favourite.dart';
+import 'package:besthouse/screens/forget_password.dart';
 import 'package:besthouse/screens/get_start.dart';
 import 'package:besthouse/screens/guide.dart';
 import 'package:besthouse/screens/home.dart';
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
         SignUp.routeName: (context) => const SignUp(),
         Guide.routeName: (context) => const Guide(),
         OfferForm.routeName: (context) => const OfferForm(),
+        ForgetPassword.routeName: (context) => const ForgetPassword()
       },
     );
   }
