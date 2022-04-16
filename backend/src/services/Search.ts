@@ -44,7 +44,7 @@ export const SearchHouse = async (data: SearchPost): ResultHandler => {
 		// Check if user want to get facilities
 		//@ts-ignore
 		if (condition.facilities) {
-			var housesDetail = await HouseDetail.find({
+			const housesDetail = await HouseDetail.find({
 				house_id: { $in: houses.map((house) => house._id) },
 				facilities: { $all: data.facilities },
 			});

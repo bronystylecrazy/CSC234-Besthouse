@@ -1,11 +1,15 @@
 import express from "express";
 import { SearchPost } from "@/interface/api/Search";
 import { SearchHouse } from "@/services/Search";
-import { responseHandler } from "@/services/Handler";
+import { genericError, responseHandler } from "@/services/Handler";
+import { Islogin } from "@/services/Utils";
 // eslint-disable-next-line new-cap
 const houseRoute = express.Router();
 
 houseRoute.post("/search", async (req, res) => {
+	if (!Islogin(req))
+		return responseHandler(res, await genericError("Unauthorized", 403));
+
 	const data: SearchPost = req.body;
 	return responseHandler(res, await SearchHouse(data));
 });

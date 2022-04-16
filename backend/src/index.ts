@@ -15,8 +15,6 @@ import profileRoute from "./routes/profile";
 /** Misc */
 import config from "./config";
 
-// import { House, User } from "./database/models/schema";
-import { func } from "joi";
 import mongoose from "mongoose";
 import { User, House } from "./database/models";
 import favoriteRoute from "./routes/favorite";
@@ -57,6 +55,7 @@ app.use(
 		},
 	})
 );
+
 /** Routes */
 app.use("/auth", authRoute);
 app.use("/profile", profileRoute);
