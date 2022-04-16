@@ -5,7 +5,7 @@ class DioInstance {
   static late Dio dio;
   static void init() async {
     var options = BaseOptions(
-      baseUrl: 'localhost:8080',
+      baseUrl: Constants.baseUrl,
       connectTimeout: 5000,
       receiveTimeout: 3000,
     );
