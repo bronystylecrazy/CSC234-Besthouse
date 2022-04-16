@@ -38,60 +38,34 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
         primaryColor: Colors.blue,
         textTheme: TextTheme(
-            headline2: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF24577A),
-            ),
-            headline1: GoogleFonts.poppins(
-              fontSize: 38,
-              fontWeight: FontWeight.w600,
+          headline2: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF24577A),
+          ),
+          headline1: GoogleFonts.poppins(
+            fontSize: 38,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF022B3A),
+          ),
+          bodyText1: GoogleFonts.poppins(fontSize: 16),
+          bodyText2: GoogleFonts.poppins(
+              fontSize: 16,
               color: const Color(0xFF022B3A),
-            ),
-            bodyText1: GoogleFonts.poppins(fontSize: 16)),
+              fontWeight: FontWeight.bold),
+        ),
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
 
-      home: AnimatedSplashScreen(
-        duration: 3000,
-        splash: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Positioned(
-                child: Image.asset("assets/logo.png", scale: 0.8),
-                top: 50,
-                left: 18,
-              ),
-              SizedBox(height: 20),
-              Text('BestHouse',
-                  style: GoogleFonts.poppins(
-                      fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xFF24577A))),
-              SizedBox(height: 20),
-              Text('Welcome to BestHouse',
-                  style: GoogleFonts.poppins(
-                      fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF24577A))),
-            ],
-          ),
-        ),
-        nextScreen: GetStart(),
-        splashTransition: SplashTransition.fadeTransition,
-      ),
+      // home: const SplashScreen(),
       routes: {
+        "/": (context) => MyHomePage(title: "homepage"),
         HouseDetailed.routeName: (context) => const HouseDetailed(),
         GetStart.routeName: (context) => const GetStart(),
+        MyHomePage.routeName: (context) => const MyHomePage(title: "homepage"),
         SignIn.routeName: (context) => const SignIn(),
         SignUp.routeName: (context) => const SignUp(),
         Guide.routeName: (context) => const Guide(),
@@ -101,8 +75,46 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSplashScreen(
+      duration: 3000,
+      splash: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Positioned(
+              child: Image.asset("assets/logo.png", scale: 0.8),
+              top: 50,
+              left: 18,
+            ),
+            Text('BestHouse',
+                style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF24577A))),
+            Text('Welcome to BestHouse',
+                style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF24577A))),
+          ],
+        ),
+      ),
+      nextScreen: GetStart(),
+      splashTransition: SplashTransition.fadeTransition,
+    );
+  }
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
+  static const String routeName = "/homepage";
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -139,38 +151,68 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Row(
+          children: [
+            Image.asset("assets/logo.png", scale: 1),
+            const SizedBox(
+              width: 8,
+            ),
+            Text(
+              "Best house",
+              textAlign: TextAlign.left,
+              style: Theme.of(context).textTheme.bodyText2,
+            ),
+          ],
+        ),
+        centerTitle: false,
       ),
       body: screen.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            spreadRadius: -4,
+            blurRadius: 5,
+          )
+        ]),
+        child: BottomNavigationBar(
+          selectedItemColor: const Color(0xff24577A),
+          unselectedItemColor: const Color(0xff7E95A6),
+          selectedLabelStyle: GoogleFonts.poppins(),
+          unselectedLabelStyle: GoogleFonts.poppins(),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+              ),
+              label: 'Home',
             ),
-            label: 'Home',
-            backgroundColor: Colors.blue,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-            backgroundColor: Colors.blue,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favourite',
-            backgroundColor: Colors.blue,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-            backgroundColor: Colors.blue,
-          ),
-        ],
-        showUnselectedLabels: true,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        // showSelectedLabels: false,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.search,
+              ),
+              label: 'Search',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.favorite,
+              ),
+              label: 'Favourite',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.person,
+              ),
+              label: 'Profile',
+            ),
+          ],
+          showUnselectedLabels: true,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          // showSelectedLabels: false,
+        ),
       ),
     );
   }
