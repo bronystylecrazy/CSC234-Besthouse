@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
           ),
           bodyText1: GoogleFonts.poppins(fontSize: 16),
           bodyText2: GoogleFonts.poppins(
-              fontSize: 16,
+              fontSize: 14,
               color: const Color(0xFF022B3A),
               fontWeight: FontWeight.bold),
         ),
@@ -62,10 +62,10 @@ class MyApp extends StatelessWidget {
 
       // home: const SplashScreen(),
       routes: {
-        "/": (context) => MyHomePage(title: "homepage"),
+        "/": (context) => MyHomePage(),
         HouseDetailed.routeName: (context) => const HouseDetailed(),
         GetStart.routeName: (context) => const GetStart(),
-        MyHomePage.routeName: (context) => const MyHomePage(title: "homepage"),
+        MyHomePage.routeName: (context) => const MyHomePage(),
         SignIn.routeName: (context) => const SignIn(),
         SignUp.routeName: (context) => const SignUp(),
         Guide.routeName: (context) => const Guide(),
@@ -113,19 +113,10 @@ class SplashScreen extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({
+    Key? key,
+  }) : super(key: key);
   static const String routeName = "/homepage";
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
