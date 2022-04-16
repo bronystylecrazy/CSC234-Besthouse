@@ -2,7 +2,7 @@ import Favorite from "@/interface/models/Favorite";
 import House from "@/interface/models/House";
 import HouseDetail from "@/interface/models/HouseDetail";
 import User from "@/interface/models/User";
-import UserProfile from "@/interface/models/UserProfile";
+import UserProfile from "@/interface/models/Profile";
 import mongoose from "mongoose";
 
 import {

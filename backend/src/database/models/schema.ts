@@ -1,6 +1,6 @@
 import { Schema, Types } from "mongoose";
 import User from "@/interface/models/User";
-import UserProfile from "@/interface/models/UserProfile";
+import UserProfile from "@/interface/models/Profile";
 import House from "@/interface/models/House";
 import HouseDetail from "@/interface/models/HouseDetail";
 

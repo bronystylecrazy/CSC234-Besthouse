@@ -1,46 +1,19 @@
+/* eslint-disable new-cap */
 import express from "express";
-import { Profile } from "@/database/models/index";
+import { GetUserProfile, PatchUserProfile } from "@/services/UserProfile";
+import { responseHandler } from "@/services/Handler";
+import { ProfilePatch } from "@/interface/api/ProfilePatch";
+
 // eslint-disable-next-line new-cap
 const profileRoute = express.Router();
 
-profileRoute.get("/:username", async (req, res) => {
-	const username = req.params.username;
-	const userProfile = await Profile.findOne({ username: username });
-	if (userProfile) {
-		res.send({
-			success: true,
-			data: userProfile,
-		});
-	} else {
-		res.send({
-			success: false,
-			message: "User not found",
-		});
-	}
+profileRoute.get("/:id", async (req, res) => {
+	return responseHandler(res, await GetUserProfile(req));
 });
 
-profileRoute.patch("/:username", async (req, res) => {
-	const username = req.params.username;
-	const { firstname, lastname, lineId, facebook } = req.body;
-	const userProfile = new Profile({
-		username,
-		firstname,
-		lastname,
-		lineId,
-		facebook,
-	});
-	await userProfile.save();
-	if (userProfile) {
-		res.send({
-			success: true,
-			data: userProfile,
-		});
-	} else {
-		res.send({
-			success: false,
-			message: "User not update information",
-		});
-	}
+profileRoute.patch("/:id", async (req, res) => {
+	const body: ProfilePatch = req.body;
+	return responseHandler(res, await PatchUserProfile(req, body));
 });
 
 export default profileRoute;
