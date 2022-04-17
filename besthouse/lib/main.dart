@@ -126,6 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: false,
         actions: <Widget>[
           IconButton(
+            splashRadius: 20.0,
             icon: const Icon(Icons.menu_book),
             color: Theme.of(context).colorScheme.secondary,
             tooltip: 'Go to guide page',
