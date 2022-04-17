@@ -43,8 +43,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Best House',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        primaryColor: Colors.blue,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: const Color(0xFF24577A),
+          secondary: const Color.fromARGB(255, 84, 156, 160),
+        ),
         textTheme: TextTheme(
           headline2: GoogleFonts.poppins(
             fontSize: 20,
@@ -110,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.white,
         title: Row(
           children: [
-            Image.asset("assets/logo.png", scale: 1),
+            Image.asset("assets/logo.png", scale: 1.2),
             const SizedBox(
               width: 8,
             ),
@@ -122,6 +124,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         centerTitle: false,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.menu_book),
+            color: Theme.of(context).colorScheme.secondary,
+            tooltip: 'Go to guide page',
+            onPressed: () => Navigator.pushNamed(context, Guide.routeName),
+          ),
+        ],
       ),
       body: screen.elementAt(_selectedIndex),
       bottomNavigationBar: Container(
