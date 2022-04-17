@@ -100,7 +100,7 @@ app.get("/api", async (req, res) => {
 
 app.get("/", (req, res) => {
 	return res.send(
-		"Hello, we are Float, Art, Ann, Willy, and Spy (FaawS)<br> We are a team of 5 students from the University of Information Technology, Faculty of Engineering, Department of Computer Engineering. Also called us Fivesome!"
+		"Hello, we are Float, Art, Ann, Willy, and Spy (FaawS)<br> We are a team of 5 students from the University of Information Technology, Faculty of Engineering, Department of Computer Engineering. Also called us Fivesome!<br/> <b>This API is sooooo awesome!</b>"
 	);
 });
 
