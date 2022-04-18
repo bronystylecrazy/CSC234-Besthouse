@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
           ),
           bodyText1: GoogleFonts.poppins(fontSize: 16),
           bodyText2: GoogleFonts.poppins(
-              fontSize: 14, color: const Color(0xFF022B3A), fontWeight: FontWeight.bold),
+              fontSize: 14, color: const Color(0xFF022B3A), fontWeight: FontWeight.w600),
         ),
       ),
       // home: const SplashScreen(),
