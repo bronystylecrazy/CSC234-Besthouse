@@ -1,9 +1,10 @@
 import type { Response } from "express";
 import type { ResultHandler, ErrorResponse } from "@/interface/handler";
+import type HttpStatus from "@/utils/httpStatus";
 
 export const genericError = async (
 	message = "",
-	status = 404
+	status: HttpStatus = 404
 ): ResultHandler => {
 	return [
 		null,
@@ -18,7 +19,7 @@ export const genericError = async (
 export const infoResponse = async (
 	data: unknown,
 	message = "Success!",
-	status = 200
+	status: HttpStatus = 200
 ): ResultHandler => {
 	return [
 		{
