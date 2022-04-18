@@ -55,6 +55,7 @@ app.use(
 		},
 	})
 );
+
 /** Routes */
 app.use("/auth", authRoute);
 app.use("/profile", profileRoute);

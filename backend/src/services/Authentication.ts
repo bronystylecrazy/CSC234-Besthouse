@@ -38,9 +38,9 @@ export const SignUp = async (data: SignUpPost): ResultHandler => {
 		if (password.length < 4) {
 			return genericError("Password lenght must not less than 4", 400);
 		}
-		const hashedPassword = await bcrypt.hash(password, saltRounds);
 
 		// Create user
+		const hashedPassword = await bcrypt.hash(password, saltRounds);
 		const myUser = new User({ ...props, password: hashedPassword });
 		try {
 			await myUser.save();
@@ -51,7 +51,7 @@ export const SignUp = async (data: SignUpPost): ResultHandler => {
 		// Return token
 		const token = generateJwtToken(myUser._id, myUser.email);
 
-		return infoResponse(token, "Sign up success");
+		return infoResponse(token, "Sign up success", 201);
 	} catch (e) {
 		return genericError(e.message, 503);
 	}
