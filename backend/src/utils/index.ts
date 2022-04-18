@@ -10,11 +10,12 @@ export function sayFuckyou() {
 	return "Fuck you, Ann!!";
 }
 
-export function getcookie(req) {
-	var cookie = req.headers.cookie;
-	return cookie.split("; ");
-}
-
+/**
+ * Generate jwt from given user_id and email.
+ * @param {string} _id User's id.
+ * @param {string} email User's email.
+ * @return {string} Encoded jwt token.
+ */
 export function generateJwtToken(_id, email: string) {
 	const payload = {
 		user_id: _id,
