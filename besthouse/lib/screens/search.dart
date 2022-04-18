@@ -38,8 +38,4 @@ class _SearchState extends State<Search> {
           return const FilterSheet();
         });
   }
-
-  void _closeModalSheet(BuildContext context) {
-    Navigator.pop(context);
-  }
 }
