@@ -5,7 +5,7 @@ import House from "@/interface/models/House";
 import HouseDetail from "@/interface/models/HouseDetail";
 
 const validateEmail = function (email) {
-	var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 	return re.test(email);
 };
 
