@@ -1,9 +1,8 @@
 import { House, HouseDetail, Favorite } from "@/database/models";
 import { OfferPatch } from "@/interface/api/OfferType";
-import { Types } from "mongoose";
+import { Types, Schema } from "mongoose";
 import { FavouritePost } from "@/interface/api/FavoritePost";
 import { Request } from "express";
-import { Schema } from "mongoose";
 import { genericError, infoResponse } from "./Handler";
 import { isLogin } from "./Utils";
 
@@ -30,7 +29,7 @@ export const updateOffer = async (
 				400
 			);
 		}
-		//@ts-ignore
+
 		const user_id = req.user.user_id;
 
 		// check permission
@@ -88,7 +87,7 @@ export const deleteOffer = async (house_id: Types.ObjectId, req: Request) => {
 				400
 			);
 		}
-		//@ts-ignore
+
 		const user_id = req.user.user_id;
 
 		const houseDetail = await HouseDetail.findOne({
@@ -116,7 +115,6 @@ export const listFavoriteHouse = async (req: Request) => {
 			);
 		}
 
-		//@ts-ignore
 		const user_id = req.user.user_id;
 
 		// Fetch favorite list from userid
@@ -143,7 +141,6 @@ export const favoriteHouse = async (body: FavouritePost, req: Request) => {
 			);
 		}
 
-		//@ts-ignore
 		const user_id = req.user.user_id;
 
 		// check if the user favorited or not
