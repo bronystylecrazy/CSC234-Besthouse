@@ -16,7 +16,7 @@ export const genericError = async (
 };
 
 export const infoResponse = async (
-	data: any,
+	data: unknown,
 	message = "Success!",
 	status = 200
 ): ResultHandler => {
@@ -33,9 +33,9 @@ export const infoResponse = async (
 
 export const responseHandler = (
 	res: Response,
-	resultOrError: [any, ErrorResponse]
+	resultOrError: [unknown, ErrorResponse]
 ) => {
-	if (resultOrError[1])
-		return res.status(resultOrError[1].status).json(resultOrError[1]);
-	return res.json(resultOrError[0]);
+	const [result, error] = resultOrError;
+	if (error) return res.status(error.status).json(error);
+	return res.json(result);
 };
