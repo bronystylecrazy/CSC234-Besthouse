@@ -34,9 +34,12 @@ export const infoResponse = async (
 
 export const responseHandler = (
 	res: Response,
-	resultOrError: [unknown, ErrorResponse]
+	resultOrError: [unknown, ErrorResponse] | ErrorResponse
 ) => {
-	const [result, error] = resultOrError;
-	if (error) return res.status(error.status).json(error);
-	return res.json(result);
+	if (Array.isArray(resultOrError)) {
+		const [result, error] = resultOrError;
+		if (error) return res.status(error.status).json(error);
+		return res.json(result);
+	}
+	return res.json(resultOrError);
 };
