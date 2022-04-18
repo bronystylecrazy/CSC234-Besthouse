@@ -2,6 +2,8 @@ module.exports = {
 	env: {
 		browser: false,
 		es2021: true,
+		jest: true,
+		node: true,
 	},
 	extends: ["plugin:@typescript-eslint/recommended", "google", "prettier"],
 	parser: "@typescript-eslint/parser",

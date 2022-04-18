@@ -16,8 +16,8 @@
 		"removeComments": true,
 		"forceConsistentCasingInFileNames": true,
 		"strict": false,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"types": ["jest", "node"]
 	},
-	"include": ["./src", "./node_modules/@types", "./global.d.ts"],
-	"exclude": ["./src/test"]
+	"include": ["./src", "./global.d.ts"]
 }
