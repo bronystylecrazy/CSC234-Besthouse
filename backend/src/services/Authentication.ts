@@ -3,12 +3,12 @@ const saltRounds = 10;
 
 import { User } from "@/database/models";
 
-import { SignUpPost } from "@/interface/api/User";
+import type { SignUpPost } from "@/interface/api/User";
 import type { ResultHandler } from "@/interface/handler";
 import { genericError, infoResponse } from "@/services/Handler";
 import { generateJwtToken } from "@/utils";
 
-export const Login = async (email: string, password: string): ResultHandler => {
+export const login = async (email: string, password: string): ResultHandler => {
 	try {
 		// Fetches user from database
 		const myUser = await User.findOne({
@@ -31,13 +31,15 @@ export const Login = async (email: string, password: string): ResultHandler => {
 	}
 };
 
-export const SignUp = async (data: SignUpPost): ResultHandler => {
+export const signup = async (data: SignUpPost): ResultHandler => {
 	try {
 		// Hash password
 		const { password, ...props } = data;
+
 		if (password.length < 4) {
 			return genericError("Password lenght must not less than 4", 400);
 		}
+
 		const hashedPassword = await bcrypt.hash(password, saltRounds);
 
 		// Create user

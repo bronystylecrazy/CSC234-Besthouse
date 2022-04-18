@@ -5,9 +5,9 @@ import { FavouritePost } from "@/interface/api/FavoritePost";
 import { Request } from "express";
 import { Schema } from "mongoose";
 import { genericError, infoResponse } from "./Handler";
-import { Islogin } from "./Utils";
+import { isLogin } from "./Utils";
 
-export const GetOfferInfo = async (house_id: Types.ObjectId) => {
+export const getOfferInfo = async (house_id: Types.ObjectId) => {
 	try {
 		const house = await House.findById(house_id);
 		const houseDetail = await HouseDetail.findOne({ house_id: house_id });
@@ -18,13 +18,13 @@ export const GetOfferInfo = async (house_id: Types.ObjectId) => {
 	}
 };
 
-export const UpdateOffer = async (
+export const updateOffer = async (
 	house_id: Types.ObjectId,
 	body: OfferPatch,
 	req: Request
 ) => {
 	try {
-		if (!Islogin(req)) {
+		if (!isLogin(req)) {
 			return genericError(
 				"Unauthorize: Login is required to do function",
 				400
@@ -80,9 +80,9 @@ export const UpdateOffer = async (
 	}
 };
 
-export const DeleteOffer = async (house_id: Types.ObjectId, req: Request) => {
+export const deleteOffer = async (house_id: Types.ObjectId, req: Request) => {
 	try {
-		if (!Islogin(req)) {
+		if (!isLogin(req)) {
 			return genericError(
 				"Unauthorize: Login is required to do function",
 				400
@@ -107,9 +107,9 @@ export const DeleteOffer = async (house_id: Types.ObjectId, req: Request) => {
 	}
 };
 
-export const ListFavoriteHouse = async (req: Request) => {
+export const listFavoriteHouse = async (req: Request) => {
 	try {
-		if (!Islogin(req)) {
+		if (!isLogin(req)) {
 			return genericError(
 				"Unauthorize: Login is required to do function",
 				400
@@ -134,9 +134,9 @@ export const ListFavoriteHouse = async (req: Request) => {
 	}
 };
 
-export const FavoriteHouse = async (body: FavouritePost, req: Request) => {
+export const favoriteHouse = async (body: FavouritePost, req: Request) => {
 	try {
-		if (!Islogin(req)) {
+		if (!isLogin(req)) {
 			return genericError(
 				"Unauthorize: Login is required to do function",
 				400
@@ -147,10 +147,11 @@ export const FavoriteHouse = async (body: FavouritePost, req: Request) => {
 		const user_id = req.user.user_id;
 
 		// check if the user favorited or not
-		var favorite = await Favorite.findOne({
+		const favorite = await Favorite.findOne({
 			house_id: body.house_id,
 			user_id: user_id,
 		});
+
 		if (favorite) {
 			await favorite.remove();
 			return infoResponse(null, "Removed from favorite");
