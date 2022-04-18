@@ -38,8 +38,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        primaryColor: Colors.blue,
+        primaryColor: Color(0xff24577A),
         textTheme: TextTheme(
           headline2: GoogleFonts.poppins(
             fontSize: 20,
@@ -51,7 +50,8 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.w600,
             color: const Color(0xFF022B3A),
           ),
-          bodyText1: GoogleFonts.poppins(fontSize: 16),
+          bodyText1:
+              GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
           bodyText2: GoogleFonts.poppins(
               fontSize: 14,
               color: const Color(0xFF022B3A),
