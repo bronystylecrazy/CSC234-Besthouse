@@ -29,7 +29,7 @@ class _SearchState extends State<Search> {
 
   void _buildModal(BuildContext ctx) {
     showModalBottomSheet<dynamic>(
-        // isScrollControlled: true,
+        isScrollControlled: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
