@@ -62,7 +62,8 @@ export const CreateOffer = async (req: Request, body: OfferPatch) => {
 		try {
 			const new_house = await House.create({
 				name: body.name,
-				location: body.location,
+				address: body.address,
+				location: body.location, // number array [Long, Lat]
 				picture_url: body.picture_url,
 				price: body.price,
 				tags: body.tags,
@@ -119,7 +120,8 @@ export const UpdateOffer = async (
 				{
 					$set: {
 						name: body.name,
-						location: body.location,
+						address: body.address,
+						location: body.location, // number array [Long, Lat]
 						picture_url: body.picture_url,
 						price: body.price,
 						tags: body.tags,

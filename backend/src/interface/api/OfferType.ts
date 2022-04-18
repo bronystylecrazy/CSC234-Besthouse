@@ -1,10 +1,10 @@
 export interface OfferPatch {
 	name: "String";
 	picture_url: "String";
+	address: "String";
 	location: {
-		address: "String";
-		lat: "string";
-		long: "string";
+		type: "Point";
+		coordinates: [];
 	};
 	tags: ["String"];
 	type: "String";

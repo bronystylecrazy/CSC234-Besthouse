@@ -3,6 +3,7 @@ import User from "@/interface/models/User";
 import UserProfile from "@/interface/models/UserProfile";
 import House from "@/interface/models/House";
 import HouseDetail from "@/interface/models/HouseDetail";
+import { type } from "os";
 
 const validateEmail = function (email) {
 	var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -60,6 +61,7 @@ export const houseSchema = new Schema<House>({
 		required: [true, "Enter a house name."],
 	},
 	picture_url: String,
+	address: { type: String, required: true },
 	location: {
 		type: {
 			type: String, // Don't do `{ location: { type: String } }`

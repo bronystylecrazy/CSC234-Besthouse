@@ -1,8 +1,9 @@
 export default interface House {
 	name: string;
 	picture_url: string;
+	address: string;
 	location: {
-		type: string;
+		type: "Point";
 		coordinates: number[];
 	};
 	price: number;
