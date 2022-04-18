@@ -1,8 +1,5 @@
-require("dotenv").config();
 require("module-alias/register");
-
 /** Internal Modules */
-import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import jwt from "express-jwt";
@@ -15,8 +12,6 @@ import profileRoute from "./routes/profile";
 /** Misc */
 import config from "./config";
 
-// import { House, User } from "./database/models/schema";
-import { func } from "joi";
 import mongoose from "mongoose";
 import { User, House } from "./database/models";
 import favoriteRoute from "./routes/favorite";
@@ -28,7 +23,6 @@ import houseRoute from "./routes/house";
 const app = express();
 
 /** Express configurations */
-dotenv.config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -67,13 +61,13 @@ app.use("/user", userRoute);
 
 // for test
 app.get("/api", async (req, res) => {
-	var user1 = new User({
+	const user1 = new User({
 		email: "float@mail.com",
 		password: "12345678",
 		tel: "0891231234",
 		username: "kasemtan",
 	});
-	var house1 = new House({
+	const house1 = new House({
 		name: "Condo1",
 		picture_url:
 			"https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/ZFZlzPBXT8GEoefOiG62vz0oLFY7n2gkvbzGwcQsE0G.jpeg",
