@@ -25,6 +25,18 @@ class _SearchState extends State<Search> {
         coordinates: [-6.2108, 106.8451],
       ),
       address: 'Soi 45 Prachauthid Thungkru, Bangkok',
+      type: 'CONDOMINIUM',
+    ),
+    House(
+      id: "634gf3438",
+      name: "Heliconia House",
+      pictureUrl:
+          "https://www.immhotel.com/uploads/1/1/2/9/112964589/itc-main-slide-pic-05_orig.jpg",
+      price: 6000,
+      location: Location(
+        coordinates: [13.2108, 107.8451],
+      ),
+      address: 'KMUTT university Prachauthid Thungkru, Bangkok',
     ),
   ];
 
@@ -36,9 +48,16 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return HouseDetailCard(
-      house: houses[0],
-      showInfoHandler: _showInfo,
-    );
+    return houses.isNotEmpty
+        ? ListView.builder(
+            itemCount: houses.length,
+            itemBuilder: (BuildContext context, int index) {
+              return HouseDetailCard(
+                house: houses[index],
+                showInfoHandler: _showInfo,
+              );
+            },
+          )
+        : const Text('No houses found');
   }
 }
