@@ -1,10 +1,10 @@
 import { OfferPatch } from "@/interface/api/OfferType";
 import { responseHandler } from "@/services/Handler";
 import {
+	CreateOffer,
 	DeleteOffer,
 	GetOffer,
 	GetOfferInfo,
-	PostOffer,
 	UpdateOffer,
 } from "@/services/House";
 import express from "express";
@@ -24,7 +24,7 @@ offerRoute.get("/:id", async (req, res) => {
 
 offerRoute.post("/", async (req, res) => {
 	const body: OfferPatch = req.body;
-	return responseHandler(res, await PostOffer(req, body));
+	return responseHandler(res, await CreateOffer(req, body));
 });
 
 offerRoute.patch("/:id", async (req, res) => {

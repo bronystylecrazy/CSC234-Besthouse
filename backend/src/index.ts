@@ -16,7 +16,7 @@ import profileRoute from "./routes/profile";
 import config from "./config";
 
 import mongoose from "mongoose";
-import { User, House } from "./database/models";
+import { House } from "./database/models";
 import favoriteRoute from "./routes/favorite";
 import offerRoute from "./routes/offer";
 import userRoute from "./routes/user";
