@@ -1,19 +1,24 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:besthouse/screens/customer_profile.dart';
-import 'package:besthouse/screens/favourite.dart';
-import 'package:besthouse/screens/get_start.dart';
-import 'package:besthouse/screens/guide.dart';
-import 'package:besthouse/screens/home.dart';
-import 'package:besthouse/screens/house_detailed.dart';
-import 'package:besthouse/screens/offer_form.dart';
-import 'package:besthouse/screens/search.dart';
-import 'package:besthouse/screens/sign_in.dart';
-import 'package:besthouse/screens/sign_up.dart';
-import 'package:besthouse/services/dio.dart';
-import 'package:besthouse/services/provider.dart';
+// packages
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+// screens
+import './screens/customer_profile.dart';
+import './screens/favourite.dart';
+import './screens/get_start.dart';
+import './screens/guide.dart';
+import './screens/home.dart';
+import './screens/house_detailed.dart';
+import './screens/offer_form.dart';
+import './screens/search.dart';
+import './screens/sign_in.dart';
+import './screens/sign_up.dart';
+import './screens/splash.dart';
+
+// services
+import './services/dio.dart';
+import './services/provider.dart';
 
 void main() {
   runApp(
@@ -36,7 +41,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Best House',
       theme: ThemeData(
         primaryColor: Color(0xff24577A),
         textTheme: TextTheme(
@@ -58,11 +63,9 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.bold),
             subtitle1: GoogleFonts.poppins(fontSize: 14)),
       ),
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-
       // home: const SplashScreen(),
       routes: {
-        "/": (context) => MyHomePage(),
+        "/": (context) => const MyHomePage(),
         HouseDetailed.routeName: (context) => const HouseDetailed(),
         GetStart.routeName: (context) => const GetStart(),
         MyHomePage.routeName: (context) => const MyHomePage(),
@@ -71,43 +74,6 @@ class MyApp extends StatelessWidget {
         Guide.routeName: (context) => const Guide(),
         OfferForm.routeName: (context) => const OfferForm(),
       },
-    );
-  }
-}
-
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSplashScreen(
-      duration: 3000,
-      splash: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Positioned(
-              child: Image.asset("assets/logo.png", scale: 0.8),
-              top: 50,
-              left: 18,
-            ),
-            Text('BestHouse',
-                style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF24577A))),
-            Text('Welcome to BestHouse',
-                style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF24577A))),
-          ],
-        ),
-      ),
-      nextScreen: GetStart(),
-      splashTransition: SplashTransition.fadeTransition,
     );
   }
 }
