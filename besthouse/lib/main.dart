@@ -1,4 +1,3 @@
-
 // packages
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +45,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Best House',
       theme: ThemeData(
-        primaryColor: Color(0xff24577A),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: const Color(0xFF24577A),
+          secondary: const Color.fromARGB(255, 84, 156, 160),
+        ),
         textTheme: TextTheme(
             headline2: GoogleFonts.poppins(
               fontSize: 20,
@@ -58,14 +60,15 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w600,
               color: const Color(0xFF022B3A),
             ),
-            bodyText1:
-                GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
+            bodyText1: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
             bodyText2: GoogleFonts.poppins(
-                fontSize: 14,
-                color: const Color(0xFF022B3A),
-                fontWeight: FontWeight.bold),
+              fontSize: 14,
+              color: const Color(0xFF022B3A),
+              fontWeight: FontWeight.w600,
+            ),
             subtitle1: GoogleFonts.poppins(fontSize: 14)),
       ),
+
       // home: const SplashScreen(),
       routes: {
         "/": (context) => const MyHomePage(),
@@ -116,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.white,
         title: Row(
           children: [
-            Image.asset("assets/logo.png", scale: 1),
+            Image.asset("assets/logo.png", scale: 1.2),
             const SizedBox(
               width: 8,
             ),
@@ -128,6 +131,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         centerTitle: false,
+        actions: <Widget>[
+          IconButton(
+            splashRadius: 20.0,
+            icon: const Icon(Icons.menu_book),
+            color: Theme.of(context).colorScheme.secondary,
+            tooltip: 'Go to guide page',
+            onPressed: () => Navigator.pushNamed(context, Guide.routeName),
+          ),
+        ],
       ),
       body: screen.elementAt(_selectedIndex),
       bottomNavigationBar: Container(
