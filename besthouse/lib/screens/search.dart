@@ -131,9 +131,10 @@ class _SearchState extends State<Search> {
                   itemCount: selectedFacilities.length + 1,
                   itemBuilder: (BuildContext context, int index) {
                     return Tag(
-                        title: index == 0
-                            ? radioList.where((e) => e.type == type).first.name
-                            : selectedFacilities[index - 1]);
+                      title: index == 0
+                          ? radioList.firstWhere((e) => e.type == type).name
+                          : selectedFacilities[index - 1],
+                    );
                   },
                 ),
               ),
