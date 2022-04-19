@@ -1,5 +1,6 @@
-import 'package:besthouse/screens/house_detailed.dart';
-import 'package:besthouse/widgets/common/house_detail_card.dart';
+import '../screens/house_detailed.dart';
+import '../widgets/common/house_detail_card.dart';
+import '../widgets/search/filter_sheet.dart';
 import 'package:flutter/material.dart';
 
 // models
@@ -48,16 +49,38 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return houses.isNotEmpty
-        ? ListView.builder(
-            itemCount: houses.length,
-            itemBuilder: (BuildContext context, int index) {
-              return HouseDetailCard(
-                house: houses[index],
-                showInfoHandler: _showInfo,
-              );
-            },
-          )
-        : const Text('No houses found');
+    return Column(
+      children: [
+        ElevatedButton(
+          child: Text("test modal"),
+          onPressed: () {
+            _buildModal(context);
+          },
+        ),
+        houses.isNotEmpty
+            ? ListView.builder(
+                itemCount: houses.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return HouseDetailCard(
+                    house: houses[index],
+                    showInfoHandler: _showInfo,
+                  );
+                },
+              )
+            : const Text('No houses found'),
+      ],
+    );
+  }
+
+  void _buildModal(BuildContext ctx) {
+    showModalBottomSheet<dynamic>(
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        context: ctx,
+        builder: (_) {
+          return const FilterSheet();
+        });
   }
 }

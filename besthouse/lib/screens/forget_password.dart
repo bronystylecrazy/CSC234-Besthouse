@@ -1,20 +1,18 @@
-import 'package:besthouse/screens/forget_password.dart';
-import 'package:besthouse/screens/home.dart';
-import 'package:flutter/gestures.dart';
-import 'package:besthouse/screens/sign_up.dart';
+import 'package:besthouse/screens/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:besthouse/widgets/common/custom_textfield.dart';
 import 'package:besthouse/widgets/common/button.dart';
+import 'package:flutter/gestures.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
-  static const routeName = "/sign-in";
+class ForgetPassword extends StatefulWidget {
+  const ForgetPassword({Key? key}) : super(key: key);
+  static const routeName = "/forget-password";
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<ForgetPassword> createState() => _ForgetPasswordState();
 }
 
-class _SignInState extends State<SignIn> {
+class _ForgetPasswordState extends State<ForgetPassword> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   @override
@@ -37,15 +35,16 @@ class _SignInState extends State<SignIn> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 30),
                     Text(
-                      "Welcome",
+                      "Change password",
                       style: Theme.of(context).textTheme.headline1,
                     ),
                     Text(
-                      "Best house",
+                      "BestHouse",
                       style: Theme.of(context).textTheme.headline2,
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 30),
                     CustomTextField(
                         context: context,
                         controller: _usernameController,
@@ -57,25 +56,16 @@ class _SignInState extends State<SignIn> {
                     CustomTextField(
                         context: context,
                         controller: _passwordController,
-                        label: "Password",
+                        label: "Enter new password",
                         isObscure: true),
-                    Container(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Forget password ?',
-                            style: Theme.of(context).textTheme.caption,
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushNamed(
-                                    context, ForgetPassword.routeName);
-                              },
-                          ),
-                        ),
-                      ),
+                    const SizedBox(
+                      height: 20,
                     ),
+                    CustomTextField(
+                        context: context,
+                        controller: _passwordController,
+                        label: "Enter new password",
+                        isObscure: true),
                     const SizedBox(
                       height: 20,
                     ),
@@ -90,26 +80,21 @@ class _SignInState extends State<SignIn> {
                                 borderRadius: BorderRadius.circular(18.0),
                               ),
                             ),
-                            child: Button(
-                                text: "Start your journey",
-                                clickHandler: () {
-                                  Navigator.pushNamed(context, Home.routeName);
-                                }),
+                            child: Button(text: "Comfirm", clickHandler: () {}),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(16),
                             child: RichText(
                               text: TextSpan(
-                                text: 'or Sign Up here',
-                                style: const TextStyle(
-                                  color: Color(0xFF022B3A),
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pushNamed(
-                                        context, SignUp.routeName);
-                                  },
-                              ),
+                                  text: 'Back to sign-in page',
+                                  style: const TextStyle(
+                                    color: Color(0xFF022B3A),
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.pushNamed(
+                                          context, SignIn.routeName);
+                                    }),
                             ),
                           ),
                         ],

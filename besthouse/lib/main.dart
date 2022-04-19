@@ -1,4 +1,5 @@
 // packages
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ import './screens/search.dart';
 import './screens/sign_in.dart';
 import './screens/sign_up.dart';
 import './screens/splash.dart';
+import './screens/forget_password.dart';
 
 // services
 import './services/dio.dart';
@@ -48,21 +50,25 @@ class MyApp extends StatelessWidget {
           secondary: const Color.fromARGB(255, 84, 156, 160),
         ),
         textTheme: TextTheme(
-          headline2: GoogleFonts.poppins(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF24577A),
-          ),
-          headline1: GoogleFonts.poppins(
-            fontSize: 38,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF022B3A),
-          ),
-          bodyText1: GoogleFonts.poppins(fontSize: 16),
-          bodyText2: GoogleFonts.poppins(
-              fontSize: 14, color: const Color(0xFF022B3A), fontWeight: FontWeight.w600),
-        ),
+            headline2: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF24577A),
+            ),
+            headline1: GoogleFonts.poppins(
+              fontSize: 38,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF022B3A),
+            ),
+            bodyText1: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
+            bodyText2: GoogleFonts.poppins(
+              fontSize: 14,
+              color: const Color(0xFF022B3A),
+              fontWeight: FontWeight.w600,
+            ),
+            subtitle1: GoogleFonts.poppins(fontSize: 14)),
       ),
+
       // home: const SplashScreen(),
       routes: {
         "/": (context) => const MyHomePage(),
@@ -73,6 +79,7 @@ class MyApp extends StatelessWidget {
         SignUp.routeName: (context) => const SignUp(),
         Guide.routeName: (context) => const Guide(),
         OfferForm.routeName: (context) => const OfferForm(),
+        ForgetPassword.routeName: (context) => const ForgetPassword()
       },
     );
   }
