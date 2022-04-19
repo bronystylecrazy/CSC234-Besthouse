@@ -7,4 +7,4 @@ class AccommodationObject {
   AccommodationObject(this.name, this.type);
 }
 
-enum Accommodation { house, condo, hotel, shophouse }
+enum Accommodation { all, house, condo, hotel }

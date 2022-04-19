@@ -5,33 +5,30 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FilterSheet extends StatefulWidget {
-  const FilterSheet({Key? key}) : super(key: key);
+  FilterSheet({
+    Key? key,
+    required this.slideHandler,
+    required this.radioHandler,
+    required this.checkBoxHandler,
+    required this.currentRangeValues,
+    required this.radioList,
+    required this.checkboxList,
+    required this.type,
+  }) : super(key: key);
+
+  RangeValues currentRangeValues;
+  Accommodation? type;
+  List<AccommodationObject> radioList;
+  List<Facilities> checkboxList;
+  final Function slideHandler;
+  final Function radioHandler;
+  final Function checkBoxHandler;
+
   @override
   State<FilterSheet> createState() => _FilterSheetState();
 }
 
 class _FilterSheetState extends State<FilterSheet> {
-  RangeValues _currentRangeValues = const RangeValues(0, 20000);
-
-  var radioList = [
-    AccommodationObject("House", Accommodation.house),
-    AccommodationObject("Condo", Accommodation.condo),
-    AccommodationObject("Hotel", Accommodation.hotel),
-    AccommodationObject("Shop", Accommodation.shophouse),
-  ];
-  Accommodation? type = Accommodation.house;
-
-  var checkboxList = [
-    Facilities("Wifi", false),
-    Facilities("Parking", false),
-    Facilities("Aircondition", false),
-    Facilities("Water heater", false),
-    Facilities("Fitness", false),
-    Facilities("Swimming pool", false),
-    Facilities("Fan", false),
-    Facilities("Furnishes", false),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -44,8 +41,7 @@ class _FilterSheetState extends State<FilterSheet> {
               children: [
                 Text(
                   "Filters",
-                  style: GoogleFonts.poppins(
-                      fontSize: 18, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 IconButton(
                     onPressed: () {
@@ -65,22 +61,22 @@ class _FilterSheetState extends State<FilterSheet> {
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                     Text(
-                      "${_currentRangeValues.start.round()} - ${_currentRangeValues.end.round()} ฿",
+                      "${widget.currentRangeValues.start.round()} - ${widget.currentRangeValues.end.round()} ฿",
                       style: Theme.of(context).textTheme.bodyText1,
                     )
                   ],
                 ),
                 RangeSlider(
-                  activeColor: const Color(0xff24577A),
-                  inactiveColor: const Color(0xffC1C1C1),
-                  max: 20000,
-                  values: _currentRangeValues,
-                  onChanged: (RangeValues values) {
-                    setState(() {
-                      _currentRangeValues = values;
-                    });
-                  },
-                )
+                    activeColor: const Color(0xff24577A),
+                    inactiveColor: const Color(0xffC1C1C1),
+                    max: 20000,
+                    values: widget.currentRangeValues,
+                    onChanged: (values) {
+                      widget.slideHandler(values);
+                      setState(() {
+                        widget.currentRangeValues = values;
+                      });
+                    })
               ]),
             ),
             _buildContainer(
@@ -103,25 +99,22 @@ class _FilterSheetState extends State<FilterSheet> {
                         mainAxisSpacing: 4,
                         crossAxisCount: 2,
                         // Generate 100 widgets that display their index in the List.
-                        children: radioList
+                        children: widget.radioList
                             .map((e) => Row(
                                   children: [
                                     Radio<Accommodation>(
-                                      activeColor: const Color(0xff24577A),
-                                      value: e.type,
-                                      groupValue: type,
-                                      onChanged: (Accommodation? value) {
-                                        setState(
-                                          () {
-                                            type = value;
-                                          },
-                                        );
-                                      },
-                                    ),
+                                        activeColor: const Color(0xff24577A),
+                                        value: e.type,
+                                        groupValue: widget.type,
+                                        onChanged: (value) {
+                                          widget.radioHandler(value);
+                                          setState(() {
+                                            widget.type = value;
+                                          });
+                                        }),
                                     Text(
                                       e.name,
-                                      style:
-                                          Theme.of(context).textTheme.subtitle1,
+                                      style: Theme.of(context).textTheme.subtitle1,
                                     )
                                   ],
                                 ))
@@ -150,21 +143,19 @@ class _FilterSheetState extends State<FilterSheet> {
                         mainAxisSpacing: 4,
                         crossAxisCount: 2,
                         // Generate 100 widgets that display their index in the List.
-                        children: checkboxList
+                        children: widget.checkboxList
                             .map((e) => Row(
                                   children: [
                                     Checkbox(
                                         activeColor: Color(0xff24577A),
                                         value: e.checked,
                                         onChanged: (value) {
-                                          setState(() {
-                                            e.checked = value!;
-                                          });
+                                          widget.checkBoxHandler(value, e);
+                                          setState(() {});
                                         }),
                                     Text(
                                       e.name,
-                                      style:
-                                          Theme.of(context).textTheme.subtitle1,
+                                      style: Theme.of(context).textTheme.subtitle1,
                                     ),
                                   ],
                                 ))
