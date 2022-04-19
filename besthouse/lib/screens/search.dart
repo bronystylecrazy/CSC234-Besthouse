@@ -1,3 +1,4 @@
+import 'package:besthouse/widgets/common/tag.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/house_detailed.dart';
@@ -89,6 +90,12 @@ class _SearchState extends State<Search> {
     Facilities("Furnishes", false),
   ];
 
+  List<String> get selectedFacilities {
+    var list = checkboxList.where((element) => element.checked);
+    var result = list.map((e) => e.name);
+    return result.toList();
+  }
+
   void slideHandler(RangeValues values) {
     setState(() {
       currentRangeValues = values;
@@ -109,50 +116,67 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Ink(
-              width: 40,
-              height: 40,
-              decoration: ShapeDecoration(
-                color: Colors.grey.withOpacity(0.2),
-                shape: const CircleBorder(),
-              ),
-              child: IconButton(
-                splashRadius: 20,
-                iconSize: 20,
-                icon: Icon(Icons.filter_list, color: Theme.of(context).colorScheme.secondary),
-                onPressed: () {
-                  _buildModal(context);
-                },
-                tooltip: 'Filter',
-              ),
-            ),
-          ],
-        ),
-        const Divider(
-          indent: 12,
-          endIndent: 12,
-          color: Colors.grey,
-        ),
-        houses.isNotEmpty
-            ? SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 60,
+                height: 40,
                 child: ListView.builder(
-                  itemCount: houses.length,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: selectedFacilities.length + 1,
                   itemBuilder: (BuildContext context, int index) {
-                    return HouseDetailCard(
-                      house: houses[index],
-                      showInfoHandler: _showInfo,
-                    );
+                    return Tag(
+                        title: index == 0
+                            ? radioList.where((e) => e.type == type).first.name
+                            : selectedFacilities[index - 1]);
                   },
                 ),
-              )
-            : const Text('No houses found'),
-      ],
+              ),
+              Ink(
+                width: 40,
+                height: 40,
+                decoration: ShapeDecoration(
+                  color: Colors.grey.withOpacity(0.2),
+                  shape: const CircleBorder(),
+                ),
+                child: IconButton(
+                  splashRadius: 20,
+                  iconSize: 20,
+                  icon: Icon(Icons.filter_list, color: Theme.of(context).colorScheme.secondary),
+                  onPressed: () {
+                    _buildModal(context);
+                  },
+                  tooltip: 'Filter',
+                ),
+              ),
+            ],
+          ),
+          const Divider(
+            indent: 12,
+            endIndent: 12,
+            color: Colors.grey,
+          ),
+          houses.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: ListView.builder(
+                    itemCount: houses.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return HouseDetailCard(
+                        house: houses[index],
+                        showInfoHandler: _showInfo,
+                      );
+                    },
+                  ),
+                )
+              : const Text('No houses found'),
+        ],
+      ),
     );
   }
 
