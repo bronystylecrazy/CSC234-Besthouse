@@ -1,5 +1,3 @@
-import 'package:besthouse/widgets/search/filter_sheet.dart';
-
 class AccommodationObject {
   final String name;
   final Accommodation type;

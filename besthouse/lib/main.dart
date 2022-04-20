@@ -1,10 +1,12 @@
 // packages
-import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // screens
+import '../screens/maptest.dart';
 import './screens/customer_profile.dart';
 import './screens/favourite.dart';
 import './screens/get_start.dart';
@@ -23,6 +25,10 @@ import './services/dio.dart';
 import './services/provider.dart';
 
 void main() {
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+  }
+
   runApp(
     /// Providers are above [MyApp] instead of inside it, so that tests
     /// can use [MyApp] while mocking the providers
@@ -33,6 +39,7 @@ void main() {
       child: const MyApp(),
     ),
   );
+
   DioInstance.init();
 }
 
@@ -79,7 +86,8 @@ class MyApp extends StatelessWidget {
         SignUp.routeName: (context) => const SignUp(),
         Guide.routeName: (context) => const Guide(),
         OfferForm.routeName: (context) => const OfferForm(),
-        ForgetPassword.routeName: (context) => const ForgetPassword()
+        ForgetPassword.routeName: (context) => const ForgetPassword(),
+        "/map": (context) => MapSample()
       },
     );
   }

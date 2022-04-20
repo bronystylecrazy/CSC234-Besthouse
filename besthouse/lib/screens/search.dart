@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../screens/house_detailed.dart';
 
 // widgets
+import '../services/location_api.dart';
+import '../widgets/search/map.dart';
 import '../widgets/common/house_detail_card.dart';
 import '../widgets/search/filter_sheet.dart';
 
@@ -26,7 +28,7 @@ class _SearchState extends State<Search> {
       id: "634gf3438",
       name: "Cosmo Home",
       pictureUrl:
-          "https://assets.brandinside.asia/uploads/2021/03/shutterstock_756956185-scaled.jpg",
+          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
       price: 4000,
       location: Location(
         coordinates: [-6.2108, 106.8451],
@@ -38,7 +40,7 @@ class _SearchState extends State<Search> {
       id: "634gf3438",
       name: "Heliconia House",
       pictureUrl:
-          "https://www.immhotel.com/uploads/1/1/2/9/112964589/itc-main-slide-pic-05_orig.jpg",
+          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
       price: 6000,
       location: Location(
         coordinates: [13.2108, 107.8451],
@@ -49,7 +51,7 @@ class _SearchState extends State<Search> {
       id: "634gf3438",
       name: "Cosmo Home",
       pictureUrl:
-          "https://assets.brandinside.asia/uploads/2021/03/shutterstock_756956185-scaled.jpg",
+          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
       price: 4000,
       location: Location(
         coordinates: [-6.2108, 106.8451],
@@ -61,7 +63,7 @@ class _SearchState extends State<Search> {
       id: "634gf3438",
       name: "Heliconia House",
       pictureUrl:
-          "https://www.immhotel.com/uploads/1/1/2/9/112964589/itc-main-slide-pic-05_orig.jpg",
+          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
       price: 6000,
       location: Location(
         coordinates: [13.2108, 107.8451],
@@ -114,53 +116,73 @@ class _SearchState extends State<Search> {
     });
   }
 
+  List<double?> get currentLocation {
+    List<double?> data = [];
+    LocationApi.getLocation().then((value) {
+      data = value;
+    });
+    return data;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width - 60,
-                height: 40,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: selectedFacilities.length + 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Tag(
-                      title: index == 0
-                          ? radioList.firstWhere((e) => e.type == type).name
-                          : selectedFacilities[index - 1],
-                    );
-                  },
+          // ElevatedButton(
+          //     onPressed: () {
+          //       Navigator.pushNamed(context, "/map");
+          //     },
+          //     child: Text("Hello")),
+          Map(locationApi: [13.3564, 90.64956]),
+          Padding(
+            padding: const EdgeInsets.only(top: 9.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 60,
+                  height: 40,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: selectedFacilities.length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Tag(
+                        title: index == 0
+                            ? radioList.firstWhere((e) => e.type == type).name
+                            : selectedFacilities[index - 1],
+                      );
+                    },
+                  ),
                 ),
-              ),
-              Ink(
-                width: 40,
-                height: 40,
-                decoration: ShapeDecoration(
-                  color: Colors.grey.withOpacity(0.2),
-                  shape: const CircleBorder(),
+                Ink(
+                  width: 40,
+                  height: 40,
+                  decoration: ShapeDecoration(
+                    color: Colors.grey.withOpacity(0.2),
+                    shape: const CircleBorder(),
+                  ),
+                  child: IconButton(
+                    splashRadius: 20,
+                    iconSize: 20,
+                    icon: Icon(Icons.filter_list, color: Theme.of(context).colorScheme.secondary),
+                    onPressed: () {
+                      _buildModal(context);
+                    },
+                    tooltip: 'Filter',
+                  ),
                 ),
-                child: IconButton(
-                  splashRadius: 20,
-                  iconSize: 20,
-                  icon: Icon(Icons.filter_list, color: Theme.of(context).colorScheme.secondary),
-                  onPressed: () {
-                    _buildModal(context);
-                  },
-                  tooltip: 'Filter',
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const Divider(
-            indent: 12,
-            endIndent: 12,
-            color: Colors.grey,
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Divider(
+              indent: 12,
+              endIndent: 12,
+              color: Colors.grey,
+            ),
           ),
           houses.isNotEmpty
               ? SizedBox(
