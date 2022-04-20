@@ -4,7 +4,7 @@ import { SearchPost } from "@/interface/api/Search";
 import { ResultHandler } from "@/interface/handler";
 import { infoResponse, genericError } from "./Handler";
 
-export const SearchHouse = async (data: SearchPost): ResultHandler => {
+export const searchHouse = async (data: SearchPost): ResultHandler => {
 	try {
 		let condition = { status: true };
 		if (data.pricelow) {
@@ -15,6 +15,15 @@ export const SearchHouse = async (data: SearchPost): ResultHandler => {
 			//@ts-ignore
 			condition.price = { ...condition.price, $lte: data.pricehigh };
 		}
+		if (data.type) {
+			//@ts-ignore
+			condition.type = data.type;
+		}
+		if (data.facilities) {
+			//@ts-ignore
+			condition.facilities = data.facilities;
+		}
+
 		if (data.lat && data.long) {
 			//@ts-ignore
 			condition.location = {
@@ -26,14 +35,9 @@ export const SearchHouse = async (data: SearchPost): ResultHandler => {
 					$maxDistance: 5000,
 				},
 			};
-		}
-		if (data.type) {
+		} else if (data.address) {
 			//@ts-ignore
-			condition.type = data.type;
-		}
-		if (data.facilities) {
-			//@ts-ignore
-			condition.facilities = data.facilities;
+			condition.address = { $contains: data.address };
 		}
 
 		// Get houses from provied condition
