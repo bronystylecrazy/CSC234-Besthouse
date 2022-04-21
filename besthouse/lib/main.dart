@@ -1,4 +1,5 @@
 // packages
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ import './screens/search.dart';
 import './screens/sign_in.dart';
 import './screens/sign_up.dart';
 import './screens/splash.dart';
+import './screens/forget_password.dart';
 
 // services
 import './services/dio.dart';
@@ -43,7 +45,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Best House',
       theme: ThemeData(
-        primaryColor: Color(0xff24577A),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: const Color(0xFF24577A),
+          secondary: const Color.fromARGB(255, 84, 156, 160),
+        ),
         textTheme: TextTheme(
             headline3: GoogleFonts.poppins(
               fontSize: 24,
@@ -65,11 +70,13 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: Color(0xff0E2B39)),
             bodyText2: GoogleFonts.poppins(
-                fontSize: 14,
-                color: const Color(0xFF022B3A),
-                fontWeight: FontWeight.bold),
+              fontSize: 14,
+              color: const Color(0xFF022B3A),
+              fontWeight: FontWeight.w600,
+            ),
             subtitle1: GoogleFonts.poppins(fontSize: 14)),
       ),
+
       // home: const SplashScreen(),
       routes: {
         "/": (context) => const MyHomePage(),
@@ -80,6 +87,7 @@ class MyApp extends StatelessWidget {
         SignUp.routeName: (context) => const SignUp(),
         Guide.routeName: (context) => const Guide(),
         OfferForm.routeName: (context) => const OfferForm(),
+        ForgetPassword.routeName: (context) => const ForgetPassword()
       },
     );
   }
@@ -119,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Color(0xffFFFFFF),
         title: Row(
           children: [
-            Image.asset("assets/logo.png", scale: 1),
+            Image.asset("assets/logo.png", scale: 1.2),
             const SizedBox(
               width: 8,
             ),
