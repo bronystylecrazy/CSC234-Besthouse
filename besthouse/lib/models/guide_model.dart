@@ -1,8 +1,9 @@
 class GuideModel {
   final String name;
   final String description;
+  bool isExpanded = false;
 
-  const GuideModel(this.name, this.description);
+  GuideModel(this.name, this.description);
 
   GuideModel.fromJson(Map<String, dynamic> json)
       : name = json["name"],
