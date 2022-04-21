@@ -1,5 +1,6 @@
 import 'package:besthouse/widgets/common/tag.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../screens/house_detailed.dart';
 
@@ -15,9 +16,9 @@ import '../models/facilities.dart';
 import '../models/house.dart';
 
 class Search extends StatefulWidget {
-  const Search({Key? key}) : super(key: key);
+  Search({Key? key, required this.initposition}) : super(key: key);
   static const routeName = "/search";
-
+  final CameraPosition initposition;
   @override
   State<Search> createState() => _SearchState();
 }
@@ -135,7 +136,7 @@ class _SearchState extends State<Search> {
           //       Navigator.pushNamed(context, "/map");
           //     },
           //     child: Text("Hello")),
-          Map(locationApi: [13.3564, 90.64956]),
+          Map(initPosition: widget.initposition),
           Padding(
             padding: const EdgeInsets.only(top: 9.0),
             child: Row(
@@ -186,7 +187,7 @@ class _SearchState extends State<Search> {
           ),
           houses.isNotEmpty
               ? SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.5,
+                  height: MediaQuery.of(context).size.height - 430,
                   child: ListView.builder(
                     itemCount: houses.length,
                     itemBuilder: (BuildContext context, int index) {

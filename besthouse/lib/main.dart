@@ -1,4 +1,5 @@
 // packages
+import 'package:besthouse/services/location_api.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // screens
-import '../screens/maptest.dart';
 import './screens/customer_profile.dart';
 import './screens/favourite.dart';
 import './screens/get_start.dart';
@@ -87,7 +87,6 @@ class MyApp extends StatelessWidget {
         Guide.routeName: (context) => const Guide(),
         OfferForm.routeName: (context) => const OfferForm(),
         ForgetPassword.routeName: (context) => const ForgetPassword(),
-        "/map": (context) => MapSample()
       },
     );
   }
@@ -105,6 +104,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  CameraPosition _initposition = const CameraPosition(target: LatLng(100, 200));
 
   void _onItemTapped(int index) {
     setState(() {
@@ -112,15 +112,31 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  static List<Widget> screen = <Widget>[
-    const Home(),
-    const Search(),
-    const Favourite(),
-    const CustomerProfile()
-  ];
+  @override
+  void initState() {
+    LocationApi.getLocation().then((value) {
+      setState(() {
+        _initposition = CameraPosition(
+          target: LatLng(value[1] as double, value[0] as double),
+          zoom: 16,
+        );
+        print(_initposition.target.latitude);
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> screen = <Widget>[
+      const Home(),
+      Search(
+        initposition: _initposition,
+      ),
+      const Favourite(),
+      const CustomerProfile()
+    ];
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

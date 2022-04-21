@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../services/location_api.dart';
+
 class Map extends StatefulWidget {
-  final List<double?> locationApi;
-  const Map({Key? key, required this.locationApi}) : super(key: key);
+  final CameraPosition initPosition;
+  const Map({Key? key, required this.initPosition}) : super(key: key);
 
   @override
   State<Map> createState() => _MapState();
@@ -13,43 +15,49 @@ class Map extends StatefulWidget {
 
 class _MapState extends State<Map> {
   final Completer<GoogleMapController> _controller = Completer();
-  static const CameraPosition _kLake = CameraPosition(
-    bearing: 192.8334901395799,
-    target: LatLng(37.43296265331129, -122.08832357078792),
-    tilt: 59.440717697143555,
-    zoom: 19.151926040649414,
-  );
 
   @override
   Widget build(BuildContext context) {
-    // var promiseLocation = LocationApi.getLocation();
+    // LocationApi.getLocation().then((value) {
+    //   print(value[0]);
+    //   setState(() {
+    //     _initposition = CameraPosition(
+    //       target: LatLng(value[1], value[0]),
+    //       zoom: 16,
+    //     );
+    //   });
+    // });
     // promiseLocation.then((value) {
     //   widget.locationApi = value;
     // });
 
-    CameraPosition _initposition = CameraPosition(
-      target: LatLng(widget.locationApi[1] ?? 0, widget.locationApi[0] ?? 0),
-      zoom: 14,
-    );
-
     return Container(
-      height: 150,
+      height: 200,
       width: MediaQuery.of(context).size.width,
       child: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _initposition,
+        mapType: MapType.normal,
+        initialCameraPosition: widget.initPosition,
+        buildingsEnabled: true,
+        trafficEnabled: true,
+        markers: {
+          Marker(
+            markerId: MarkerId('1'),
+            position:
+                LatLng(widget.initPosition.target.latitude, widget.initPosition.target.longitude),
+            infoWindow: InfoWindow(
+              title: 'Hello',
+              snippet: 'Hello',
+            ),
+          ),
+        },
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
         onTap: (value) {
           print(value);
+          setState(() {});
         },
       ),
     );
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }

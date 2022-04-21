@@ -17,7 +17,7 @@ class HouseDetailCard extends StatelessWidget {
     final BorderRadius borderRadius = BorderRadius.circular(14);
     final TextStyle detailStyle = GoogleFonts.poppins(
       color: Colors.white,
-      fontSize: 15,
+      fontSize: 13,
       fontWeight: FontWeight.normal,
     );
 
@@ -34,14 +34,14 @@ class HouseDetailCard extends StatelessWidget {
               child: Image.network(
                 house.pictureUrl,
                 fit: BoxFit.cover,
-                height: 150,
+                height: 140,
                 width: double.infinity,
               ),
             ),
             Container(
               padding: const EdgeInsets.all(8.0),
               width: double.maxFinite,
-              height: 150,
+              height: 140,
               decoration: BoxDecoration(
                 borderRadius: borderRadius,
                 gradient: LinearGradient(
@@ -72,7 +72,7 @@ class HouseDetailCard extends StatelessWidget {
                           overflow: TextOverflow.fade,
                           style: GoogleFonts.poppins(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 13,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -85,14 +85,14 @@ class HouseDetailCard extends StatelessWidget {
                               'more info',
                               style: GoogleFonts.poppins(
                                 color: const Color.fromARGB(255, 233, 250, 252),
-                                fontSize: 14,
+                                fontSize: 12,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
                             const Icon(
                               Icons.arrow_forward_ios,
                               color: Color.fromARGB(255, 233, 250, 252),
-                              size: 14,
+                              size: 12,
                             )
                           ],
                         ),
