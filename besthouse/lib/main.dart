@@ -50,6 +50,11 @@ class MyApp extends StatelessWidget {
           secondary: const Color.fromARGB(255, 84, 156, 160),
         ),
         textTheme: TextTheme(
+            headline3: GoogleFonts.poppins(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF24577A),
+            ),
             headline2: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.w600,
@@ -60,7 +65,10 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w600,
               color: const Color(0xFF022B3A),
             ),
-            bodyText1: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
+            bodyText1: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Color(0xff0E2B39)),
             bodyText2: GoogleFonts.poppins(
               fontSize: 14,
               color: const Color(0xFF022B3A),
@@ -116,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xffFFFFFF),
         title: Row(
           children: [
             Image.asset("assets/logo.png", scale: 1.2),
@@ -137,7 +145,8 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.menu_book),
             color: Theme.of(context).colorScheme.secondary,
             tooltip: 'Go to guide page',
-            onPressed: () => Navigator.pushNamed(context, Guide.routeName),
+            onPressed: () => Navigator.pushNamed(context, Guide.routeName,
+                arguments: {"type": "customer"}),
           ),
         ],
       ),
