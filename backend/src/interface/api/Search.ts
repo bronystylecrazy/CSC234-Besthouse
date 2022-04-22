@@ -5,6 +5,7 @@ export interface SearchPost {
 	pricehigh?: number;
 	type?: HouseType;
 	facilities?: string[];
+	address?: string;
 	lat?: number;
 	long?: number;
 }

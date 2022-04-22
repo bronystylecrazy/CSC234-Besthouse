@@ -1,6 +1,6 @@
 import express from "express";
 import { SearchPost } from "@/interface/api/Search";
-import { SearchHouse } from "@/services/Search";
+import { searchHouse } from "@/services/Search";
 import { genericError, responseHandler } from "@/services/Handler";
 import { Islogin } from "@/services/Utils";
 // eslint-disable-next-line new-cap
@@ -11,7 +11,7 @@ houseRoute.post("/search", async (req, res) => {
 		return responseHandler(res, await genericError("Unauthorized", 403));
 
 	const data: SearchPost = req.body;
-	return responseHandler(res, await SearchHouse(data));
+	return responseHandler(res, await searchHouse(data));
 });
 
 // feature and nearby house are the same api
