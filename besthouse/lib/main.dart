@@ -1,4 +1,5 @@
 // packages
+import 'package:besthouse/screens/google_location.dart';
 import 'package:besthouse/services/location_api.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -73,9 +74,7 @@ class MyApp extends StatelessWidget {
               color: const Color(0xFF022B3A),
             ),
             bodyText1: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Color(0xff0E2B39)),
+                fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff0E2B39)),
             bodyText2: GoogleFonts.poppins(
               fontSize: 14,
               color: const Color(0xFF022B3A),
@@ -95,6 +94,7 @@ class MyApp extends StatelessWidget {
         Guide.routeName: (context) => const Guide(),
         OfferForm.routeName: (context) => const OfferForm(),
         ForgetPassword.routeName: (context) => const ForgetPassword(),
+        GoogleLocation.routeName: (context) => const GoogleLocation(),
       },
     );
   }
@@ -169,8 +169,8 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.menu_book),
             color: Theme.of(context).colorScheme.secondary,
             tooltip: 'Go to guide page',
-            onPressed: () => Navigator.pushNamed(context, Guide.routeName,
-                arguments: {"type": "customer"}),
+            onPressed: () =>
+                Navigator.pushNamed(context, Guide.routeName, arguments: {"type": "customer"}),
           ),
         ],
       ),

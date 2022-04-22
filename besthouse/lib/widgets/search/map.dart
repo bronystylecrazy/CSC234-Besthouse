@@ -55,6 +55,7 @@ class _MapState extends State<Map> {
         },
         onTap: (value) {
           print(value);
+          Navigator.pushNamed(context, '/google_location');
           setState(() {});
         },
       ),

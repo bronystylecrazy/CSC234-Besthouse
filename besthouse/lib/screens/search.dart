@@ -1,11 +1,11 @@
 import 'package:besthouse/widgets/common/tag.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../screens/house_detailed.dart';
 
 // widgets
-import '../services/location_api.dart';
 import '../widgets/search/map.dart';
 import '../widgets/common/house_detail_card.dart';
 import '../widgets/search/filter_sheet.dart';
@@ -16,7 +16,7 @@ import '../models/facilities.dart';
 import '../models/house.dart';
 
 class Search extends StatefulWidget {
-  Search({Key? key, required this.initposition}) : super(key: key);
+  const Search({Key? key, required this.initposition}) : super(key: key);
   static const routeName = "/search";
   final CameraPosition initposition;
   @override
@@ -117,91 +117,84 @@ class _SearchState extends State<Search> {
     });
   }
 
-  List<double?> get currentLocation {
-    List<double?> data = [];
-    LocationApi.getLocation().then((value) {
-      data = value;
-    });
-    return data;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Column(
-        children: [
-          // ElevatedButton(
-          //     onPressed: () {
-          //       Navigator.pushNamed(context, "/map");
-          //     },
-          //     child: Text("Hello")),
-          Map(initPosition: widget.initposition),
-          Padding(
-            padding: const EdgeInsets.only(top: 9.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return widget.initposition.target.latitude == 100
+        ? const SpinKitRing(
+            color: Color(0xFF24577A),
+            size: 50.0,
+          )
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
               children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 60,
-                  height: 40,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: selectedFacilities.length + 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Tag(
-                        title: index == 0
-                            ? radioList.firstWhere((e) => e.type == type).name
-                            : selectedFacilities[index - 1],
-                      );
-                    },
+                Map(initPosition: widget.initposition),
+                Padding(
+                  padding: const EdgeInsets.only(top: 9.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width - 60,
+                        height: 40,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: selectedFacilities.length + 1,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Tag(
+                              title: index == 0
+                                  ? radioList.firstWhere((e) => e.type == type).name
+                                  : selectedFacilities[index - 1],
+                            );
+                          },
+                        ),
+                      ),
+                      Ink(
+                        width: 40,
+                        height: 40,
+                        decoration: ShapeDecoration(
+                          color: Colors.grey.withOpacity(0.2),
+                          shape: const CircleBorder(),
+                        ),
+                        child: IconButton(
+                          splashRadius: 20,
+                          iconSize: 20,
+                          icon: Icon(Icons.filter_list,
+                              color: Theme.of(context).colorScheme.secondary),
+                          onPressed: () {
+                            _buildModal(context);
+                          },
+                          tooltip: 'Filter',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Ink(
-                  width: 40,
-                  height: 40,
-                  decoration: ShapeDecoration(
-                    color: Colors.grey.withOpacity(0.2),
-                    shape: const CircleBorder(),
-                  ),
-                  child: IconButton(
-                    splashRadius: 20,
-                    iconSize: 20,
-                    icon: Icon(Icons.filter_list, color: Theme.of(context).colorScheme.secondary),
-                    onPressed: () {
-                      _buildModal(context);
-                    },
-                    tooltip: 'Filter',
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Divider(
+                    indent: 12,
+                    endIndent: 12,
+                    color: Colors.grey,
                   ),
                 ),
+                houses.isNotEmpty
+                    ? SizedBox(
+                        height: MediaQuery.of(context).size.height - 430,
+                        child: ListView.builder(
+                          itemCount: houses.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return HouseDetailCard(
+                              house: houses[index],
+                              showInfoHandler: _showInfo,
+                            );
+                          },
+                        ),
+                      )
+                    : const Text('No houses found'),
               ],
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Divider(
-              indent: 12,
-              endIndent: 12,
-              color: Colors.grey,
-            ),
-          ),
-          houses.isNotEmpty
-              ? SizedBox(
-                  height: MediaQuery.of(context).size.height - 430,
-                  child: ListView.builder(
-                    itemCount: houses.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return HouseDetailCard(
-                        house: houses[index],
-                        showInfoHandler: _showInfo,
-                      );
-                    },
-                  ),
-                )
-              : const Text('No houses found'),
-        ],
-      ),
-    );
+          );
   }
 
   void _showInfo(String id) {
