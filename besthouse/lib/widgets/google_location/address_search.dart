@@ -14,7 +14,7 @@ class AddressSearch extends SearchDelegate<Suggestion> {
     return [
       IconButton(
         tooltip: 'Clear',
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },

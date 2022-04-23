@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../services/location_api.dart';
+import '../services/provider.dart';
 import '../widgets/google_location/address_search.dart';
+import '../widgets/search/map.dart';
 
 class GoogleLocation extends StatefulWidget {
   const GoogleLocation({Key? key}) : super(key: key);
@@ -13,72 +19,81 @@ class GoogleLocation extends StatefulWidget {
 }
 
 class _GoogleLocationState extends State<GoogleLocation> {
-  final _controller = TextEditingController();
-  String _streetNumber = '';
-  String _street = '';
-  String _city = '';
-  String _zipCode = '';
+  final _textController = TextEditingController();
+  final Completer<GoogleMapController> _controller = Completer();
 
   @override
   void dispose() {
-    _controller.dispose();
+    _textController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    CameraPosition location;
+    bool checkDesireLocation = context.watch<DesireLocation>().location.target.latitude != 90.0 &&
+        context.watch<DesireLocation>().location.target.longitude != -160;
+    if (checkDesireLocation) {
+      location = context.watch<DesireLocation>().location;
+    } else {
+      location = context.watch<CurrentLocation>().currentLocation;
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search'),
+        title: _textController.text == ""
+            ? const Text("Enter your desire location", style: TextStyle(fontSize: 15))
+            : Text(_textController.text, style: const TextStyle(fontSize: 15)),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () async {
+              final sessionToken = const Uuid().v4();
+              final Suggestion result = await showSearch(
+                context: context,
+                delegate: AddressSearch(sessionToken),
+              ) as Suggestion;
+              final placeDetails =
+                  await PlaceApiProvider(sessionToken).getPlaceDetailFromId(result.placeId);
+
+              setState(() {
+                _textController.text = result.description;
+              });
+              context.read<DesireLocation>().updateLocation(placeDetails.location);
+
+              CameraUpdate update = CameraUpdate.newCameraPosition(placeDetails.location);
+              _controller.future.then((value) => value.animateCamera(update));
+            },
+          ),
+        ],
       ),
-      body: Container(
-        margin: EdgeInsets.only(left: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextField(
-              controller: _controller,
-              readOnly: true,
-              onTap: () async {
-                // generate a new token here
-                final sessionToken = Uuid().v4();
-                final Suggestion result = await showSearch(
-                  context: context,
-                  delegate: AddressSearch(sessionToken),
-                ) as Suggestion;
-                // This will change the text displayed in the TextField
-                final placeDetails =
-                    await PlaceApiProvider(sessionToken).getPlaceDetailFromId(result.placeId);
-                setState(() {
-                  _controller.text = result.description;
-                  _streetNumber = placeDetails.streetNumber;
-                  _street = placeDetails.street;
-                  _city = placeDetails.city;
-                  _zipCode = placeDetails.zipCode;
-                });
-              },
-              decoration: InputDecoration(
-                icon: Container(
-                  width: 10,
-                  height: 10,
-                  child: Icon(
-                    Icons.home,
-                    color: Colors.black,
-                  ),
-                ),
-                hintText: "Enter your shipping address",
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 8.0, top: 16.0),
-              ),
+      body: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: location,
+        buildingsEnabled: true,
+        trafficEnabled: true,
+        markers: {
+          Marker(
+            markerId: const MarkerId('1'),
+            position: LatLng(context.watch<CurrentLocation>().currentLocation.target.latitude,
+                context.watch<CurrentLocation>().currentLocation.target.longitude),
+            infoWindow: const InfoWindow(
+              title: 'You',
+              snippet: 'Hello',
             ),
-            SizedBox(height: 20.0),
-            Text('Street Number: $_streetNumber'),
-            Text('Street: $_street'),
-            Text('City: $_city'),
-            Text('ZIP Code: $_zipCode'),
-          ],
-        ),
+          ),
+        },
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+        onTap: (value) {},
       ),
     );
   }
+}
+
+class GoogleLocationArgument {
+  final CameraPosition location;
+
+  GoogleLocationArgument(this.location);
 }

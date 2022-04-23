@@ -1,12 +1,14 @@
-import 'package:besthouse/widgets/common/tag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../screens/house_detailed.dart';
 
 // widgets
+import '../services/provider.dart';
 import '../widgets/search/map.dart';
+import '../widgets/common/tag.dart';
 import '../widgets/common/house_detail_card.dart';
 import '../widgets/search/filter_sheet.dart';
 
@@ -14,16 +16,19 @@ import '../widgets/search/filter_sheet.dart';
 import '../models/accommodation.dart';
 import '../models/facilities.dart';
 import '../models/house.dart';
+import 'google_location.dart';
 
 class Search extends StatefulWidget {
-  const Search({Key? key, required this.initposition}) : super(key: key);
   static const routeName = "/search";
-  final CameraPosition initposition;
+
+  const Search({Key? key}) : super(key: key);
+
   @override
   State<Search> createState() => _SearchState();
 }
 
 class _SearchState extends State<Search> {
+  final String _apiKey = "AIzaSyBugQOo_mjZGdkM7ud_VGCNh-oriwAglv4";
   final List<House> houses = [
     House(
       id: "634gf3438",
@@ -119,7 +124,16 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.initposition.target.latitude == 100
+    CameraPosition location;
+    bool checkDesireLocation = context.watch<DesireLocation>().location.target.latitude != 90.0 &&
+        context.watch<DesireLocation>().location.target.longitude != -160;
+    if (checkDesireLocation) {
+      location = context.watch<DesireLocation>().location;
+    } else {
+      location = context.watch<CurrentLocation>().currentLocation;
+    }
+
+    return location.target.latitude == 100
         ? const SpinKitRing(
             color: Color(0xFF24577A),
             size: 50.0,
@@ -128,7 +142,22 @@ class _SearchState extends State<Search> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               children: [
-                Map(initPosition: widget.initposition),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/google_location',
+                      arguments: GoogleLocationArgument(location),
+                    ).then((value) {
+                      setState(() {});
+                    });
+                  },
+                  child: Image.network(
+                    "https://maps.googleapis.com/maps/api/staticmap?center=${location.target.latitude},${location.target.longitude}&zoom=16&size=${MediaQuery.of(context).size.width.toInt()}x200&key=$_apiKey",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                // Map(currentLocation: widget.currentLocation),
                 Padding(
                   padding: const EdgeInsets.only(top: 9.0),
                   child: Row(

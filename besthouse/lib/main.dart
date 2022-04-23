@@ -1,11 +1,11 @@
 // packages
-import 'package:besthouse/screens/google_location.dart';
 import 'package:besthouse/services/location_api.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // screens
 import './screens/customer_profile.dart';
@@ -16,6 +16,7 @@ import './screens/home.dart';
 import './screens/house_detailed.dart';
 import './screens/offer_form.dart';
 import './screens/search.dart';
+import '../screens/google_location.dart';
 import './screens/sign_in.dart';
 import './screens/sign_up.dart';
 import './screens/splash.dart';
@@ -35,7 +36,8 @@ void main() {
     /// can use [MyApp] while mocking the providers
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Counter()),
+        ChangeNotifierProvider(create: (_) => CurrentLocation()),
+        ChangeNotifierProvider(create: (_) => DesireLocation())
       ],
       child: const MyApp(),
     ),
@@ -112,7 +114,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-  CameraPosition _initposition = const CameraPosition(target: LatLng(100, 200));
 
   void _onItemTapped(int index) {
     setState(() {
@@ -123,14 +124,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     LocationApi.getLocation().then((value) {
-      setState(() {
-        _initposition = CameraPosition(
-          target: LatLng(value[1] as double, value[0] as double),
-          zoom: 16,
-        );
-        print(_initposition.target.latitude);
-      });
+      var latlong = value;
+      return context.read<CurrentLocation>().updateLocation(
+          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 16));
     });
+    // print(context.watch<CurrentLocation>().currentLocation);
     super.initState();
   }
 
@@ -138,9 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     List<Widget> screen = <Widget>[
       const Home(),
-      Search(
-        initposition: _initposition,
-      ),
+      const Search(),
       const Favourite(),
       const CustomerProfile()
     ];
@@ -148,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color(0xffFFFFFF),
+        backgroundColor: const Color(0xffFFFFFF),
         title: Row(
           children: [
             Image.asset("assets/logo.png", scale: 1.2),
