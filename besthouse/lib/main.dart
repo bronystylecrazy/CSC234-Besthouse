@@ -1,8 +1,11 @@
 // packages
-import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:besthouse/services/location_api.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // screens
 import './screens/customer_profile.dart';
@@ -13,6 +16,7 @@ import './screens/home.dart';
 import './screens/house_detailed.dart';
 import './screens/offer_form.dart';
 import './screens/search.dart';
+import '../screens/google_location.dart';
 import './screens/sign_in.dart';
 import './screens/sign_up.dart';
 import './screens/splash.dart';
@@ -23,16 +27,22 @@ import './services/dio.dart';
 import './services/provider.dart';
 
 void main() {
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+  }
+
   runApp(
     /// Providers are above [MyApp] instead of inside it, so that tests
     /// can use [MyApp] while mocking the providers
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Counter()),
+        ChangeNotifierProvider(create: (_) => CurrentLocation()),
+        ChangeNotifierProvider(create: (_) => DesireLocation())
       ],
       child: const MyApp(),
     ),
   );
+
   DioInstance.init();
 }
 
@@ -66,9 +76,7 @@ class MyApp extends StatelessWidget {
               color: const Color(0xFF022B3A),
             ),
             bodyText1: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Color(0xff0E2B39)),
+                fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff0E2B39)),
             bodyText2: GoogleFonts.poppins(
               fontSize: 14,
               color: const Color(0xFF022B3A),
@@ -87,7 +95,8 @@ class MyApp extends StatelessWidget {
         SignUp.routeName: (context) => const SignUp(),
         Guide.routeName: (context) => const Guide(),
         OfferForm.routeName: (context) => const OfferForm(),
-        ForgetPassword.routeName: (context) => const ForgetPassword()
+        ForgetPassword.routeName: (context) => const ForgetPassword(),
+        GoogleLocation.routeName: (context) => const GoogleLocation(),
       },
     );
   }
@@ -112,19 +121,30 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  static List<Widget> screen = <Widget>[
-    const Home(),
-    const Search(),
-    const Favourite(),
-    const CustomerProfile()
-  ];
+  @override
+  void initState() {
+    LocationApi.getLocation().then((value) {
+      var latlong = value;
+      return context.read<CurrentLocation>().updateLocation(
+          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 16));
+    });
+    // print(context.watch<CurrentLocation>().currentLocation);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> screen = <Widget>[
+      const Home(),
+      const Search(),
+      const Favourite(),
+      const CustomerProfile()
+    ];
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color(0xffFFFFFF),
+        backgroundColor: const Color(0xffFFFFFF),
         title: Row(
           children: [
             Image.asset("assets/logo.png", scale: 1.2),
@@ -145,8 +165,8 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.menu_book),
             color: Theme.of(context).colorScheme.secondary,
             tooltip: 'Go to guide page',
-            onPressed: () => Navigator.pushNamed(context, Guide.routeName,
-                arguments: {"type": "customer"}),
+            onPressed: () =>
+                Navigator.pushNamed(context, Guide.routeName, arguments: {"type": "customer"}),
           ),
         ],
       ),
