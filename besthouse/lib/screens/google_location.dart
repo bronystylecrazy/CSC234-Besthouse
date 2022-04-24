@@ -8,7 +8,6 @@ import 'package:uuid/uuid.dart';
 import '../services/location_api.dart';
 import '../services/provider.dart';
 import '../widgets/google_location/address_search.dart';
-import '../widgets/search/map.dart';
 
 class GoogleLocation extends StatefulWidget {
   const GoogleLocation({Key? key}) : super(key: key);
@@ -22,6 +21,14 @@ class _GoogleLocationState extends State<GoogleLocation> {
   final _textController = TextEditingController();
   final Completer<GoogleMapController> _controller = Completer();
 
+  void resetLocation() {
+    _textController.text = "";
+    Provider.of<CurrentLocation>(context, listen: false).resetLocation();
+    Provider.of<DesireLocation>(context, listen: false).resetLocation();
+    _controller.future.then((value) => value.animateCamera(CameraUpdate.newCameraPosition(
+        Provider.of<CurrentLocation>(context, listen: false).currentLocation)));
+  }
+
   @override
   void dispose() {
     _textController.dispose();
@@ -31,9 +38,9 @@ class _GoogleLocationState extends State<GoogleLocation> {
   @override
   Widget build(BuildContext context) {
     CameraPosition location;
-    bool checkDesireLocation = context.watch<DesireLocation>().location.target.latitude != 90.0 &&
+    bool isDesireLocation = context.watch<DesireLocation>().location.target.latitude != 90.0 &&
         context.watch<DesireLocation>().location.target.longitude != -160;
-    if (checkDesireLocation) {
+    if (isDesireLocation) {
       location = context.watch<DesireLocation>().location;
     } else {
       location = context.watch<CurrentLocation>().currentLocation;
@@ -87,6 +94,10 @@ class _GoogleLocationState extends State<GoogleLocation> {
           _controller.complete(controller);
         },
         onTap: (value) {},
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: resetLocation,
+        child: const Icon(Icons.my_location),
       ),
     );
   }

@@ -7,7 +7,6 @@ import '../screens/house_detailed.dart';
 
 // widgets
 import '../services/provider.dart';
-import '../widgets/search/map.dart';
 import '../widgets/common/tag.dart';
 import '../widgets/common/house_detail_card.dart';
 import '../widgets/search/filter_sheet.dart';
@@ -125,9 +124,9 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     CameraPosition location;
-    bool checkDesireLocation = context.watch<DesireLocation>().location.target.latitude != 90.0 &&
+    bool isDesireLocation = context.watch<DesireLocation>().location.target.latitude != 90.0 &&
         context.watch<DesireLocation>().location.target.longitude != -160;
-    if (checkDesireLocation) {
+    if (isDesireLocation) {
       location = context.watch<DesireLocation>().location;
     } else {
       location = context.watch<CurrentLocation>().currentLocation;
