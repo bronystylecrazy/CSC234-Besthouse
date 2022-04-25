@@ -12,21 +12,50 @@ import 'package:besthouse/screens/sign_in.dart';
 import 'package:besthouse/screens/sign_up.dart';
 import 'package:besthouse/services/dio.dart';
 import 'package:besthouse/services/provider.dart';
+import 'package:besthouse/services/location_api.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// screens
+import './screens/customer_profile.dart';
+import './screens/favourite.dart';
+import './screens/get_start.dart';
+import './screens/guide.dart';
+import './screens/home.dart';
+import './screens/house_detailed.dart';
+import './screens/offer_form.dart';
+import './screens/search.dart';
+import '../screens/google_location.dart';
+import './screens/sign_in.dart';
+import './screens/sign_up.dart';
+import './screens/splash.dart';
+import './screens/forget_password.dart';
+
+// services
+import './services/dio.dart';
+import './services/provider.dart';
 
 void main() {
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+  }
+
   runApp(
     /// Providers are above [MyApp] instead of inside it, so that tests
     /// can use [MyApp] while mocking the providers
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Counter()),
+        ChangeNotifierProvider(create: (_) => CurrentLocation()),
+        ChangeNotifierProvider(create: (_) => DesireLocation())
       ],
       child: const MyApp(),
     ),
   );
+
   DioInstance.init();
 }
 
@@ -37,21 +66,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Best House',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        primaryColor: Colors.blue,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: const Color(0xFF24577A),
+          secondary: const Color.fromARGB(255, 84, 156, 160),
+        ),
         textTheme: TextTheme(
+            headline3: GoogleFonts.poppins(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF24577A),
+            ),
             headline2: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -72,9 +99,15 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w500,
               color: Color.fromARGB(80, 0, 0, 0),
             ),
-            bodyText1: GoogleFonts.poppins(fontSize: 16)),
+            bodyText1: GoogleFonts.poppins(
+                fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff0E2B39)),
+            bodyText2: GoogleFonts.poppins(
+              fontSize: 14,
+              color: const Color(0xFF022B3A),
+              fontWeight: FontWeight.w600,
+            ),
+            subtitle1: GoogleFonts.poppins(fontSize: 14)),
       ),
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
 
       home: Scaffold(
         body: AnimatedSplashScreen(
@@ -87,30 +120,26 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
+        "/": (context) => const MyHomePage(),
         HouseDetailed.routeName: (context) => const HouseDetailed(),
         GetStart.routeName: (context) => const GetStart(),
+        MyHomePage.routeName: (context) => const MyHomePage(),
         SignIn.routeName: (context) => const SignIn(),
         SignUp.routeName: (context) => const SignUp(),
         Guide.routeName: (context) => const Guide(),
-        PostForm.routeName: (context) => const PostForm(),
+        OfferForm.routeName: (context) => const OfferForm(),
+        ForgetPassword.routeName: (context) => const ForgetPassword(),
+        GoogleLocation.routeName: (context) => const GoogleLocation(),
       },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  const MyHomePage({
+    Key? key,
+  }) : super(key: key);
+  static const String routeName = "/homepage";
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -125,49 +154,100 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  static List<Widget> screen = <Widget>[
-    const Home(),
-    const Search(),
-    const Favourite(),
-    const CustomerProfile()
-  ];
+  @override
+  void initState() {
+    LocationApi.getLocation().then((value) {
+      var latlong = value;
+      return context.read<CurrentLocation>().updateLocation(
+          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 16));
+    });
+    // print(context.watch<CurrentLocation>().currentLocation);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> screen = <Widget>[
+      const Home(),
+      const Search(),
+      const Favourite(),
+      const CustomerProfile()
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: screen.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
+        elevation: 0,
+        backgroundColor: const Color(0xffFFFFFF),
+        title: Row(
+          children: [
+            Image.asset("assets/logo.png", scale: 1.2),
+            const SizedBox(
+              width: 8,
             ),
-            label: 'Home',
-            backgroundColor: Colors.blue,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-            backgroundColor: Colors.blue,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favourite',
-            backgroundColor: Colors.blue,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-            backgroundColor: Colors.blue,
+            Text(
+              "Best house",
+              textAlign: TextAlign.left,
+              style: Theme.of(context).textTheme.bodyText2,
+            ),
+          ],
+        ),
+        centerTitle: false,
+        actions: <Widget>[
+          IconButton(
+            splashRadius: 20.0,
+            icon: const Icon(Icons.menu_book),
+            color: Theme.of(context).colorScheme.secondary,
+            tooltip: 'Go to guide page',
+            onPressed: () =>
+                Navigator.pushNamed(context, Guide.routeName, arguments: {"type": "customer"}),
           ),
         ],
-        showUnselectedLabels: true,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        // showSelectedLabels: false,
+      ),
+      body: screen.elementAt(_selectedIndex),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            spreadRadius: -4,
+            blurRadius: 5,
+          )
+        ]),
+        child: BottomNavigationBar(
+          selectedItemColor: const Color(0xff24577A),
+          unselectedItemColor: const Color(0xff7E95A6),
+          selectedLabelStyle: GoogleFonts.poppins(),
+          unselectedLabelStyle: GoogleFonts.poppins(),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+              ),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.search,
+              ),
+              label: 'Search',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.favorite,
+              ),
+              label: 'Favourite',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.person,
+              ),
+              label: 'Profile',
+            ),
+          ],
+          showUnselectedLabels: true,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          // showSelectedLabels: false,
+        ),
       ),
     );
   }
