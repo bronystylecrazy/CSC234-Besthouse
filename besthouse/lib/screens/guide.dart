@@ -67,28 +67,45 @@ class _GuideState extends State<Guide> {
           ),
           elevation: 0,
           backgroundColor: Color(0xffF5F5F5)),
-      body: Center(
-        child: ListView(
-          children: [
-            Center(
-              child: Text(
-                guideType == "customer" ? "Customer Guide" : "Seller Guide",
-                style: Theme.of(context).textTheme.headline3,
+      body: Stack(
+        children: [
+          Center(
+            child: ListView(
+              children: [
+                Center(
+                  child: Text(
+                    guideType == "customer" ? "Customer Guide" : "Seller Guide",
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                ),
+                guides == null
+                    ? Container(
+                        height: MediaQuery.of(context).size.height - 200,
+                        child: spinkit,
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children:
+                              guides!.map((e) => _buildGuideCard(e)).toList(),
+                        ),
+                      )
+              ],
+            ),
+          ),
+          Positioned(
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+              color: Color(0xfff4f4f4),
+              width: MediaQuery.of(context).size.width,
+              child: const Text(
+                "Made with love by Best house",
+                textAlign: TextAlign.center,
               ),
             ),
-            guides == null
-                ? Container(
-                    height: MediaQuery.of(context).size.height - 200,
-                    child: spinkit,
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: guides!.map((e) => _buildGuideCard(e)).toList(),
-                    ),
-                  )
-          ],
-        ),
+            bottom: 10,
+          )
+        ],
       ),
     );
   }
