@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -61,16 +62,26 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w600,
               color: const Color(0xFF022B3A),
             ),
+            headline5: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Color.fromARGB(255, 5, 5, 5),
+            ),
+            headline6: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Color.fromARGB(80, 0, 0, 0),
+            ),
             bodyText1: GoogleFonts.poppins(fontSize: 16)),
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
 
       home: Scaffold(
         body: AnimatedSplashScreen(
-          duration: 100000,
+          duration: 3000,
           centered: true,
           splash: 'assets/get_start_1.png',
-          nextScreen: const GetStart(),
+          nextScreen: const HouseDetailed(),
           splashTransition: SplashTransition.fadeTransition,
           pageTransitionType: PageTransitionType.fade,
         ),
