@@ -16,7 +16,7 @@ export default interface HouseDetail {
 		}
 	];
 	description: string;
-	price: string;
+	price: number;
 	facilities: [
 		{
 			name: string;
