@@ -63,7 +63,7 @@ class _SignUpState extends State<SignUp> {
       body: Stack(
         children: [
           Positioned(
-            child: Image.asset("assets/logo.png", scale: 0.8),
+            child: Image.asset("assets/logo.png", scale: 14),
             top: 50,
             left: 18,
           ),
