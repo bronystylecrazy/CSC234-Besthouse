@@ -17,11 +17,7 @@ class Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final isLandscape = mediaQuery.orientation == Orientation.landscape;
-
     return SizedBox(
-      height: isLandscape ? mediaQuery.size.height * 0.85 : mediaQuery.size.height * 0.45,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -36,7 +32,7 @@ class Content extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.only(top: 2),
                 child: Text(
                   header,
                   style: GoogleFonts.poppins(
@@ -48,7 +44,14 @@ class Content extends StatelessWidget {
               ),
             ],
           ),
-          Image.asset(image),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 32),
+            width: 200,
+            child: Image.asset(
+              image,
+              fit: BoxFit.contain,
+            ),
+          ),
           Text(
             text,
             textAlign: TextAlign.center,

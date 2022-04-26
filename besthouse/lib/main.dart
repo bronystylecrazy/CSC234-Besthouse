@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: const Color(0xffFFFFFF),
         title: Row(
           children: [
-            Image.asset("assets/logo.png", scale: 1.2),
+            Image.asset("assets/logo.png", scale: 24),
             const SizedBox(
               width: 8,
             ),
