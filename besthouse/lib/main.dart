@@ -76,7 +76,9 @@ class MyApp extends StatelessWidget {
               color: const Color(0xFF022B3A),
             ),
             bodyText1: GoogleFonts.poppins(
-                fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff0E2B39)),
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Color(0xff0E2B39)),
             bodyText2: GoogleFonts.poppins(
               fontSize: 14,
               color: const Color(0xFF022B3A),
@@ -113,7 +115,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 3;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -125,8 +127,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     LocationApi.getLocation().then((value) {
       var latlong = value;
-      return context.read<CurrentLocation>().updateLocation(
-          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 16));
+      return context.read<CurrentLocation>().updateLocation(CameraPosition(
+          target: LatLng(latlong[1] as double, latlong[0] as double),
+          zoom: 16));
     });
     // print(context.watch<CurrentLocation>().currentLocation);
     super.initState();
@@ -144,17 +147,37 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0xffFFFFFF),
+        flexibleSpace: Container(
+          decoration: _selectedIndex == 3
+              ? const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Color(0xff173550),
+                      Color(0xff24577a),
+                    ],
+                  ),
+                )
+              : const BoxDecoration(color: Colors.white),
+        ),
         title: Row(
           children: [
-            Image.asset("assets/logo.png", scale: 24),
+            Image.asset(
+                _selectedIndex == 3 ? "assets/logo_alt.png" : "assets/logo.png",
+                scale: 24),
             const SizedBox(
               width: 8,
             ),
             Text(
               "Best house",
               textAlign: TextAlign.left,
-              style: Theme.of(context).textTheme.bodyText2,
+              style: _selectedIndex == 3
+                  ? GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600)
+                  : Theme.of(context).textTheme.bodyText2,
             ),
           ],
         ),
@@ -162,11 +185,15 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           IconButton(
             splashRadius: 20.0,
-            icon: const Icon(Icons.menu_book),
-            color: Theme.of(context).colorScheme.secondary,
+            icon: const Icon(
+              Icons.menu_book,
+            ),
+            color: _selectedIndex == 3
+                ? Colors.white
+                : Theme.of(context).colorScheme.secondary,
             tooltip: 'Go to guide page',
-            onPressed: () =>
-                Navigator.pushNamed(context, Guide.routeName, arguments: {"type": "customer"}),
+            onPressed: () => Navigator.pushNamed(context, Guide.routeName,
+                arguments: {"type": "customer"}),
           ),
         ],
       ),

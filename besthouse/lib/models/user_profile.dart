@@ -11,3 +11,11 @@ class UserProfile {
     this.facebook = "",
   });
 }
+
+class UserProfileCard {
+  final String label;
+  final String value;
+  final bool isEditable;
+
+  const UserProfileCard(this.label, this.value, this.isEditable);
+}
