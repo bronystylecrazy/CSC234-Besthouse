@@ -65,35 +65,34 @@ class _TextInfoState extends State<TextInfo> {
                                       top: Radius.circular(15.0))),
                               context: context,
                               isScrollControlled: true,
-                              builder: (context) => Container(
-                                padding: EdgeInsets.only(
-                                    left: 20,
-                                    right: 20,
-                                    top: 20,
-                                    bottom: MediaQuery.of(context)
-                                        .viewInsets
-                                        .bottom),
-                                width: MediaQuery.of(context).size.width,
-                                height: 170,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: Text(
-                                        "Editing ${widget.label}",
-                                        textAlign: TextAlign.start,
+                              builder: (context) => Padding(
+                                padding: MediaQuery.of(context).viewInsets,
+                                child: Container(
+                                  padding: EdgeInsets.all(20),
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 180,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: Text(
+                                          "Editing ${widget.label}",
+                                          textAlign: TextAlign.start,
+                                        ),
                                       ),
-                                    ),
-                                    TextField(
-                                      autofocus: true,
-                                      controller: controller,
-                                    ),
-                                    SizedBox(height: 20),
-                                    ElevatedButton(
-                                        onPressed: () {},
-                                        child: Text("Confirm"))
-                                  ],
+                                      TextField(
+                                        autofocus: true,
+                                        controller: controller,
+                                      ),
+                                      SizedBox(height: 20),
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Confirm"))
+                                    ],
+                                  ),
                                 ),
                               ),
                             );

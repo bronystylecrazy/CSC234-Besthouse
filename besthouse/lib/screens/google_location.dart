@@ -25,8 +25,10 @@ class _GoogleLocationState extends State<GoogleLocation> {
     _textController.text = "";
     Provider.of<CurrentLocation>(context, listen: false).resetLocation();
     Provider.of<DesireLocation>(context, listen: false).resetLocation();
-    _controller.future.then((value) => value.animateCamera(CameraUpdate.newCameraPosition(
-        Provider.of<CurrentLocation>(context, listen: false).currentLocation)));
+    _controller.future.then((value) => value.animateCamera(
+        CameraUpdate.newCameraPosition(
+            Provider.of<CurrentLocation>(context, listen: false)
+                .currentLocation)));
   }
 
   @override
@@ -38,8 +40,9 @@ class _GoogleLocationState extends State<GoogleLocation> {
   @override
   Widget build(BuildContext context) {
     CameraPosition location;
-    bool isDesireLocation = context.watch<DesireLocation>().location.target.latitude != 90.0 &&
-        context.watch<DesireLocation>().location.target.longitude != -160;
+    bool isDesireLocation =
+        context.watch<DesireLocation>().location.target.latitude != 90.0 &&
+            context.watch<DesireLocation>().location.target.longitude != -160;
     if (isDesireLocation) {
       location = context.watch<DesireLocation>().location;
     } else {
@@ -49,7 +52,8 @@ class _GoogleLocationState extends State<GoogleLocation> {
     return Scaffold(
       appBar: AppBar(
         title: _textController.text == ""
-            ? const Text("Enter your desire location", style: TextStyle(fontSize: 15))
+            ? const Text("Enter your desire location",
+                style: TextStyle(fontSize: 15))
             : Text(_textController.text, style: const TextStyle(fontSize: 15)),
         actions: <Widget>[
           IconButton(
@@ -60,15 +64,18 @@ class _GoogleLocationState extends State<GoogleLocation> {
                 context: context,
                 delegate: AddressSearch(sessionToken),
               ) as Suggestion;
-              final placeDetails =
-                  await PlaceApiProvider(sessionToken).getPlaceDetailFromId(result.placeId);
+              final placeDetails = await PlaceApiProvider(sessionToken)
+                  .getPlaceDetailFromId(result.placeId);
 
               setState(() {
                 _textController.text = result.description;
               });
-              context.read<DesireLocation>().updateLocation(placeDetails.location);
+              context
+                  .read<DesireLocation>()
+                  .updateLocation(placeDetails.location);
 
-              CameraUpdate update = CameraUpdate.newCameraPosition(placeDetails.location);
+              CameraUpdate update =
+                  CameraUpdate.newCameraPosition(placeDetails.location);
               _controller.future.then((value) => value.animateCamera(update));
             },
           ),
@@ -82,8 +89,17 @@ class _GoogleLocationState extends State<GoogleLocation> {
         markers: {
           Marker(
             markerId: const MarkerId('1'),
-            position: LatLng(context.watch<CurrentLocation>().currentLocation.target.latitude,
-                context.watch<CurrentLocation>().currentLocation.target.longitude),
+            position: LatLng(
+                context
+                    .watch<CurrentLocation>()
+                    .currentLocation
+                    .target
+                    .latitude,
+                context
+                    .watch<CurrentLocation>()
+                    .currentLocation
+                    .target
+                    .longitude),
             infoWindow: const InfoWindow(
               title: 'You',
               snippet: 'Hello',

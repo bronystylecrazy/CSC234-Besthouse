@@ -24,13 +24,6 @@ class AvatarProfile extends StatelessWidget {
               width: 125,
               height: 125,
             ),
-            Positioned.fill(
-                child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      splashColor: const Color(0xff24577a).withOpacity(0.5),
-                      onTap: () {},
-                    ))),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -47,7 +40,14 @@ class AvatarProfile extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
+            Positioned.fill(
+                child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      splashColor: const Color(0xff24577a).withOpacity(0.5),
+                      onTap: () {},
+                    ))),
           ],
         ),
       ),
