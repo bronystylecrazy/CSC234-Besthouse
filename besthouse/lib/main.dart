@@ -115,7 +115,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 3;
+  int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -135,15 +135,22 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
+  void changeIndex() {
+    setState(() {
+      _selectedIndex = 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> screen = <Widget>[
-      const Home(),
+      Home(
+        onTapHandler: changeIndex,
+      ),
       const Search(),
       const Favourite(),
       const CustomerProfile()
     ];
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

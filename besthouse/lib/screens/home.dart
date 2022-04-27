@@ -1,13 +1,14 @@
 import 'package:besthouse/models/house.dart';
+import 'package:besthouse/screens/google_location.dart';
 import 'package:besthouse/widgets/home/house_card.dart';
 import '../screens/house_detailed.dart';
 import 'package:besthouse/widgets/common/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({Key? key, required this.onTapHandler}) : super(key: key);
   static const routeName = "/home";
-
+  final Function onTapHandler;
   @override
   State<Home> createState() => _HomeState();
 }
@@ -115,7 +116,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
             //Text("Where ?"),
@@ -129,17 +130,25 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  controller: _searchController,
-                  obscureText: false,
-                  decoration: const InputDecoration(
-                    fillColor: Color(0xFFE9E9E9),
-                    filled: true,
-                    suffixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(16),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, GoogleLocation.routeName)
+                        .then((value) => {widget.onTapHandler()});
+                  },
+                  child: TextFormField(
+                    enabled: false,
+                    controller: _searchController,
+                    obscureText: false,
+                    decoration: const InputDecoration(
+                      hintText: "Search your desire location!",
+                      fillColor: Color(0xFFE9E9E9),
+                      filled: true,
+                      suffixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(16),
+                        ),
                       ),
                     ),
                   ),
@@ -187,7 +196,7 @@ class _HomeState extends State<Home> {
             SizedBox(
               width: double.infinity,
               child: Text(
-                'Recommended House',
+                'Discover around you',
                 style: Theme.of(context).textTheme.headline2,
                 textAlign: TextAlign.left,
               ),
