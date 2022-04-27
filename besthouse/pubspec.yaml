@@ -71,6 +71,7 @@ flutter:
     - assets/get_start_2.png
     - assets/customer_guide.json
     - assets/seller_guide.json
+    - assets/house_image.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
