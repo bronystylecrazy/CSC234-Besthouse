@@ -1,9 +1,14 @@
+import 'package:besthouse/models/offer.dart';
+import 'package:besthouse/models/user_profile.dart';
 import 'package:besthouse/screens/offer_form.dart';
+import 'package:besthouse/widgets/customer_profile/avatar_profile.dart';
 import 'package:besthouse/widgets/customer_profile/offer_card.dart';
+import 'package:besthouse/widgets/customer_profile/text_info.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
 
 class CustomerProfile extends StatefulWidget {
   const CustomerProfile({Key? key}) : super(key: key);
@@ -14,10 +19,35 @@ class CustomerProfile extends StatefulWidget {
 }
 
 class _CustomerProfileState extends State<CustomerProfile> {
+  final String username = "Shirayuki_hime";
+  final String name = "Shinomiya Kaguya";
+  final String email = "kaguya@mail.com";
+  final String phoneNo = "000-000-0000";
+  final String lineId = "";
+  final String facebook = "";
   final userPicture =
-      "https://cdn.pixabay.com/photo/2015/08/25/10/40/ben-knapen-906550_960_720.jpg";
+      "https://i0.wp.com/shindekudasai.com/wp-content/uploads/2022/03/kaguya-sama.jpg";
+  final List<OfferCardModel> offerList = [
+    OfferCardModel(
+        id: const Uuid().v1().toString(),
+        isAvailable: true,
+        name: "Diary Prachautid"),
+    OfferCardModel(
+        id: const Uuid().v1().toString(),
+        isAvailable: false,
+        name: "Chapter One"),
+  ];
+
   @override
   Widget build(BuildContext context) {
+    List<UserProfileCard> infoList = [
+      UserProfileCard("Username", username, true),
+      UserProfileCard("Name", name, false),
+      UserProfileCard("Email", email, false),
+      UserProfileCard("Phone No.", phoneNo, true),
+      UserProfileCard("Line Id", lineId, true),
+      UserProfileCard("Facebook", facebook, true),
+    ];
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -36,7 +66,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
             child: Text("Your Profile",
                 style: TextStyle(color: Colors.white, fontSize: 20)),
           ),
-          _buildAvatarProfile(context),
+          AvatarProfile(userPicture: userPicture),
           const SizedBox(
             height: 40,
           ),
@@ -72,7 +102,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                               icon: Icon(
                                 Icons.add,
                                 size: 30,
-                                color: Theme.of(context).primaryColor,
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
                               onPressed: () {
                                 Navigator.pushNamed(
@@ -80,10 +110,17 @@ class _CustomerProfileState extends State<CustomerProfile> {
                               })
                         ],
                       ),
-                      OfferCard(name: "Diary Prachautid", isAvailable: true),
-                      OfferCard(name: "Diary Prachautid", isAvailable: false),
-                      OfferCard(name: "Diary Prachautid", isAvailable: true),
-                      OfferCard(name: "Diary Prachautid", isAvailable: false),
+                      ...offerList
+                          .map((e) => OfferCard(
+                                name: e.name,
+                                isAvailable: e.isAvailable,
+                                key: Key(e.id),
+                              ))
+                          .toList(),
+                      ...infoList.map((e) => TextInfo(
+                          label: e.label,
+                          value: e.value,
+                          isEditable: e.isEditable))
                     ],
                   ),
                 ),
@@ -91,45 +128,6 @@ class _CustomerProfileState extends State<CustomerProfile> {
             color: Colors.white,
           ))
         ],
-      ),
-    );
-  }
-
-  Widget _buildAvatarProfile(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(120),
-      child: SizedBox(
-        height: 120,
-        width: 120,
-        child: Stack(children: [
-          Image.network(
-            userPicture,
-            fit: BoxFit.contain,
-          ),
-          Positioned.fill(
-              child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    splashColor: const Color(0xff24577a).withOpacity(0.5),
-                    onTap: () {},
-                  ))),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                height: 120 * 0.25,
-                width: double.infinity,
-                color: Colors.black.withOpacity(0.5),
-                child: Center(
-                  child: Text(
-                    "Edit",
-                    style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ))
-        ]),
       ),
     );
   }

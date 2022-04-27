@@ -38,8 +38,8 @@ class OfferCard extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(4),
                           child: Container(
-                            width: 10,
-                            height: 10,
+                            width: 8,
+                            height: 8,
                             color: isAvailable
                                 ? const Color(0xff38A06C)
                                 : const Color(0xff94989B),
@@ -60,11 +60,31 @@ class OfferCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                GestureDetector(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.more_vert,
-                    ))
+                PopupMenuButton(
+                  padding: EdgeInsets.all(0),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: Text(isAvailable ? "Disable" : "Enable"),
+                      onTap: () {},
+                    ),
+                    PopupMenuItem(
+                      child: Text("Edit"),
+                      onTap: () {},
+                    ),
+                    PopupMenuItem(
+                      child: Text("Delete",
+                          style: GoogleFonts.poppins(
+                              color: Theme.of(context).errorColor)),
+                      onTap: () {},
+                    )
+                  ],
+                  child: const Icon(
+                    Icons.more_vert,
+                    size: 18,
+                  ),
+                )
               ],
             )
           ],
