@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 
 class StepIdentifyer extends StatelessWidget {
-  const StepIdentifyer({Key? key, required this.stepIndex}) : super(key: key);
   final int stepIndex;
+  final int amount;
+
+  const StepIdentifyer({
+    Key? key,
+    required this.stepIndex,
+    required this.amount,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,17 +17,17 @@ class StepIdentifyer extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircleAvatar(
-            radius: 5,
-            backgroundColor: stepIndex == 0 ? const Color(0xFF24577A) : const Color(0xFFC4C4C4),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          CircleAvatar(
-            radius: 5,
-            backgroundColor: stepIndex == 1 ? const Color(0xFF24577A) : const Color(0xFFC4C4C4),
-          )
+          for (int i = 0; i < amount; i++)
+            if (i == stepIndex)
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4),
+                child: CircleAvatar(radius: 5, backgroundColor: Color(0xFF24577A)),
+              )
+            else
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4),
+                child: CircleAvatar(radius: 5, backgroundColor: Color(0xFFC4C4C4)),
+              )
         ],
       ),
     );

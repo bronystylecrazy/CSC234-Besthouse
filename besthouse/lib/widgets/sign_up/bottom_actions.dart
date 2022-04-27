@@ -14,6 +14,7 @@ class BottomActions extends StatelessWidget {
       children: [
         StepIdentifyer(
           stepIndex: stepIndex,
+          amount: 2,
         ),
         Button(clickHandler: next, text: stepIndex == 1 ? "sign up" : "next"),
         Padding(

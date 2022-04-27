@@ -23,7 +23,7 @@ class _SignInState extends State<SignIn> {
       body: Stack(
         children: [
           Positioned(
-            child: Image.asset("assets/logo.png", scale: 0.8),
+            child: Image.asset("assets/logo.png", scale: 14),
             top: 50,
             left: 18,
           ),
@@ -69,8 +69,7 @@ class _SignInState extends State<SignIn> {
                             style: Theme.of(context).textTheme.caption,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Navigator.pushNamed(
-                                    context, ForgetPassword.routeName);
+                                Navigator.pushNamed(context, ForgetPassword.routeName);
                               },
                           ),
                         ),
@@ -106,8 +105,7 @@ class _SignInState extends State<SignIn> {
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.pushNamed(
-                                        context, SignUp.routeName);
+                                    Navigator.pushNamed(context, SignUp.routeName);
                                   },
                               ),
                             ),
