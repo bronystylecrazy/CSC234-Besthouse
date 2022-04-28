@@ -18,15 +18,57 @@ class GoogleLocation extends StatefulWidget {
 }
 
 class _GoogleLocationState extends State<GoogleLocation> {
+  final sessionToken = const Uuid().v4();
   final _textController = TextEditingController();
   final Completer<GoogleMapController> _controller = Completer();
 
-  void resetLocation() {
-    _textController.text = "";
-    Provider.of<CurrentLocation>(context, listen: false).resetLocation();
-    Provider.of<DesireLocation>(context, listen: false).resetLocation();
-    _controller.future.then((value) => value.animateCamera(CameraUpdate.newCameraPosition(
-        Provider.of<CurrentLocation>(context, listen: false).currentLocation)));
+  void _resetLocation() {
+    setState(() {
+      _textController.text = "";
+
+      Provider.of<CurrentLocation>(context, listen: false).resetLocation();
+      Provider.of<DesireLocation>(context, listen: false).resetLocation();
+
+      _controller.future.then((value) => value.animateCamera(CameraUpdate.newCameraPosition(
+          Provider.of<CurrentLocation>(context, listen: false).currentLocation)));
+    });
+  }
+
+  void _onMapTap(LatLng location) async {
+    final address =
+        await GoogleApiProvider(sessionToken).getAddress(location.latitude, location.longitude);
+
+    print("test");
+    print(address);
+
+    setState(() {
+      Provider.of<DesireLocation>(context, listen: false)
+          .updateLocation(CameraPosition(target: location, zoom: 18));
+      Provider.of<DesireLocation>(context, listen: false).updateAddress(address);
+
+      _controller.future.then((value) => value.animateCamera(CameraUpdate.newCameraPosition(
+          Provider.of<DesireLocation>(context, listen: false).location)));
+
+      _textController.text = Provider.of<DesireLocation>(context, listen: false).address;
+    });
+  }
+
+  void _search() async {
+    final Suggestion result = await showSearch(
+      context: context,
+      delegate: AddressSearch(sessionToken),
+    ) as Suggestion;
+
+    final placeDetails = await GoogleApiProvider(sessionToken).getPlaceDetailFromId(result.placeId);
+
+    setState(() {
+      _textController.text = result.description;
+    });
+    context.read<DesireLocation>().updateLocation(placeDetails.location);
+    context.read<DesireLocation>().updateAddress(placeDetails.address);
+
+    CameraUpdate update = CameraUpdate.newCameraPosition(placeDetails.location);
+    _controller.future.then((value) => value.animateCamera(update));
   }
 
   @override
@@ -38,9 +80,7 @@ class _GoogleLocationState extends State<GoogleLocation> {
   @override
   Widget build(BuildContext context) {
     CameraPosition location;
-    bool isDesireLocation = context.watch<DesireLocation>().location.target.latitude != 90.0 &&
-        context.watch<DesireLocation>().location.target.longitude != -160;
-    if (isDesireLocation) {
+    if (Provider.of<DesireLocation>(context).isExist) {
       location = context.watch<DesireLocation>().location;
     } else {
       location = context.watch<CurrentLocation>().currentLocation;
@@ -54,23 +94,7 @@ class _GoogleLocationState extends State<GoogleLocation> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () async {
-              final sessionToken = const Uuid().v4();
-              final Suggestion result = await showSearch(
-                context: context,
-                delegate: AddressSearch(sessionToken),
-              ) as Suggestion;
-              final placeDetails =
-                  await PlaceApiProvider(sessionToken).getPlaceDetailFromId(result.placeId);
-
-              setState(() {
-                _textController.text = result.description;
-              });
-              context.read<DesireLocation>().updateLocation(placeDetails.location);
-
-              CameraUpdate update = CameraUpdate.newCameraPosition(placeDetails.location);
-              _controller.future.then((value) => value.animateCamera(update));
-            },
+            onPressed: _search,
           ),
         ],
       ),
@@ -79,32 +103,37 @@ class _GoogleLocationState extends State<GoogleLocation> {
         initialCameraPosition: location,
         buildingsEnabled: true,
         trafficEnabled: true,
+        zoomControlsEnabled: false,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+        myLocationEnabled: true,
+        myLocationButtonEnabled: false,
         markers: {
           Marker(
             markerId: const MarkerId('1'),
-            position: LatLng(context.watch<CurrentLocation>().currentLocation.target.latitude,
-                context.watch<CurrentLocation>().currentLocation.target.longitude),
+            position: LatLng(
+              context.watch<DesireLocation>().latitude,
+              context.watch<DesireLocation>().longitude,
+            ),
             infoWindow: const InfoWindow(
               title: 'You',
               snippet: 'Hello',
             ),
-          ),
+          )
         },
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        onTap: (value) {},
+        onTap: _onMapTap,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: resetLocation,
+        onPressed: _resetLocation,
         child: const Icon(Icons.my_location),
       ),
     );
   }
 }
 
-class GoogleLocationArgument {
-  final CameraPosition location;
+// class GoogleLocationArgument {
+//   final CameraPosition location;
 
-  GoogleLocationArgument(this.location);
-}
+//   GoogleLocationArgument(this.location);
+// }

@@ -3,10 +3,10 @@ import '../../services/location_api.dart';
 
 class AddressSearch extends SearchDelegate<Suggestion> {
   final sessionToken;
-  late PlaceApiProvider apiClient;
+  late GoogleApiProvider apiClient;
 
   AddressSearch(this.sessionToken) {
-    apiClient = PlaceApiProvider(sessionToken);
+    apiClient = GoogleApiProvider(sessionToken);
   }
 
   @override

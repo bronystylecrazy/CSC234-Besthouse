@@ -58,31 +58,33 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch().copyWith(
           primary: const Color(0xFF24577A),
           secondary: const Color.fromARGB(255, 84, 156, 160),
+          tertiary: const Color.fromARGB(255, 240, 241, 243),
         ),
         textTheme: TextTheme(
-            headline3: GoogleFonts.poppins(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF24577A),
-            ),
-            headline2: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF24577A),
-            ),
-            headline1: GoogleFonts.poppins(
-              fontSize: 38,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF022B3A),
-            ),
-            bodyText1: GoogleFonts.poppins(
-                fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff0E2B39)),
-            bodyText2: GoogleFonts.poppins(
-              fontSize: 14,
-              color: const Color(0xFF022B3A),
-              fontWeight: FontWeight.w600,
-            ),
-            subtitle1: GoogleFonts.poppins(fontSize: 14)),
+          headline3: GoogleFonts.poppins(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF24577A),
+          ),
+          headline2: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF24577A),
+          ),
+          headline1: GoogleFonts.poppins(
+            fontSize: 38,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF022B3A),
+          ),
+          bodyText1: GoogleFonts.poppins(
+              fontSize: 16, fontWeight: FontWeight.w500, color: const Color(0xff0E2B39)),
+          bodyText2: GoogleFonts.poppins(
+            fontSize: 14,
+            color: const Color(0xFF022B3A),
+            fontWeight: FontWeight.w600,
+          ),
+          subtitle1: GoogleFonts.poppins(fontSize: 14),
+        ),
       ),
 
       // home: const SplashScreen(),
@@ -126,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
     LocationApi.getLocation().then((value) {
       var latlong = value;
       return context.read<CurrentLocation>().updateLocation(
-          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 16));
+          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 18));
     });
     // print(context.watch<CurrentLocation>().currentLocation);
     super.initState();

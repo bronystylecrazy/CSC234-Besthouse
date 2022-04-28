@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../models/location.dart';
 import '../screens/house_detailed.dart';
 
 // widgets
@@ -27,7 +28,9 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  final String _apiKey = "AIzaSyBugQOo_mjZGdkM7ud_VGCNh-oriwAglv4";
+  final String _apiKey = "AIzaSyCoIin5viAmmuDbNf7MZZUbEqfMsYUj79Q";
+  RangeValues currentRangeValues = const RangeValues(0, 20000);
+
   final List<House> houses = [
     House(
       id: "634gf3438",
@@ -64,19 +67,7 @@ class _SearchState extends State<Search> {
       address: 'Soi 45 Prachauthid Thungkru, Bangkok',
       type: 'CONDOMINIUM',
     ),
-    House(
-      id: "634gf3438",
-      name: "Heliconia House",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 6000,
-      location: Location(
-        coordinates: [13.2108, 107.8451],
-      ),
-      address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    ),
   ];
-  RangeValues currentRangeValues = const RangeValues(0, 20000);
 
   List<AccommodationObject> radioList = [
     AccommodationObject("All", Accommodation.all),
@@ -124,9 +115,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     CameraPosition location;
-    bool isDesireLocation = context.watch<DesireLocation>().location.target.latitude != 90.0 &&
-        context.watch<DesireLocation>().location.target.longitude != -160;
-    if (isDesireLocation) {
+    if (Provider.of<DesireLocation>(context).isExist) {
       location = context.watch<DesireLocation>().location;
     } else {
       location = context.watch<CurrentLocation>().currentLocation;
@@ -145,14 +134,13 @@ class _SearchState extends State<Search> {
                   onTap: () {
                     Navigator.pushNamed(
                       context,
-                      '/google_location',
-                      arguments: GoogleLocationArgument(location),
+                      GoogleLocation.routeName,
                     ).then((value) {
                       setState(() {});
                     });
                   },
                   child: Image.network(
-                    "https://maps.googleapis.com/maps/api/staticmap?center=${location.target.latitude},${location.target.longitude}&zoom=16&size=${MediaQuery.of(context).size.width.toInt()}x200&key=$_apiKey",
+                    "https://maps.googleapis.com/maps/api/staticmap?center=${location.target.latitude},${location.target.longitude}&zoom=18&size=${MediaQuery.of(context).size.width.toInt()}x200&key=$_apiKey",
                     fit: BoxFit.cover,
                   ),
                 ),
