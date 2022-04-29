@@ -6,7 +6,7 @@ import 'package:besthouse/screens/get_start.dart';
 import 'package:besthouse/screens/guide.dart';
 import 'package:besthouse/screens/home.dart';
 import 'package:besthouse/screens/house_detailed.dart';
-import 'package:besthouse/screens/post_form.dart';
+import 'package:besthouse/screens/offer_form.dart';
 import 'package:besthouse/screens/search.dart';
 import 'package:besthouse/screens/sign_in.dart';
 import 'package:besthouse/screens/sign_up.dart';
@@ -32,7 +32,7 @@ import './screens/search.dart';
 import '../screens/google_location.dart';
 import './screens/sign_in.dart';
 import './screens/sign_up.dart';
-import './screens/splash.dart';
+// import './screens/splash.dart';
 import './screens/forget_password.dart';
 
 // services
@@ -82,13 +82,11 @@ class MyApp extends StatelessWidget {
             headline2: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF24577A)
-                ),
+                color: Color(0xFF24577A)),
             headline1: GoogleFonts.poppins(
                 fontSize: 38,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF022B3A)
-                ),
+                color: Color(0xFF022B3A)),
             headline5: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.w600,
@@ -100,7 +98,9 @@ class MyApp extends StatelessWidget {
               color: Color.fromARGB(80, 0, 0, 0),
             ),
             bodyText1: GoogleFonts.poppins(
-                fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff0E2B39)),
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Color(0xff0E2B39)),
             bodyText2: GoogleFonts.poppins(
               fontSize: 14,
               color: const Color(0xFF022B3A),
@@ -108,19 +108,17 @@ class MyApp extends StatelessWidget {
             ),
             subtitle1: GoogleFonts.poppins(fontSize: 14)),
       ),
-
       home: Scaffold(
         body: AnimatedSplashScreen(
           duration: 3000,
           centered: true,
           splash: 'assets/get_start_1.png',
-          nextScreen: const HouseDetailed(),
+          nextScreen: const GetStart(),
           splashTransition: SplashTransition.fadeTransition,
           pageTransitionType: PageTransitionType.fade,
         ),
       ),
       routes: {
-        "/": (context) => const MyHomePage(),
         HouseDetailed.routeName: (context) => const HouseDetailed(),
         GetStart.routeName: (context) => const GetStart(),
         MyHomePage.routeName: (context) => const MyHomePage(),
@@ -158,8 +156,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     LocationApi.getLocation().then((value) {
       var latlong = value;
-      return context.read<CurrentLocation>().updateLocation(
-          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 16));
+      return context.read<CurrentLocation>().updateLocation(CameraPosition(
+          target: LatLng(latlong[1] as double, latlong[0] as double),
+          zoom: 16));
     });
     // print(context.watch<CurrentLocation>().currentLocation);
     super.initState();
@@ -180,7 +179,14 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: const Color(0xffFFFFFF),
         title: Row(
           children: [
-            Image.asset("assets/logo.png", scale: 1.2),
+            GestureDetector(
+              child: Image.asset("assets/logo.png", scale: 1.2),
+              onTap: () {
+                setState(() {
+                  _selectedIndex = 0;
+                });
+              },
+            ),
             const SizedBox(
               width: 8,
             ),
@@ -198,8 +204,8 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.menu_book),
             color: Theme.of(context).colorScheme.secondary,
             tooltip: 'Go to guide page',
-            onPressed: () =>
-                Navigator.pushNamed(context, Guide.routeName, arguments: {"type": "customer"}),
+            onPressed: () => Navigator.pushNamed(context, Guide.routeName,
+                arguments: {"type": "customer"}),
           ),
         ],
       ),

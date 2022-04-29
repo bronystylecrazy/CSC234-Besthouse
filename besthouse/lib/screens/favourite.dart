@@ -67,29 +67,9 @@ class _FavouriteState extends State<Favourite> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          children: [
-            Image.asset('assets/Logo.png', height: 50),
-            const SizedBox(
-              width: 10,
-            ),
-            const Text(
-              "Best house",
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'poppins',
-                  color: Color.fromARGB(255, 5, 5, 5)),
-            ),
-          ],
-        ),
-      ),
-      body: Padding(
+    return Container(
+      color: Colors.white,
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Column(
           children: [
@@ -99,7 +79,7 @@ class _FavouriteState extends State<Favourite> {
             Row(
               children: [
                 const SizedBox(
-                  width: 30,
+                  width: 10,
                 ),
                 Text(
                   "Favorite",
@@ -116,9 +96,10 @@ class _FavouriteState extends State<Favourite> {
               ],
             ),
             houses.isNotEmpty
-                ? SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.8,
+                ? Expanded(
                     child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
                       itemCount: houses.length,
                       itemBuilder: (BuildContext context, int index) {
                         return HouseDetailCard(
@@ -131,80 +112,80 @@ class _FavouriteState extends State<Favourite> {
                 : const Text('No houses found'),
           ],
         ),
+        // Container(
+        //   child: ListView.builder(
+        //     itemCount: houses.length,
+        //     itemBuilder: (context, index) {
+        //       return Padding(
+        //         padding: const EdgeInsets.all(8.0),
+        //         child: Container(
+        //           decoration: BoxDecoration(
+        //             borderRadius: BorderRadius.circular(10),
+        //             color: Colors.white,
+        //           ),
+        //           child: Padding(
+        //             padding: const EdgeInsets.all(8.0),
+        //             child: Row(
+        //               children: [
+        //                 Container(
+        //                   height: 100,
+        //                   width: 100,
+        //                   decoration: BoxDecoration(
+        //                     borderRadius: BorderRadius.circular(10),
+        //                     image: DecorationImage(
+        //                       image: NetworkImage(houses[index].pictureUrl),
+        //                       fit: BoxFit.cover,
+        //                     ),
+        //                   ),
+        //                 ),
+        //                 const SizedBox(
+        //                   width: 10,
+        //                 ),
+        //                 Expanded(
+        //                   child: Column(
+        //                       crossAxisAlignment: CrossAxisAlignment.start,
+        //                       children: [
+        //                         Text(
+        //                           houses[index].name,
+        //                           style: GoogleFonts.poppins(
+        //                             fontSize: 18,
+        //                             fontWeight: FontWeight.bold,
+        //                             color: Color.fromARGB(255, 5, 5, 5),
+        //                           ),
+        //                         ),
+        //                         const SizedBox(
+        //                           height: 10,
+        //                         ),
+        //                         Text(
+        //                           houses[index].address,
+        //                           style: GoogleFonts.poppins(
+        //                             fontSize: 14,
+        //                             fontWeight: FontWeight.bold,
+        //                             color: Color.fromARGB(255, 5, 5, 5),
+        //                           ),
+        //                         ),
+        //                         const SizedBox(
+        //                           height: 10,
+        //                         ),
+        //                         Text(
+        //                           "Price: ${houses[index].price}",
+        //                           style: GoogleFonts.poppins(
+        //                             fontSize: 14,
+        //                             fontWeight: FontWeight.bold,
+        //                             color: Color.fromARGB(255, 5, 5, 5),
+        //                           ),
+        //                         ),
+        //                       ]),
+        //                 ),
+        //               ],
+        //             ),
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ),
       ),
-      // Container(
-      //   child: ListView.builder(
-      //     itemCount: houses.length,
-      //     itemBuilder: (context, index) {
-      //       return Padding(
-      //         padding: const EdgeInsets.all(8.0),
-      //         child: Container(
-      //           decoration: BoxDecoration(
-      //             borderRadius: BorderRadius.circular(10),
-      //             color: Colors.white,
-      //           ),
-      //           child: Padding(
-      //             padding: const EdgeInsets.all(8.0),
-      //             child: Row(
-      //               children: [
-      //                 Container(
-      //                   height: 100,
-      //                   width: 100,
-      //                   decoration: BoxDecoration(
-      //                     borderRadius: BorderRadius.circular(10),
-      //                     image: DecorationImage(
-      //                       image: NetworkImage(houses[index].pictureUrl),
-      //                       fit: BoxFit.cover,
-      //                     ),
-      //                   ),
-      //                 ),
-      //                 const SizedBox(
-      //                   width: 10,
-      //                 ),
-      //                 Expanded(
-      //                   child: Column(
-      //                       crossAxisAlignment: CrossAxisAlignment.start,
-      //                       children: [
-      //                         Text(
-      //                           houses[index].name,
-      //                           style: GoogleFonts.poppins(
-      //                             fontSize: 18,
-      //                             fontWeight: FontWeight.bold,
-      //                             color: Color.fromARGB(255, 5, 5, 5),
-      //                           ),
-      //                         ),
-      //                         const SizedBox(
-      //                           height: 10,
-      //                         ),
-      //                         Text(
-      //                           houses[index].address,
-      //                           style: GoogleFonts.poppins(
-      //                             fontSize: 14,
-      //                             fontWeight: FontWeight.bold,
-      //                             color: Color.fromARGB(255, 5, 5, 5),
-      //                           ),
-      //                         ),
-      //                         const SizedBox(
-      //                           height: 10,
-      //                         ),
-      //                         Text(
-      //                           "Price: ${houses[index].price}",
-      //                           style: GoogleFonts.poppins(
-      //                             fontSize: 14,
-      //                             fontWeight: FontWeight.bold,
-      //                             color: Color.fromARGB(255, 5, 5, 5),
-      //                           ),
-      //                         ),
-      //                       ]),
-      //                 ),
-      //               ],
-      //             ),
-      //           ),
-      //         ),
-      //       );
-      //     },
-      //   ),
-      // ),
     );
   }
 

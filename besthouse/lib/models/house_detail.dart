@@ -1,11 +1,10 @@
-import 'package:besthouse/models/facilities.dart';
 import 'package:besthouse/models/room.dart';
 
 class HouseDetail {
   final String houseId;
   final String userId;
   final List<Room> rooms;
-  final List<Facilities> facilities;
+  final List<String> facilities;
   final String description;
   final double electricFee;
   final int likes;

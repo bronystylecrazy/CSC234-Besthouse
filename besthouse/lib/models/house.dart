@@ -31,6 +31,8 @@ class House {
     this.type = "HOUSE",
     this.status = true,
   });
+
+  get userId => null;
 }
 
 class Location {

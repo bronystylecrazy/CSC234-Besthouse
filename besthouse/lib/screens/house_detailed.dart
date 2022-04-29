@@ -1,3 +1,4 @@
+import 'package:besthouse/screens/customer_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:like_button/like_button.dart';
@@ -5,11 +6,13 @@ import 'package:like_button/like_button.dart';
 //model
 import 'package:besthouse/models/house.dart';
 import 'package:besthouse/models/house_detail.dart';
-import 'package:besthouse/models/facilities.dart';
+import 'package:besthouse/models/user_profile.dart';
 import 'package:besthouse/models/room.dart';
 
 //widget
 import '../widgets/common/tag.dart';
+import '../widgets/house_detail/room_image.dart';
+import '../widgets/home/house_card.dart';
 
 // class HouseDetailed0 extends StatelessWidget {
 //   const HouseDetailed0({Key? key}) : super(key: key);
@@ -34,31 +37,6 @@ class _HouseDetailedState extends State<HouseDetailed> {
         <String, String>{"id": "0"}) as Map<String, String>;
     final houseId = routeArgs['id'];
 
-    final houseDetail = HouseDetail(
-      houseId: "0",
-      userId: "0",
-      rooms: [
-        Room(
-            type: "Bathroom",
-            numbers: 2,
-            pictures: ["https://i.imgur.com/DvpvklR.png"]),
-        Room(
-            type: "Living room",
-            numbers: 0,
-            pictures: ["https://i.imgur.com/DvpvklR.png"]),
-        Room(
-            type: "kitchen",
-            numbers: 1,
-            pictures: ["https://i.imgur.com/DvpvklR.png"]),
-      ],
-      facilities: [Facilities("aaa", true), Facilities("name", false)],
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      electricFee: 0,
-      likes: 1200,
-      totalSize: 33,
-    );
-
     final house = House(
       id: houseId ?? "0",
       name: "Flutter Condo",
@@ -76,8 +54,103 @@ class _HouseDetailedState extends State<HouseDetailed> {
         "Condo",
         "House"
       ],
-      detail: houseDetail,
+      detail: HouseDetail(
+        houseId: "0",
+        userId: "0",
+        rooms: [
+          Room(type: "bath", numbers: 2, pictures: [
+            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+          ]),
+          Room(type: "living", numbers: 3, pictures: [
+            "https://i.imgur.com/DvpvklR.png",
+            "https://i.imgur.com/DvpvklR.png",
+            "https://i.imgur.com/DvpvklR.png",
+          ]),
+          Room(type: "kitchen", numbers: 1, pictures: [
+            "https://i.imgur.com/DvpvklR.png",
+            "https://i.imgur.com/DvpvklR.png",
+            "https://i.imgur.com/DvpvklR.png",
+          ]),
+        ],
+        facilities: [
+          "wifi",
+          "parking",
+          "air",
+          "fitness",
+          "water",
+          "furnished",
+          "pool"
+        ],
+        description:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        electricFee: 0,
+        likes: 1200,
+        totalSize: 33,
+      ),
     );
+
+    final landlord = UserProfile(
+      firstname: "Flutter Condo",
+      lastname: "Landlord",
+    );
+
+    final List<House> housesRec = [
+      House(
+        id: "634gf3438",
+        name: "Spy Home",
+        pictureUrl:
+            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+        price: 4000,
+        location: Location(
+          coordinates: [-6.2108, 106.8451],
+        ),
+        address: 'Soi 45 Prachauthid Thungkru, Bangkok',
+        type: 'CONDOMINIUM',
+      ),
+      House(
+        id: "634gf3438",
+        name: "Willy House",
+        pictureUrl:
+            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+        price: 6000,
+        location: Location(
+          coordinates: [13.2108, 107.8451],
+        ),
+        address: 'KMUTT university Prachauthid Thungkru, Bangkok',
+      ),
+      House(
+        id: "634gf3438",
+        name: "Jannie House",
+        pictureUrl:
+            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+        price: 6000,
+        location: Location(
+          coordinates: [13.2108, 107.8451],
+        ),
+        address: 'KMUTT university Prachauthid Thungkru, Bangkok',
+      ),
+    ];
+
+    final houseDetail = house.detail;
+    int living = 0;
+    int kitchen = 0;
+    int bath = 0;
+    int bed = 0;
+    int total = 0;
+    for (var i = 0; i < houseDetail!.rooms.length; i++) {
+      if (houseDetail.rooms[i].type == "living") {
+        living = houseDetail.rooms[i].numbers;
+      } else if (houseDetail.rooms[i].type == "kitchen") {
+        kitchen = houseDetail.rooms[i].numbers;
+      } else if (houseDetail.rooms[i].type == "bath") {
+        bath = houseDetail.rooms[i].numbers;
+      } else if (houseDetail.rooms[i].type == "bed") {
+        bed = houseDetail.rooms[i].numbers;
+      }
+    }
+    total = living + kitchen + bath + bed;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -182,14 +255,14 @@ class _HouseDetailedState extends State<HouseDetailed> {
                     "Description",
                     style: Theme.of(context).textTheme.headline5?.apply(
                           fontSizeFactor: 0.9,
-                          fontSizeDelta: 0.0,
+                          fontSizeDelta: 0.9,
                         ),
                   ),
                   const SizedBox(
                     height: 8,
                   ),
                   Text(
-                    house.detail?.description ?? "No describetion",
+                    houseDetail?.description ?? "No describetion",
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                   const SizedBox(
@@ -199,7 +272,7 @@ class _HouseDetailedState extends State<HouseDetailed> {
                     "Details",
                     style: Theme.of(context).textTheme.headline5?.apply(
                           fontSizeFactor: 0.9,
-                          fontSizeDelta: 0.0,
+                          fontSizeDelta: 0.9,
                         ),
                   ),
                   Row(
@@ -208,22 +281,191 @@ class _HouseDetailedState extends State<HouseDetailed> {
                         "Total Space: ",
                         style: Theme.of(context).textTheme.headline5?.apply(
                               fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.0,
+                              fontSizeDelta: 0.8,
                             ),
                       ),
                       Text(
-                        house.detail?.totalSize.toString() ?? "0",
+                        houseDetail.totalSize.toString(),
                       )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Rooms: ",
+                        style: Theme.of(context).textTheme.headline5?.apply(
+                              fontSizeFactor: 0.8,
+                              fontSizeDelta: 0.8,
+                            ),
+                      ),
+                      Text(
+                        total.toString(),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Living room: ",
+                        style: Theme.of(context).textTheme.headline5?.apply(
+                              fontSizeFactor: 0.8,
+                              fontSizeDelta: 0.8,
+                            ),
+                      ),
+                      Text(
+                        living.toString(),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Bedroom: ",
+                        style: Theme.of(context).textTheme.headline5?.apply(
+                              fontSizeFactor: 0.8,
+                              fontSizeDelta: 0.8,
+                            ),
+                      ),
+                      Text(
+                        bed.toString(),
+                      ),
                     ],
                   ),
 
                   Row(
                     children: [
                       Text(
+                        "Bathroom: ",
+                        style: Theme.of(context).textTheme.headline5?.apply(
+                              fontSizeFactor: 0.8,
+                              fontSizeDelta: 0.8,
+                            ),
+                      ),
+                      Text(
+                        bath.toString(),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Kitchen: ",
+                        style: Theme.of(context).textTheme.headline5?.apply(
+                              fontSizeFactor: 0.8,
+                              fontSizeDelta: 0.8,
+                            ),
+                      ),
+                      Text(
+                        kitchen.toString(),
+                      ),
+                    ],
+                  ),
+
+                  Column(
+                    children: [
+                      Text(
+                        "Pictures of everyroom ",
+                        style: Theme.of(context).textTheme.headline5?.apply(
+                              fontSizeFactor: 0.8,
+                              fontSizeDelta: 0.8,
+                            ),
+                      ),
+                      SizedBox(
+                        height: 200,
+                        child: RoomImage(houseDetail: house.detail),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Furniture: ",
+                        style: Theme.of(context).textTheme.headline5?.apply(
+                              fontSizeFactor: 0.8,
+                              fontSizeDelta: 0.8,
+                            ),
+                      ),
+                      Text(
+                        houseDetail.facilities
+                                .any((e) => e.compareTo("funished") == 0)
+                            ? "provided"
+                            : "No",
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Fiber internet: ",
+                        style: Theme.of(context).textTheme.headline5?.apply(
+                              fontSizeFactor: 0.8,
+                              fontSizeDelta: 0.8,
+                            ),
+                      ),
+                      Text(
+                        houseDetail.facilities
+                                .any((e) => e.compareTo("wifi") == 0)
+                            ? "provided"
+                            : "No",
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Water heater: ",
+                        style: Theme.of(context).textTheme.headline5?.apply(
+                              fontSizeFactor: 0.8,
+                              fontSizeDelta: 0.8,
+                            ),
+                      ),
+                      Text(
+                        houseDetail.facilities
+                                .any((e) => e.compareTo("water") == 0)
+                            ? "provided"
+                            : "No",
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Air condition: ",
+                        style: Theme.of(context).textTheme.headline5?.apply(
+                              fontSizeFactor: 0.8,
+                              fontSizeDelta: 0.8,
+                            ),
+                      ),
+                      Text(
+                        houseDetail.facilities
+                                .any((e) => e.compareTo("air") == 0)
+                            ? "provided"
+                            : "No",
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Fan: ",
+                        style: Theme.of(context).textTheme.headline5?.apply(
+                              fontSizeFactor: 0.8,
+                              fontSizeDelta: 0.8,
+                            ),
+                      ),
+                      Text(
+                        houseDetail.facilities
+                                .any((e) => e.compareTo("Fan") == 0)
+                            ? "provided"
+                            : "No",
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
                         "Electric Fee: ",
                         style: Theme.of(context).textTheme.headline5?.apply(
                               fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.0,
+                              fontSizeDelta: 0.8,
                             ),
                       ),
                       Text(
@@ -231,7 +473,78 @@ class _HouseDetailedState extends State<HouseDetailed> {
                       )
                     ],
                   ),
-
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          MaterialButton(
+                            onPressed: (() {
+                              _showUser(houseDetail.userId.toString());
+                            }),
+                            child: Container(
+                              width: 50.0,
+                              height: 50.0,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: NetworkImage(
+                                    "https://i.imgur.com/DvpvklR.png",
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: (() {
+                              _showUser(houseDetail.userId.toString());
+                            }),
+                            child: Text(
+                              landlord.firstname + "  " + landlord.lastname,
+                            ),
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.phone,
+                          size: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Nearby Place",
+                    style: Theme.of(context).textTheme.headline5?.apply(
+                          fontSizeFactor: 0.9,
+                          fontSizeDelta: 0.9,
+                        ),
+                  ),
+                  housesRec.isNotEmpty
+                      ? SizedBox(
+                          height: 150,
+                          width: double.infinity,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: housesRec.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return HouseCard(
+                                house: housesRec[index],
+                                showInfoHandler: _showInfo,
+                              );
+                            },
+                          ),
+                        )
+                      : const Text('No houses found'),
                   // SliverList(
                   //     Container(
                   //       width: 160.0,
@@ -317,5 +630,17 @@ class _HouseDetailedState extends State<HouseDetailed> {
 
   String calculatePrice(int price) {
     return "${price.toString()} Baht/Month";
+  }
+
+  void _showInfo(String id) {
+    Navigator.of(context).pushNamed(HouseDetailed.routeName, arguments: {
+      'id': id,
+    });
+  }
+
+  void _showUser(String id) {
+    Navigator.of(context).pushNamed(CustomerProfile.routeName, arguments: {
+      'id': id,
+    });
   }
 }
