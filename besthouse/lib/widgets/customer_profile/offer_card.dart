@@ -36,10 +36,10 @@ class OfferCard extends StatelessWidget {
                     child: Row(
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(2),
                           child: Container(
-                            width: 8,
-                            height: 8,
+                            width: 6,
+                            height: 6,
                             color: isAvailable
                                 ? const Color(0xff38A06C)
                                 : const Color(0xff94989B),
