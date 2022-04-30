@@ -1,7 +1,7 @@
+import 'package:besthouse/main.dart';
 import 'package:besthouse/screens/forget_password.dart';
-import 'package:besthouse/screens/home.dart';
-import 'package:flutter/gestures.dart';
 import 'package:besthouse/screens/sign_up.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:besthouse/widgets/common/custom_textfield.dart';
 import 'package:besthouse/widgets/common/button.dart';
@@ -69,7 +69,8 @@ class _SignInState extends State<SignIn> {
                             style: Theme.of(context).textTheme.caption,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Navigator.pushNamed(context, ForgetPassword.routeName);
+                                Navigator.pushNamed(
+                                    context, ForgetPassword.routeName);
                               },
                           ),
                         ),
@@ -92,7 +93,8 @@ class _SignInState extends State<SignIn> {
                             child: Button(
                                 text: "Start your journey",
                                 clickHandler: () {
-                                  Navigator.pushNamed(context, Home.routeName);
+                                  Navigator.pushReplacementNamed(
+                                      context, MyHomePage.routeName);
                                 }),
                           ),
                           Padding(
@@ -105,7 +107,8 @@ class _SignInState extends State<SignIn> {
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.pushNamed(context, SignUp.routeName);
+                                    Navigator.pushReplacementNamed(
+                                        context, SignUp.routeName);
                                   },
                               ),
                             ),

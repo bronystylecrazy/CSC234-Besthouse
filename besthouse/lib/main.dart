@@ -182,6 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 0,
         flexibleSpace: Container(
           decoration: _selectedIndex == 3
@@ -201,8 +202,10 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             GestureDetector(
               child: Image.asset(
-                _selectedIndex == 3 ? "assets/logo_alt.png" : "assets/logo.png",
-                scale: 24),
+                  _selectedIndex == 3
+                      ? "assets/logo_alt.png"
+                      : "assets/logo.png",
+                  scale: 24),
               onTap: () {
                 setState(() {
                   _selectedIndex = 0;

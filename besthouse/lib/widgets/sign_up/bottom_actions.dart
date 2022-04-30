@@ -1,4 +1,5 @@
-import 'package:besthouse/widgets/sign_up/step_identifyer.dart';
+import 'package:besthouse/screens/sign_in.dart';
+import 'package:besthouse/widgets/common/step_identifyer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,7 +18,11 @@ class BottomActions extends StatelessWidget {
           amount: 2,
         ),
         ElevatedButton(
-          onPressed: next,
+          onPressed: stepIndex == 1
+              ? () {
+                  Navigator.pushNamed(context, SignIn.routeName);
+                }
+              : next,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(0),
             shape: RoundedRectangleBorder(
@@ -57,7 +62,7 @@ class BottomActions extends StatelessWidget {
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    print('Login Text Clicked');
+                    Navigator.pushReplacementNamed(context, SignIn.routeName);
                   }),
           ),
         ),
