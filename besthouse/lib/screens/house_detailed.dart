@@ -10,6 +10,7 @@ import 'package:besthouse/models/user_profile.dart';
 import 'package:besthouse/models/room.dart';
 
 //widget
+import '../models/location.dart';
 import '../widgets/common/tag.dart';
 import '../widgets/house_detail/room_image.dart';
 import '../widgets/home/house_card.dart';
@@ -33,8 +34,8 @@ class _HouseDetailedState extends State<HouseDetailed> {
   final scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    final routeArgs = (ModalRoute.of(context)?.settings.arguments ??
-        <String, String>{"id": "0"}) as Map<String, String>;
+    final routeArgs = (ModalRoute.of(context)?.settings.arguments ?? <String, String>{"id": "0"})
+        as Map<String, String>;
     final houseId = routeArgs['id'];
 
     final house = House(
@@ -44,45 +45,28 @@ class _HouseDetailedState extends State<HouseDetailed> {
       pictureUrl: "https://i.imgur.com/DvpvklR.png",
       price: 1000000,
       address: "123 Fake Street",
-      tags: [
-        "Hello",
-        "World",
-        "Flutter",
-        "Condo",
-        "House",
-        "Flutter",
-        "Condo",
-        "House"
-      ],
+      tags: ["Hello", "World", "Flutter", "Condo", "House", "Flutter", "Condo", "House"],
       detail: HouseDetail(
         houseId: "0",
         userId: "0",
         rooms: [
-          Room(type: "bath", numbers: 2, pictures: [
+          Room(type: "bath", amount: 2, pictures: [
             "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
             "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
             "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
           ]),
-          Room(type: "living", numbers: 3, pictures: [
+          Room(type: "living", amount: 3, pictures: [
             "https://i.imgur.com/DvpvklR.png",
             "https://i.imgur.com/DvpvklR.png",
             "https://i.imgur.com/DvpvklR.png",
           ]),
-          Room(type: "kitchen", numbers: 1, pictures: [
+          Room(type: "kitchen", amount: 1, pictures: [
             "https://i.imgur.com/DvpvklR.png",
             "https://i.imgur.com/DvpvklR.png",
             "https://i.imgur.com/DvpvklR.png",
           ]),
         ],
-        facilities: [
-          "wifi",
-          "parking",
-          "air",
-          "fitness",
-          "water",
-          "furnished",
-          "pool"
-        ],
+        facilities: ["wifi", "parking", "air", "fitness", "water", "furnished", "pool"],
         description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         electricFee: 0,
@@ -141,13 +125,13 @@ class _HouseDetailedState extends State<HouseDetailed> {
     int total = 0;
     for (var i = 0; i < houseDetail!.rooms.length; i++) {
       if (houseDetail.rooms[i].type == "living") {
-        living = houseDetail.rooms[i].numbers;
+        living = houseDetail.rooms[i].amount;
       } else if (houseDetail.rooms[i].type == "kitchen") {
-        kitchen = houseDetail.rooms[i].numbers;
+        kitchen = houseDetail.rooms[i].amount;
       } else if (houseDetail.rooms[i].type == "bath") {
-        bath = houseDetail.rooms[i].numbers;
+        bath = houseDetail.rooms[i].amount;
       } else if (houseDetail.rooms[i].type == "bed") {
-        bed = houseDetail.rooms[i].numbers;
+        bed = houseDetail.rooms[i].amount;
       }
     }
     total = living + kitchen + bath + bed;
@@ -202,8 +186,8 @@ class _HouseDetailedState extends State<HouseDetailed> {
                       ),
                       LikeButton(
                         size: buttonSize,
-                        circleColor: const CircleColor(
-                            start: Color(0xff00ddff), end: Color(0xff0099cc)),
+                        circleColor:
+                            const CircleColor(start: Color(0xff00ddff), end: Color(0xff0099cc)),
                         bubblesColor: const BubblesColor(
                           dotPrimaryColor: Color(0xff33b5e5),
                           dotSecondaryColor: Color(0xff0099cc),
@@ -211,8 +195,7 @@ class _HouseDetailedState extends State<HouseDetailed> {
                         likeBuilder: (bool isLiked) {
                           return Icon(
                             Icons.thumb_up,
-                            color:
-                                isLiked ? const Color(0xFF24577A) : Colors.grey,
+                            color: isLiked ? const Color(0xFF24577A) : Colors.grey,
                             size: buttonSize,
                           );
                         },
@@ -259,8 +242,7 @@ class _HouseDetailedState extends State<HouseDetailed> {
                     height: 8,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
                     child: Text(
                       houseDetail?.description ?? "No describetion",
                       style: Theme.of(context).textTheme.subtitle1,
@@ -277,17 +259,14 @@ class _HouseDetailedState extends State<HouseDetailed> {
                         ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                     child: Column(
                       children: [
-                        _buildDetail(context, "Total Space",
-                            houseDetail.totalSize.toString()),
+                        _buildDetail(context, "Total Space", houseDetail.totalSize.toString()),
                         _buildDetail(context, "Rooms", total.toString()),
                         Row(
                           children: [
-                            _buildDetail(
-                                context, "Living romm", living.toString()),
+                            _buildDetail(context, "Living romm", living.toString()),
                             const SizedBox(
                               width: 10,
                             ),
@@ -300,8 +279,7 @@ class _HouseDetailedState extends State<HouseDetailed> {
                             const SizedBox(
                               width: 10,
                             ),
-                            _buildDetail(
-                                context, "Kitchen", kitchen.toString()),
+                            _buildDetail(context, "Kitchen", kitchen.toString()),
                           ],
                         ),
                       ],
@@ -310,55 +288,48 @@ class _HouseDetailedState extends State<HouseDetailed> {
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, bottom: 8),
                     child: Text("Additional pictures :",
-                        textAlign: TextAlign.left,
-                        style: Theme.of(context).textTheme.headline4),
+                        textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline4),
                   ),
                   SizedBox(
                     height: 200,
                     child: RoomImage(houseDetail: house.detail),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                     child: Column(
                       children: [
                         _buildDetail(
                           context,
                           "Furniture",
-                          houseDetail.facilities
-                                  .any((e) => e.compareTo("funished") == 0)
+                          houseDetail.facilities.any((e) => e.compareTo("funished") == 0)
                               ? "provided"
                               : "No",
                         ),
                         _buildDetail(
                           context,
                           "Fiber internet",
-                          houseDetail.facilities
-                                  .any((e) => e.compareTo("wifi") == 0)
+                          houseDetail.facilities.any((e) => e.compareTo("wifi") == 0)
                               ? "provided"
                               : "No",
                         ),
                         _buildDetail(
                           context,
                           "Water heater",
-                          houseDetail.facilities
-                                  .any((e) => e.compareTo("water") == 0)
+                          houseDetail.facilities.any((e) => e.compareTo("water") == 0)
                               ? "provided"
                               : "No",
                         ),
                         _buildDetail(
                           context,
                           "Air condition",
-                          houseDetail.facilities
-                                  .any((e) => e.compareTo("air") == 0)
+                          houseDetail.facilities.any((e) => e.compareTo("air") == 0)
                               ? "provided"
                               : "No",
                         ),
                         _buildDetail(
                           context,
                           "Fan",
-                          houseDetail.facilities
-                                  .any((e) => e.compareTo("Fan") == 0)
+                          houseDetail.facilities.any((e) => e.compareTo("Fan") == 0)
                               ? "provided"
                               : "No",
                         ),

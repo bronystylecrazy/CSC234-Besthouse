@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 //model
-import 'package:besthouse/models/house.dart';
+import '../models/house.dart';
+import '../models/location.dart';
+// screens
 import '../screens/house_detailed.dart';
-
 //widget
 import '../widgets/common/house_detail_card.dart';
 

@@ -1,4 +1,6 @@
 // packages
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +26,7 @@ import './screens/forget_password.dart';
 import './services/dio.dart';
 import './services/provider.dart';
 import './services/location_api.dart';
+import 'screens/land_lord_profile.dart';
 
 void main() {
   if (defaultTargetPlatform == TargetPlatform.android) {
@@ -70,15 +73,11 @@ class MyApp extends StatelessWidget {
               color: const Color(0xFF24577A),
             ),
             headline2: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF24577A)),
+                fontSize: 20, fontWeight: FontWeight.w600, color: const Color(0xFF24577A)),
             headline1: GoogleFonts.poppins(
-                fontSize: 38,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF022B3A)),
-            headline4: GoogleFonts.poppins(
-                fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+                fontSize: 38, fontWeight: FontWeight.w600, color: const Color(0xFF022B3A)),
+            headline4:
+                GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
             headline5: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.w600,
@@ -90,9 +89,7 @@ class MyApp extends StatelessWidget {
               color: const Color.fromARGB(80, 0, 0, 0),
             ),
             bodyText1: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xff0E2B39)),
+                fontSize: 16, fontWeight: FontWeight.w500, color: const Color(0xff0E2B39)),
             bodyText2: GoogleFonts.poppins(
               fontSize: 14,
               color: const Color(0xFF022B3A),
@@ -198,10 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Row(
           children: [
             GestureDetector(
-              child: Image.asset(
-                  _selectedIndex == 3
-                      ? "assets/logo_alt.png"
-                      : "assets/logo.png",
+              child: Image.asset(_selectedIndex == 3 ? "assets/logo_alt.png" : "assets/logo.png",
                   scale: 24),
               onTap: () {
                 setState(() {
@@ -218,9 +212,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textAlign: TextAlign.left,
               style: _selectedIndex == 3
                   ? GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600)
+                      color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)
                   : Theme.of(context).textTheme.bodyText2,
             ),
           ],
@@ -232,26 +224,20 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(
               Icons.menu_book,
             ),
-            color: _selectedIndex == 3
-                ? Colors.white
-                : Theme.of(context).colorScheme.secondary,
+            color: _selectedIndex == 3 ? Colors.white : Theme.of(context).colorScheme.secondary,
             tooltip: 'Go to guide page',
-            onPressed: () => Navigator.pushNamed(context, Guide.routeName,
-                arguments: {"type": "customer"}),
+            onPressed: () =>
+                Navigator.pushNamed(context, Guide.routeName, arguments: {"type": "customer"}),
           ),
         ],
       ),
       body: AnimatedSwitcher(
-        layoutBuilder: (currentChild, previousChildren) =>
-            currentChild as Widget,
+        layoutBuilder: (currentChild, previousChildren) => currentChild as Widget,
         switchInCurve: Curves.easeOutExpo,
         transitionBuilder: (child, animation) => SlideTransition(
           position: isSwapRight
-              ? Tween<Offset>(
-                      begin: const Offset(2, 0), end: const Offset(0, 0))
-                  .animate(animation)
-              : Tween<Offset>(
-                      begin: const Offset(-2, 0), end: const Offset(0, 0))
+              ? Tween<Offset>(begin: const Offset(2, 0), end: const Offset(0, 0)).animate(animation)
+              : Tween<Offset>(begin: const Offset(-2, 0), end: const Offset(0, 0))
                   .animate(animation),
           child: child,
         ),
