@@ -1,11 +1,9 @@
 // packages
-import 'package:besthouse/services/location_api.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // screens
 import './screens/customer_profile.dart';
@@ -25,6 +23,7 @@ import './screens/forget_password.dart';
 // services
 import './services/dio.dart';
 import './services/provider.dart';
+import './services/location_api.dart';
 
 void main() {
   if (defaultTargetPlatform == TargetPlatform.android) {
@@ -60,6 +59,9 @@ class MyApp extends StatelessWidget {
           secondary: const Color.fromARGB(255, 84, 156, 160),
           tertiary: const Color.fromARGB(255, 240, 241, 243),
         ),
+        iconTheme: const IconThemeData(
+          color: Color.fromARGB(255, 84, 156, 160),
+        ),
         textTheme: TextTheme(
           headline3: GoogleFonts.poppins(
             fontSize: 24,
@@ -77,7 +79,10 @@ class MyApp extends StatelessWidget {
             color: const Color(0xFF022B3A),
           ),
           bodyText1: GoogleFonts.poppins(
-              fontSize: 16, fontWeight: FontWeight.w500, color: const Color(0xff0E2B39)),
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: const Color(0xff0E2B39),
+          ),
           bodyText2: GoogleFonts.poppins(
             fontSize: 14,
             color: const Color(0xFF022B3A),

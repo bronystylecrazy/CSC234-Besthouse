@@ -1,3 +1,5 @@
+import './location.dart';
+
 class House {
   final String id;
   final String name;
@@ -8,6 +10,7 @@ class House {
   final List<String> tags;
   final String type;
   final bool status;
+  final bool isAdvertised;
 
   House({
     required this.id,
@@ -19,14 +22,6 @@ class House {
     this.tags = const [],
     this.type = "HOUSE",
     this.status = true,
-  });
-}
-
-class Location {
-  final List<double> coordinates;
-  final String type = 'Point';
-
-  Location({
-    required this.coordinates,
+    this.isAdvertised = false,
   });
 }

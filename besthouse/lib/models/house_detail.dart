@@ -7,6 +7,7 @@ class HouseDetail {
   final List<String> facilities;
   final String description;
   final double electricFee;
+  final double waterFee;
   final int likes;
   final double totalSize;
 
@@ -17,6 +18,7 @@ class HouseDetail {
     required this.facilities,
     this.description = "",
     this.electricFee = 0.0,
+    this.waterFee = 0.0,
     this.likes = 0,
     this.totalSize = 0.0,
   });

@@ -1,15 +1,16 @@
-import 'package:besthouse/services/dio.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+
+// services
+import 'constants.dart';
+import 'dio.dart';
 
 class LocationApi {
   static Future<List<double?>> getLocation() async {
     final Location location = Location();
-
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
     LocationData _locationData;
-    String address;
 
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
@@ -35,13 +36,13 @@ class LocationApi {
 
 class GoogleApiProvider {
   final sessionToken;
-  final String _apiKey = "AIzaSyCoIin5viAmmuDbNf7MZZUbEqfMsYUj79Q";
+  final String apiKey = Constants.apiKey;
 
   GoogleApiProvider(this.sessionToken);
 
   Future<List<Suggestion>> fetchSuggestions(String input, String lang) async {
     final request =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&language=$lang&key=$_apiKey&sessiontoken=$sessionToken';
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&language=$lang&key=$apiKey&sessiontoken=$sessionToken';
     final response = await DioInstance.dio.get(request);
 
     if (response.statusCode == 200) {
@@ -66,14 +67,13 @@ class GoogleApiProvider {
 
   Future<String> getAddress(double lat, double long) async {
     final request =
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$long&key=$_apiKey';
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$long&key=$apiKey';
     final response = await DioInstance.dio.get(request);
 
     if (response.statusCode == 200) {
       final result = response.data;
 
       if (result['status'] == 'OK') {
-        print(result['results'][0]['formatted_address']);
         final address = result['results'][0]['formatted_address'];
         return address;
       }
@@ -90,12 +90,11 @@ class GoogleApiProvider {
 
   Future<Place> getPlaceDetailFromId(String placeId) async {
     final request =
-        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=geometry,formatted_address&key=$_apiKey&sessiontoken=$sessionToken';
+        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=geometry,formatted_address&key=$apiKey&sessiontoken=$sessionToken';
     final response = await DioInstance.dio.get(request);
 
     if (response.statusCode == 200) {
       final result = response.data;
-      print(result["result"]);
       if (result['status'] == 'OK') {
         final locate = result['result']['geometry']['location'] as Map<String, dynamic>;
         final address = result['result']['formatted_address'];

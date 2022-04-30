@@ -35,20 +35,24 @@ class _GoogleLocationState extends State<GoogleLocation> {
   }
 
   void _onMapTap(LatLng location) async {
-    final address =
-        await GoogleApiProvider(sessionToken).getAddress(location.latitude, location.longitude);
-
-    print("test");
-    print(address);
+    final address = await GoogleApiProvider(sessionToken).getAddress(
+      location.latitude,
+      location.longitude,
+    );
 
     setState(() {
-      Provider.of<DesireLocation>(context, listen: false)
-          .updateLocation(CameraPosition(target: location, zoom: 18));
+      Provider.of<DesireLocation>(context, listen: false).updateLocation(CameraPosition(
+        target: location,
+        zoom: 18,
+      ));
       Provider.of<DesireLocation>(context, listen: false).updateAddress(address);
 
-      _controller.future.then((value) => value.animateCamera(CameraUpdate.newCameraPosition(
-          Provider.of<DesireLocation>(context, listen: false).location)));
-
+      _controller.future.then(
+        (value) => value.animateCamera(
+          CameraUpdate.newCameraPosition(
+              Provider.of<DesireLocation>(context, listen: false).location),
+        ),
+      );
       _textController.text = Provider.of<DesireLocation>(context, listen: false).address;
     });
   }
@@ -89,8 +93,17 @@ class _GoogleLocationState extends State<GoogleLocation> {
     return Scaffold(
       appBar: AppBar(
         title: _textController.text == ""
-            ? const Text("Enter your desire location", style: TextStyle(fontSize: 15))
-            : Text(_textController.text, style: const TextStyle(fontSize: 15)),
+            ? const Text(
+                "Enter your desire location",
+                style: TextStyle(fontSize: 15),
+              )
+            : Tooltip(
+                message: _textController.text,
+                child: Text(
+                  _textController.text,
+                  style: const TextStyle(fontSize: 15),
+                ),
+              ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.search),
@@ -126,7 +139,11 @@ class _GoogleLocationState extends State<GoogleLocation> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _resetLocation,
-        child: const Icon(Icons.my_location),
+        child: Icon(
+          Icons.my_location,
+          color: Theme.of(context).iconTheme.color,
+        ),
+        backgroundColor: Colors.white,
       ),
     );
   }

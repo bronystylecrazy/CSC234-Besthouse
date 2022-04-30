@@ -41,13 +41,18 @@ class _FilterSheetState extends State<FilterSheet> {
               children: [
                 Text(
                   "Filters",
-                  style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
                 IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.keyboard_arrow_down))
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                )
               ],
             ),
             _buildContainer(
@@ -92,34 +97,33 @@ class _FilterSheetState extends State<FilterSheet> {
                     margin: const EdgeInsets.only(top: 8),
                     height: 70,
                     child: GridView.count(
-                        childAspectRatio: 5,
-                        physics: const NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        padding: EdgeInsets.zero,
-                        mainAxisSpacing: 4,
-                        crossAxisCount: 2,
-                        // Generate 100 widgets that display their index in the List.
-                        children: widget.radioList
-                            .map((e) => Row(
-                                  children: [
-                                    Radio<Accommodation>(
-                                        activeColor: const Color(0xff24577A),
-                                        value: e.type,
-                                        groupValue: widget.type,
-                                        onChanged: (value) {
-                                          widget.radioHandler(value);
-                                          setState(() {
-                                            widget.type = value;
-                                          });
-                                        }),
-                                    Text(
-                                      e.name,
-                                      style: Theme.of(context).textTheme.subtitle1,
-                                    )
-                                  ],
-                                ))
-                            .toList()),
-                  )
+                      childAspectRatio: 6,
+                      padding: EdgeInsets.zero,
+                      mainAxisSpacing: 4,
+                      crossAxisCount: 2,
+                      // Generate 100 widgets that display their index in the List.
+                      children: widget.radioList
+                          .map((e) => Row(
+                                children: [
+                                  Radio<Accommodation>(
+                                      activeColor: const Color(0xff24577A),
+                                      value: e.type,
+                                      groupValue: widget.type,
+                                      onChanged: (value) {
+                                        widget.radioHandler(value);
+                                        setState(() {
+                                          widget.type = value;
+                                        });
+                                      }),
+                                  Text(
+                                    e.name,
+                                    style: Theme.of(context).textTheme.subtitle1,
+                                  )
+                                ],
+                              ))
+                          .toList(),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -134,11 +138,9 @@ class _FilterSheetState extends State<FilterSheet> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 8),
-                    height: 140,
+                    height: 100,
                     child: GridView.count(
-                        childAspectRatio: 5,
-                        physics: const NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
+                        childAspectRatio: 6,
                         padding: EdgeInsets.zero,
                         mainAxisSpacing: 4,
                         crossAxisCount: 2,
@@ -147,7 +149,7 @@ class _FilterSheetState extends State<FilterSheet> {
                             .map((e) => Row(
                                   children: [
                                     Checkbox(
-                                        activeColor: Color(0xff24577A),
+                                        activeColor: const Color(0xff24577A),
                                         value: e.checked,
                                         onChanged: (value) {
                                           widget.checkBoxHandler(value, e);
@@ -165,10 +167,11 @@ class _FilterSheetState extends State<FilterSheet> {
               ),
             ),
             Button(
-                clickHandler: () {
-                  Navigator.pop(context);
-                },
-                text: "APPLY")
+              clickHandler: () {
+                Navigator.pop(context);
+              },
+              text: "Apply",
+            )
           ]),
         ),
       ],
@@ -180,7 +183,7 @@ class _FilterSheetState extends State<FilterSheet> {
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: const Color(0xffE2E5F1),
+        color: Theme.of(context).colorScheme.tertiary,
       ),
       child: Padding(padding: const EdgeInsets.all(16.0), child: child),
     );

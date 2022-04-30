@@ -1,3 +1,4 @@
+import 'package:besthouse/screens/offer_form.dart';
 import 'package:flutter/material.dart';
 
 class CustomerProfile extends StatelessWidget {
@@ -6,7 +7,12 @@ class CustomerProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text("profile"),
+      child: IconButton(
+        icon: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).pushNamed(OfferForm.routeName, arguments: OfferArguments());
+        },
+      ),
     );
   }
 }

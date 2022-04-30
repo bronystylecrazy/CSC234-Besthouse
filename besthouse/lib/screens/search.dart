@@ -3,20 +3,21 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../models/location.dart';
-import '../screens/house_detailed.dart';
-
+// services
+import '../services/constants.dart';
+// screens
+import 'house_detailed.dart';
+import 'google_location.dart';
 // widgets
 import '../services/provider.dart';
 import '../widgets/common/tag.dart';
 import '../widgets/common/house_detail_card.dart';
 import '../widgets/search/filter_sheet.dart';
-
 // models
+import '../models/location.dart';
 import '../models/accommodation.dart';
 import '../models/facilities.dart';
 import '../models/house.dart';
-import 'google_location.dart';
 
 class Search extends StatefulWidget {
   static const routeName = "/search";
@@ -28,7 +29,6 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  final String _apiKey = "AIzaSyCoIin5viAmmuDbNf7MZZUbEqfMsYUj79Q";
   RangeValues currentRangeValues = const RangeValues(0, 20000);
 
   final List<House> houses = [
@@ -140,7 +140,7 @@ class _SearchState extends State<Search> {
                     });
                   },
                   child: Image.network(
-                    "https://maps.googleapis.com/maps/api/staticmap?center=${location.target.latitude},${location.target.longitude}&zoom=18&size=${MediaQuery.of(context).size.width.toInt()}x200&key=$_apiKey",
+                    "https://maps.googleapis.com/maps/api/staticmap?center=${location.target.latitude},${location.target.longitude}&zoom=17&size=${MediaQuery.of(context).size.width.toInt()}x200&key=${Constants.apiKey}",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -222,8 +222,11 @@ class _SearchState extends State<Search> {
   void _buildModal(BuildContext ctx) {
     showModalBottomSheet<dynamic>(
         isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
         ),
         context: ctx,
         builder: (_) {

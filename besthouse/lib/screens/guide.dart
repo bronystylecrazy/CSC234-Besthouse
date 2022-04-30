@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:besthouse/main.dart';
+import 'package:besthouse/widgets/common/my_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/guide_model.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -25,8 +23,7 @@ class _GuideState extends State<Guide> {
         ? await rootBundle.loadString('assets/customer_guide.json')
         : await rootBundle.loadString('assets/seller_guide.json');
     final List<dynamic> data = await json.decode(response);
-    List<GuideModel> temp =
-        data.map((element) => GuideModel.fromJson(element)).toList();
+    List<GuideModel> temp = data.map((element) => GuideModel.fromJson(element)).toList();
     await Future.delayed(const Duration(seconds: 1), () {});
     setState(() {
       guides = temp;
@@ -35,8 +32,7 @@ class _GuideState extends State<Guide> {
 
   @override
   Widget build(BuildContext context) {
-    final routeArgs =
-        ModalRoute.of(context)?.settings.arguments as Map<String, String>;
+    final routeArgs = ModalRoute.of(context)?.settings.arguments as Map<String, String>;
     final String? guideType = routeArgs['type'];
 
     readJson(guideType == "customer");
@@ -45,28 +41,13 @@ class _GuideState extends State<Guide> {
       size: 50.0,
     );
     return Scaffold(
-      backgroundColor: Color(0xffF5F5F5),
+      backgroundColor: const Color(0xffF5F5F5),
       appBar: AppBar(
-          leadingWidth: 100,
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-              ),
-              child: Text(
-                "Back",
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-          elevation: 0,
-          backgroundColor: Color(0xffF5F5F5)),
+        leadingWidth: 100,
+        leading: const MyBackButton(),
+        elevation: 0,
+        backgroundColor: const Color(0xffF5F5F5),
+      ),
       body: Stack(
         children: [
           Center(
@@ -75,7 +56,7 @@ class _GuideState extends State<Guide> {
                 Center(
                   child: Text(
                     guideType == "customer" ? "Customer Guide" : "Seller Guide",
-                    style: Theme.of(context).textTheme.headline3,
+                    style: Theme.of(context).textTheme.headline2,
                   ),
                 ),
                 guides == null
@@ -86,8 +67,7 @@ class _GuideState extends State<Guide> {
                     : Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
-                          children:
-                              guides!.map((e) => _buildGuideCard(e)).toList(),
+                          children: guides!.map((e) => _buildGuideCard(e)).toList(),
                         ),
                       )
               ],
@@ -122,8 +102,7 @@ class _GuideState extends State<Guide> {
           padding: const EdgeInsets.only(left: 8.0),
           child: Text(
             value.name,
-            style:
-                GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
           ),
         ),
         children: [
