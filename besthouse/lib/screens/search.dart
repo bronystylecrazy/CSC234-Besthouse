@@ -138,7 +138,8 @@ class _SearchState extends State<Search> {
             color: Color(0xFF24577A),
             size: 50.0,
           )
-        : Padding(
+        : Container(
+            color: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               children: [

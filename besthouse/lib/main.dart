@@ -148,9 +148,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-
+  bool isSwapRight = true;
   void _onItemTapped(int index) {
     setState(() {
+      if (_selectedIndex > index) {
+        isSwapRight = false;
+      } else if (_selectedIndex < index) {
+        isSwapRight = true;
+      }
       _selectedIndex = index;
     });
   }
@@ -211,6 +216,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   scale: 24),
               onTap: () {
                 setState(() {
+                  isSwapRight = false;
                   _selectedIndex = 0;
                 });
               },
@@ -246,7 +252,22 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: screen.elementAt(_selectedIndex),
+      body: AnimatedSwitcher(
+        switchInCurve: Curves.easeOutExpo,
+        switchOutCurve: Curves.easeOutBack,
+        transitionBuilder: (child, animation) => SlideTransition(
+          position: isSwapRight
+              ? Tween<Offset>(
+                      begin: const Offset(1, 0), end: const Offset(0, 0))
+                  .animate(animation)
+              : Tween<Offset>(
+                      begin: const Offset(-1, 0), end: const Offset(0, 0))
+                  .animate(animation),
+          child: child,
+        ),
+        child: screen.elementAt(_selectedIndex),
+        duration: const Duration(milliseconds: 650),
+      ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(boxShadow: [
           BoxShadow(
