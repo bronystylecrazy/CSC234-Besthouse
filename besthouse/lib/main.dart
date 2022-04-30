@@ -1,4 +1,17 @@
-// packages
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:besthouse/screens/customer_profile.dart';
+import 'package:besthouse/screens/favourite.dart';
+import 'package:besthouse/screens/get_start.dart';
+import 'package:besthouse/screens/guide.dart';
+import 'package:besthouse/screens/home.dart';
+import 'package:besthouse/screens/house_detailed.dart';
+import 'package:besthouse/screens/offer_form.dart';
+import 'package:besthouse/screens/search.dart';
+import 'package:besthouse/screens/sign_in.dart';
+import 'package:besthouse/screens/sign_up.dart';
+import 'package:besthouse/services/dio.dart';
+import 'package:besthouse/services/provider.dart';
 import 'package:besthouse/services/location_api.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +32,7 @@ import './screens/search.dart';
 import '../screens/google_location.dart';
 import './screens/sign_in.dart';
 import './screens/sign_up.dart';
-import './screens/splash.dart';
+// import './screens/splash.dart';
 import './screens/forget_password.dart';
 
 // services
@@ -54,6 +67,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Best House',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch().copyWith(
           primary: const Color(0xFF24577A),
@@ -66,14 +80,22 @@ class MyApp extends StatelessWidget {
               color: const Color(0xFF24577A),
             ),
             headline2: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF24577A)),
+            headline1: GoogleFonts.poppins(
+                fontSize: 38,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF022B3A)),
+            headline5: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF24577A),
+              color: Color.fromARGB(255, 5, 5, 5),
             ),
-            headline1: GoogleFonts.poppins(
-              fontSize: 38,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF022B3A),
+            headline6: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Color.fromARGB(80, 0, 0, 0),
             ),
             bodyText1: GoogleFonts.poppins(
                 fontSize: 16,
@@ -86,10 +108,17 @@ class MyApp extends StatelessWidget {
             ),
             subtitle1: GoogleFonts.poppins(fontSize: 14)),
       ),
-
-      // home: const SplashScreen(),
+      home: Scaffold(
+        body: AnimatedSplashScreen(
+          duration: 3000,
+          centered: true,
+          splash: 'assets/get_start_1.png',
+          nextScreen: const GetStart(),
+          splashTransition: SplashTransition.fadeTransition,
+          pageTransitionType: PageTransitionType.fade,
+        ),
+      ),
       routes: {
-        "/": (context) => const MyHomePage(),
         HouseDetailed.routeName: (context) => const HouseDetailed(),
         GetStart.routeName: (context) => const GetStart(),
         MyHomePage.routeName: (context) => const MyHomePage(),
@@ -170,9 +199,16 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         title: Row(
           children: [
-            Image.asset(
+            GestureDetector(
+              child: Image.asset(
                 _selectedIndex == 3 ? "assets/logo_alt.png" : "assets/logo.png",
                 scale: 24),
+              onTap: () {
+                setState(() {
+                  _selectedIndex = 0;
+                });
+              },
+            ),
             const SizedBox(
               width: 8,
             ),
