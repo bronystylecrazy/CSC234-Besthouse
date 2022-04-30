@@ -1,4 +1,4 @@
-import 'package:besthouse/screens/customer_profile.dart';
+import 'package:besthouse/screens/land_lord_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:like_button/like_button.dart';
@@ -26,9 +26,9 @@ class HouseDetailed extends StatefulWidget {
 }
 
 class _HouseDetailedState extends State<HouseDetailed> {
-  bool _pinned = true;
-  bool _snap = false;
-  bool _floating = false;
+  final bool _pinned = true;
+  final bool _snap = false;
+  final bool _floating = false;
   double buttonSize = 20;
   final scrollController = ScrollController();
   @override
@@ -235,16 +235,13 @@ class _HouseDetailedState extends State<HouseDetailed> {
                     height: 20,
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width - 60,
+                    width: MediaQuery.of(context).size.width,
                     height: 20,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: house.tags.length,
                       itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Tag(title: house.tags[index]),
-                        );
+                        return Tag(title: house.tags[index]);
                       },
                     ),
                   ),
@@ -253,7 +250,7 @@ class _HouseDetailedState extends State<HouseDetailed> {
                   ),
                   Text(
                     "Description",
-                    style: Theme.of(context).textTheme.headline5?.apply(
+                    style: Theme.of(context).textTheme.headline2?.apply(
                           fontSizeFactor: 0.9,
                           fontSizeDelta: 0.9,
                         ),
@@ -261,217 +258,117 @@ class _HouseDetailedState extends State<HouseDetailed> {
                   const SizedBox(
                     height: 8,
                   ),
-                  Text(
-                    houseDetail?.description ?? "No describetion",
-                    style: Theme.of(context).textTheme.bodyText1,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16),
+                    child: Text(
+                      houseDetail?.description ?? "No describetion",
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Text(
                     "Details",
-                    style: Theme.of(context).textTheme.headline5?.apply(
+                    style: Theme.of(context).textTheme.headline2?.apply(
                           fontSizeFactor: 0.9,
                           fontSizeDelta: 0.9,
                         ),
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        "Total Space: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8),
+                    child: Column(
+                      children: [
+                        _buildDetail(context, "Total Space",
+                            houseDetail.totalSize.toString()),
+                        _buildDetail(context, "Rooms", total.toString()),
+                        Row(
+                          children: [
+                            _buildDetail(
+                                context, "Living romm", living.toString()),
+                            const SizedBox(
+                              width: 10,
                             ),
-                      ),
-                      Text(
-                        houseDetail.totalSize.toString(),
-                      )
-                    ],
+                            _buildDetail(context, "Bedroom", bed.toString()),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            _buildDetail(context, "Bathroom", bath.toString()),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            _buildDetail(
+                                context, "Kitchen", kitchen.toString()),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        "Rooms: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      Text(
-                        total.toString(),
-                      )
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, bottom: 8),
+                    child: Text("Additional pictures :",
+                        textAlign: TextAlign.left,
+                        style: Theme.of(context).textTheme.headline4),
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        "Living room: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      Text(
-                        living.toString(),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Bedroom: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      Text(
-                        bed.toString(),
-                      ),
-                    ],
+                  SizedBox(
+                    height: 200,
+                    child: RoomImage(houseDetail: house.detail),
                   ),
-
-                  Row(
-                    children: [
-                      Text(
-                        "Bathroom: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      Text(
-                        bath.toString(),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Kitchen: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      Text(
-                        kitchen.toString(),
-                      ),
-                    ],
-                  ),
-
-                  Column(
-                    children: [
-                      Text(
-                        "Pictures of everyroom ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      SizedBox(
-                        height: 200,
-                        child: RoomImage(houseDetail: house.detail),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Furniture: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      Text(
-                        houseDetail.facilities
-                                .any((e) => e.compareTo("funished") == 0)
-                            ? "provided"
-                            : "No",
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Fiber internet: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      Text(
-                        houseDetail.facilities
-                                .any((e) => e.compareTo("wifi") == 0)
-                            ? "provided"
-                            : "No",
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Water heater: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      Text(
-                        houseDetail.facilities
-                                .any((e) => e.compareTo("water") == 0)
-                            ? "provided"
-                            : "No",
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Air condition: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      Text(
-                        houseDetail.facilities
-                                .any((e) => e.compareTo("air") == 0)
-                            ? "provided"
-                            : "No",
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Fan: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      Text(
-                        houseDetail.facilities
-                                .any((e) => e.compareTo("Fan") == 0)
-                            ? "provided"
-                            : "No",
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Electric Fee: ",
-                        style: Theme.of(context).textTheme.headline5?.apply(
-                              fontSizeFactor: 0.8,
-                              fontSizeDelta: 0.8,
-                            ),
-                      ),
-                      Text(
-                        house.detail?.electricFee.toString() ?? "0",
-                      )
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8),
+                    child: Column(
+                      children: [
+                        _buildDetail(
+                          context,
+                          "Furniture",
+                          houseDetail.facilities
+                                  .any((e) => e.compareTo("funished") == 0)
+                              ? "provided"
+                              : "No",
+                        ),
+                        _buildDetail(
+                          context,
+                          "Fiber internet",
+                          houseDetail.facilities
+                                  .any((e) => e.compareTo("wifi") == 0)
+                              ? "provided"
+                              : "No",
+                        ),
+                        _buildDetail(
+                          context,
+                          "Water heater",
+                          houseDetail.facilities
+                                  .any((e) => e.compareTo("water") == 0)
+                              ? "provided"
+                              : "No",
+                        ),
+                        _buildDetail(
+                          context,
+                          "Air condition",
+                          houseDetail.facilities
+                                  .any((e) => e.compareTo("air") == 0)
+                              ? "provided"
+                              : "No",
+                        ),
+                        _buildDetail(
+                          context,
+                          "Fan",
+                          houseDetail.facilities
+                                  .any((e) => e.compareTo("Fan") == 0)
+                              ? "provided"
+                              : "No",
+                        ),
+                        _buildDetail(
+                          context,
+                          "Electric Fee",
+                          house.detail?.electricFee.toString() ?? "0",
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     height: 20,
@@ -479,14 +376,13 @@ class _HouseDetailedState extends State<HouseDetailed> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          MaterialButton(
-                            onPressed: (() {
-                              _showUser(houseDetail.userId.toString());
-                            }),
-                            child: Container(
+                      GestureDetector(
+                        onTap: (() {
+                          _showUser(houseDetail.userId.toString());
+                        }),
+                        child: Row(
+                          children: [
+                            Container(
                               width: 50.0,
                               height: 50.0,
                               decoration: const BoxDecoration(
@@ -499,16 +395,14 @@ class _HouseDetailedState extends State<HouseDetailed> {
                                 ),
                               ),
                             ),
-                          ),
-                          MaterialButton(
-                            onPressed: (() {
-                              _showUser(houseDetail.userId.toString());
-                            }),
-                            child: Text(
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Text(
                               landlord.firstname + "  " + landlord.lastname,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       IconButton(
                         onPressed: () {},
@@ -529,6 +423,9 @@ class _HouseDetailedState extends State<HouseDetailed> {
                           fontSizeDelta: 0.9,
                         ),
                   ),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   housesRec.isNotEmpty
                       ? SizedBox(
                           height: 150,
@@ -545,67 +442,25 @@ class _HouseDetailedState extends State<HouseDetailed> {
                           ),
                         )
                       : const Text('No houses found'),
-                  // SliverList(
-                  //     Container(
-                  //       width: 160.0,
-                  //       color: Colors.red,
-                  //     ),
-                  //     Container(
-                  //       width: 160.0,
-                  //       color: Colors.blue,
-                  //     ),
-                  //     Container(
-                  //       width: 160.0,
-                  //       color: Colors.green,
-                  //     ),
-                  //     Container(
-                  //       width: 160.0,
-                  //       color: Colors.yellow,
-                  //     ),
-                  //     Container(
-                  //       width: 160.0,
-                  //       color: Colors.orange,
-                  //     ),
-                  //   ],
-                  // ),
-                  // ListView.builder(
-                  //   //scrollDirection: Axis.horizontal,
-                  //   itemCount: house.tags.length,
-                  //   itemBuilder: (context, index) {
-                  //     return Container(
-                  //       width: 40,
-                  //       child: OutlinedButton(
-                  //         onPressed: () {},
-                  //         child: Text(house.tags[index]),
-                  //         // style: ButtonStyle(
-                  //         //   minimumSize: MaterialStateProperty.all<Size>(
-                  //         //     const Size(40, 40),
-                  //         //   ),
-                  //         // ),
-                  //       ),
-                  //     );
-                  //   },
-                  // ),
-                  // ListView(
-                  //   controller: scrollController,
-                  //   shrinkWrap: true,
-                  //   physics: const NeverScrollableScrollPhysics(),
-                  //   scrollDirection: Axis.horizontal,
-                  //   children: [
-                  //     Column(
-                  //       children: house.tags.map((tag) {
-                  //         return OutlinedButton(
-                  //           onPressed: () {},
-                  //           child: Text(tag),
-                  //         );
-                  //       }).toList(),
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetail(BuildContext context, String detail, String value) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Text("$detail : ", style: Theme.of(context).textTheme.headline4),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.subtitle1,
+          )
         ],
       ),
     );
@@ -639,7 +494,7 @@ class _HouseDetailedState extends State<HouseDetailed> {
   }
 
   void _showUser(String id) {
-    Navigator.of(context).pushNamed(CustomerProfile.routeName, arguments: {
+    Navigator.of(context).pushNamed(LandLordProfile.routeName, arguments: {
       'id': id,
     });
   }

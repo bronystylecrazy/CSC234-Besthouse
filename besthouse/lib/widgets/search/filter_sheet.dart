@@ -41,7 +41,8 @@ class _FilterSheetState extends State<FilterSheet> {
               children: [
                 Text(
                   "Filters",
-                  style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.poppins(
+                      fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 IconButton(
                     onPressed: () {
@@ -114,7 +115,8 @@ class _FilterSheetState extends State<FilterSheet> {
                                         }),
                                     Text(
                                       e.name,
-                                      style: Theme.of(context).textTheme.subtitle1,
+                                      style:
+                                          Theme.of(context).textTheme.subtitle1,
                                     )
                                   ],
                                 ))
@@ -147,7 +149,7 @@ class _FilterSheetState extends State<FilterSheet> {
                             .map((e) => Row(
                                   children: [
                                     Checkbox(
-                                        activeColor: Color(0xff24577A),
+                                        activeColor: const Color(0xff24577A),
                                         value: e.checked,
                                         onChanged: (value) {
                                           widget.checkBoxHandler(value, e);
@@ -155,7 +157,8 @@ class _FilterSheetState extends State<FilterSheet> {
                                         }),
                                     Text(
                                       e.name,
-                                      style: Theme.of(context).textTheme.subtitle1,
+                                      style:
+                                          Theme.of(context).textTheme.subtitle1,
                                     ),
                                   ],
                                 ))

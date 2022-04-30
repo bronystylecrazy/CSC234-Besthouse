@@ -1,8 +1,6 @@
 import 'package:besthouse/widgets/common/custom_textfield.dart';
 import 'package:besthouse/widgets/sign_up/bottom_actions.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);

@@ -2,7 +2,6 @@ import 'package:besthouse/models/house.dart';
 import 'package:besthouse/screens/google_location.dart';
 import 'package:besthouse/widgets/home/house_card.dart';
 import '../screens/house_detailed.dart';
-import 'package:besthouse/widgets/common/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {

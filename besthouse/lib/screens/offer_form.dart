@@ -11,6 +11,6 @@ class OfferForm extends StatefulWidget {
 class _OfferFormState extends State<OfferForm> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return const Scaffold();
   }
 }

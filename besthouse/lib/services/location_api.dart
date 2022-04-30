@@ -89,7 +89,8 @@ class PlaceApiProvider {
       final result = response.data;
       print(result["result"]);
       if (result['status'] == 'OK') {
-        final locate = result['result']['geometry']['location'] as Map<String, dynamic>;
+        final locate =
+            result['result']['geometry']['location'] as Map<String, dynamic>;
         final place = Place(CameraPosition(
           target: LatLng(locate["lat"], locate["lng"]),
           zoom: 16,

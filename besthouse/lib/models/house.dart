@@ -1,4 +1,3 @@
-import 'package:besthouse/models/facilities.dart';
 import 'package:besthouse/models/house_detail.dart';
 
 class House {

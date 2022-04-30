@@ -5,9 +5,6 @@ import 'package:besthouse/widgets/customer_profile/avatar_profile.dart';
 import 'package:besthouse/widgets/customer_profile/offer_card.dart';
 import 'package:besthouse/widgets/customer_profile/text_info.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
-
-import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 
 class CustomerProfile extends StatefulWidget {
@@ -66,7 +63,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
             child: Text("Your Profile",
                 style: TextStyle(color: Colors.white, fontSize: 20)),
           ),
-          AvatarProfile(userPicture: userPicture),
+          AvatarProfile(userPicture: userPicture, isEditable: true),
           const SizedBox(
             height: 40,
           ),
@@ -95,7 +92,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                 width: 8,
                               ),
                               Text("Created offer",
-                                  style: Theme.of(context).textTheme.headline3),
+                                  style: Theme.of(context).textTheme.headline2),
                             ],
                           ),
                           IconButton(
@@ -114,6 +111,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                           .map((e) => OfferCard(
                                 name: e.name,
                                 isAvailable: e.isAvailable,
+                                isEditable: true,
                                 key: Key(e.id),
                               ))
                           .toList(),

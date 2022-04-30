@@ -124,8 +124,9 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     CameraPosition location;
-    bool isDesireLocation = context.watch<DesireLocation>().location.target.latitude != 90.0 &&
-        context.watch<DesireLocation>().location.target.longitude != -160;
+    bool isDesireLocation =
+        context.watch<DesireLocation>().location.target.latitude != 90.0 &&
+            context.watch<DesireLocation>().location.target.longitude != -160;
     if (isDesireLocation) {
       location = context.watch<DesireLocation>().location;
     } else {
@@ -156,7 +157,6 @@ class _SearchState extends State<Search> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                // Map(currentLocation: widget.currentLocation),
                 Padding(
                   padding: const EdgeInsets.only(top: 9.0),
                   child: Row(
@@ -171,7 +171,9 @@ class _SearchState extends State<Search> {
                           itemBuilder: (BuildContext context, int index) {
                             return Tag(
                               title: index == 0
-                                  ? radioList.firstWhere((e) => e.type == type).name
+                                  ? radioList
+                                      .firstWhere((e) => e.type == type)
+                                      .name
                                   : selectedFacilities[index - 1],
                             );
                           },
@@ -207,8 +209,7 @@ class _SearchState extends State<Search> {
                   ),
                 ),
                 houses.isNotEmpty
-                    ? SizedBox(
-                        height: MediaQuery.of(context).size.height - 430,
+                    ? Expanded(
                         child: ListView.builder(
                           itemCount: houses.length,
                           itemBuilder: (BuildContext context, int index) {

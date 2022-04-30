@@ -68,7 +68,7 @@ class _TextInfoState extends State<TextInfo> {
                               builder: (context) => Padding(
                                 padding: MediaQuery.of(context).viewInsets,
                                 child: Container(
-                                  padding: EdgeInsets.all(20),
+                                  padding: const EdgeInsets.all(20),
                                   width: MediaQuery.of(context).size.width,
                                   height: 180,
                                   child: Column(
@@ -85,12 +85,12 @@ class _TextInfoState extends State<TextInfo> {
                                         autofocus: true,
                                         controller: controller,
                                       ),
-                                      SizedBox(height: 20),
+                                      const SizedBox(height: 20),
                                       ElevatedButton(
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
-                                          child: Text("Confirm"))
+                                          child: const Text("Confirm"))
                                     ],
                                   ),
                                 ),

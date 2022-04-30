@@ -1,4 +1,5 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:besthouse/screens/land_lord_profile.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:besthouse/screens/customer_profile.dart';
 import 'package:besthouse/screens/favourite.dart';
@@ -18,7 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // screens
 import './screens/customer_profile.dart';
@@ -82,25 +82,27 @@ class MyApp extends StatelessWidget {
             headline2: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF24577A)),
+                color: const Color(0xFF24577A)),
             headline1: GoogleFonts.poppins(
                 fontSize: 38,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF022B3A)),
+                color: const Color(0xFF022B3A)),
+            headline4: GoogleFonts.poppins(
+                fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
             headline5: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: Color.fromARGB(255, 5, 5, 5),
+              color: const Color.fromARGB(255, 5, 5, 5),
             ),
             headline6: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: Color.fromARGB(80, 0, 0, 0),
+              color: const Color.fromARGB(80, 0, 0, 0),
             ),
             bodyText1: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Color(0xff0E2B39)),
+                color: const Color(0xff0E2B39)),
             bodyText2: GoogleFonts.poppins(
               fontSize: 14,
               color: const Color(0xFF022B3A),
@@ -128,6 +130,7 @@ class MyApp extends StatelessWidget {
         OfferForm.routeName: (context) => const OfferForm(),
         ForgetPassword.routeName: (context) => const ForgetPassword(),
         GoogleLocation.routeName: (context) => const GoogleLocation(),
+        LandLordProfile.routeName: (context) => LandLordProfile(),
       },
     );
   }

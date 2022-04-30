@@ -1,18 +1,24 @@
+import 'package:besthouse/screens/house_detailed.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class OfferCard extends StatelessWidget {
-  const OfferCard({Key? key, required this.name, required this.isAvailable})
+  const OfferCard(
+      {Key? key,
+      required this.name,
+      required this.isAvailable,
+      required this.isEditable})
       : super(key: key);
   final String name;
   final bool isAvailable;
+  final bool isEditable;
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-        side: BorderSide(color: Colors.black12, width: 1),
+        side: const BorderSide(color: Colors.black12, width: 1),
       ),
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: Padding(
@@ -20,7 +26,12 @@ class OfferCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(name),
+            GestureDetector(
+              child: Text(name),
+              onTap: () {
+                Navigator.pushNamed(context, HouseDetailed.routeName);
+              },
+            ),
             Row(
               children: [
                 Card(
@@ -60,31 +71,33 @@ class OfferCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                PopupMenuButton(
-                  padding: EdgeInsets.all(0),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: Text(isAvailable ? "Disable" : "Enable"),
-                      onTap: () {},
-                    ),
-                    PopupMenuItem(
-                      child: Text("Edit"),
-                      onTap: () {},
-                    ),
-                    PopupMenuItem(
-                      child: Text("Delete",
-                          style: GoogleFonts.poppins(
-                              color: Theme.of(context).errorColor)),
-                      onTap: () {},
-                    )
-                  ],
-                  child: const Icon(
-                    Icons.more_vert,
-                    size: 18,
-                  ),
-                )
+                isEditable
+                    ? PopupMenuButton(
+                        padding: const EdgeInsets.all(0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: Text(isAvailable ? "Disable" : "Enable"),
+                            onTap: () {},
+                          ),
+                          PopupMenuItem(
+                            child: const Text("Edit"),
+                            onTap: () {},
+                          ),
+                          PopupMenuItem(
+                            child: Text("Delete",
+                                style: GoogleFonts.poppins(
+                                    color: Theme.of(context).errorColor)),
+                            onTap: () {},
+                          )
+                        ],
+                        child: const Icon(
+                          Icons.more_vert,
+                          size: 18,
+                        ),
+                      )
+                    : Container()
               ],
             )
           ],
