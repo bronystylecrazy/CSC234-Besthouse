@@ -164,23 +164,45 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
+  void changeIndex() {
+    setState(() {
+      _selectedIndex = 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> screen = <Widget>[
-      const Home(),
+      Home(
+        onTapHandler: changeIndex,
+      ),
       const Search(),
       const Favourite(),
       const CustomerProfile()
     ];
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0xffFFFFFF),
+        flexibleSpace: Container(
+          decoration: _selectedIndex == 3
+              ? const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Color(0xff173550),
+                      Color(0xff24577a),
+                    ],
+                  ),
+                )
+              : const BoxDecoration(color: Colors.white),
+        ),
         title: Row(
           children: [
             GestureDetector(
-              child: Image.asset("assets/logo.png", scale: 1.2),
+              child: Image.asset(
+                _selectedIndex == 3 ? "assets/logo_alt.png" : "assets/logo.png",
+                scale: 24),
               onTap: () {
                 setState(() {
                   _selectedIndex = 0;
@@ -193,7 +215,12 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               "Best house",
               textAlign: TextAlign.left,
-              style: Theme.of(context).textTheme.bodyText2,
+              style: _selectedIndex == 3
+                  ? GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600)
+                  : Theme.of(context).textTheme.bodyText2,
             ),
           ],
         ),
@@ -201,8 +228,12 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           IconButton(
             splashRadius: 20.0,
-            icon: const Icon(Icons.menu_book),
-            color: Theme.of(context).colorScheme.secondary,
+            icon: const Icon(
+              Icons.menu_book,
+            ),
+            color: _selectedIndex == 3
+                ? Colors.white
+                : Theme.of(context).colorScheme.secondary,
             tooltip: 'Go to guide page',
             onPressed: () => Navigator.pushNamed(context, Guide.routeName,
                 arguments: {"type": "customer"}),

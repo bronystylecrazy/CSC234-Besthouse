@@ -14,6 +14,7 @@ class BottomActions extends StatelessWidget {
       children: [
         StepIdentifyer(
           stepIndex: stepIndex,
+          amount: 2,
         ),
         ElevatedButton(
           onPressed: next,

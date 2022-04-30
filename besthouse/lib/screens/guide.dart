@@ -28,9 +28,11 @@ class _GuideState extends State<Guide> {
     List<GuideModel> temp =
         data.map((element) => GuideModel.fromJson(element)).toList();
     await Future.delayed(const Duration(seconds: 1), () {});
-    setState(() {
-      guides = temp;
-    });
+    if (mounted) {
+      setState(() {
+        guides = temp;
+      });
+    }
   }
 
   @override

@@ -23,8 +23,15 @@ class _GetStartState extends State<GetStart> {
     Content(
       header: "Best House",
       subHeader: "Welcome to",
-      image: "assets/get_start_1.png",
+      image: "assets/logo.png",
       text: "Best house help you find your “Best house” that will fit your style the most",
+    ),
+    Content(
+      header: "Our Partner",
+      subHeader: "Become",
+      image: "assets/get_start_1.png",
+      text:
+          "We also provide community for you to offer your accommodation as well. Help us create variety for user's best experience",
     ),
     Content(
       header: "Information",
@@ -36,7 +43,7 @@ class _GetStartState extends State<GetStart> {
   ];
 
   void _onNextStep() {
-    if (stepIndex == 1) {
+    if (stepIndex == steps.length - 1) {
       Navigator.pushNamed(context, SignIn.routeName);
     } else {
       setState(() {
@@ -65,7 +72,10 @@ class _GetStartState extends State<GetStart> {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      StepIdentifyer(stepIndex: stepIndex),
+                      StepIdentifyer(
+                        stepIndex: stepIndex,
+                        amount: steps.length,
+                      ),
                       Button(
                         clickHandler: _onNextStep,
                         text: stepIndex == 0 ? "Get started" : "Okay, got it!",
