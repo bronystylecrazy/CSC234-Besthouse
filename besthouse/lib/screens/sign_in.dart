@@ -1,10 +1,14 @@
 import 'package:besthouse/main.dart';
-import 'package:besthouse/screens/forget_password.dart';
-import 'package:besthouse/screens/sign_up.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+//widget
 import 'package:besthouse/widgets/common/custom_textfield.dart';
 import 'package:besthouse/widgets/common/button.dart';
+
+//screen
+import 'package:besthouse/screens/forget_password.dart';
+import 'package:besthouse/screens/sign_up.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);

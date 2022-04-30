@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../models/guide_model.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+//model
+import 'package:besthouse/models/guide_model.dart';
 
 class Guide extends StatefulWidget {
   const Guide({Key? key}) : super(key: key);

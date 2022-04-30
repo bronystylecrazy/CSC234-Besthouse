@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
+
+//widget
 import 'package:besthouse/widgets/common/custom_textfield.dart';
 import 'package:besthouse/widgets/sign_up/bottom_actions.dart';
-import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);

@@ -2,7 +2,8 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'get_start.dart';
+//screen
+import 'package:besthouse/screens/get_start.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({
@@ -24,10 +25,14 @@ class SplashScreen extends StatelessWidget {
             ),
             Text('BestHouse',
                 style: GoogleFonts.poppins(
-                    fontSize: 20, fontWeight: FontWeight.w600, color: const Color(0xFF24577A))),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF24577A))),
             Text('Welcome to BestHouse',
                 style: GoogleFonts.poppins(
-                    fontSize: 16, fontWeight: FontWeight.w600, color: const Color(0xFF24577A))),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF24577A))),
           ],
         ),
       ),

@@ -1,10 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+
+//model
 import 'package:besthouse/models/offer.dart';
 import 'package:besthouse/models/user_profile.dart';
+
+//widget
 import 'package:besthouse/widgets/customer_profile/avatar_profile.dart';
 import 'package:besthouse/widgets/customer_profile/offer_card.dart';
 import 'package:besthouse/widgets/customer_profile/text_info.dart';
-import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
 class LandLordProfile extends StatelessWidget {
   LandLordProfile({Key? key}) : super(key: key);

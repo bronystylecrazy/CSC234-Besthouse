@@ -1,8 +1,14 @@
-import 'package:besthouse/models/house.dart';
-import 'package:besthouse/screens/google_location.dart';
-import 'package:besthouse/widgets/home/house_card.dart';
-import '../screens/house_detailed.dart';
 import 'package:flutter/material.dart';
+
+//model
+import 'package:besthouse/models/house.dart';
+
+//widget
+import 'package:besthouse/widgets/home/house_card.dart';
+
+//screen
+import 'package:besthouse/screens/google_location.dart';
+import 'package:besthouse/screens/house_detailed.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key, required this.onTapHandler}) : super(key: key);
