@@ -4,11 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 class Button extends StatelessWidget {
   const Button({
     Key? key,
-    required this.clickHandler,
+    this.clickHandler,
     required this.text,
   }) : super(key: key);
 
-  final Function() clickHandler;
+  final Function()? clickHandler;
   final String text;
 
   @override
@@ -38,7 +38,7 @@ class Button extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.6,
           child: Text(
             text,
-            style: GoogleFonts.poppins(fontSize: 18),
+            style: GoogleFonts.poppins(fontSize: 14),
             textAlign: TextAlign.center,
           ),
         ),

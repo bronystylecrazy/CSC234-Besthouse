@@ -1,3 +1,4 @@
+import './location.dart';
 import 'package:besthouse/models/house_detail.dart';
 
 class House {
@@ -10,6 +11,8 @@ class House {
   final List<String> tags;
   final String type;
   final bool status;
+  final bool isAdvertised;
+
   HouseDetail? detail = HouseDetail(
     houseId: "0",
     description: "A simple house for us!",
@@ -29,16 +32,9 @@ class House {
     this.tags = const [],
     this.type = "HOUSE",
     this.status = true,
+    this.isAdvertised = false,
+
   });
 
   get userId => null;
-}
-
-class Location {
-  final List<double> coordinates;
-  final String type = 'Point';
-
-  Location({
-    required this.coordinates,
-  });
 }

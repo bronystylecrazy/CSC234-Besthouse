@@ -4,43 +4,48 @@ import 'package:flutter/foundation.dart';
 import 'location_api.dart';
 
 class CurrentLocation with ChangeNotifier, DiagnosticableTreeMixin {
-  CameraPosition currentLocation = const CameraPosition(target: LatLng(100, 200), zoom: 16);
+  CameraPosition currentLocation = const CameraPosition(target: LatLng(100, 200), zoom: 18);
+  String address = "";
+
+  get latitude => currentLocation.target.latitude;
+  get longitude => currentLocation.target.longitude;
 
   void updateLocation(CameraPosition newLocation) {
     currentLocation = newLocation;
   }
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DoubleProperty('latitude', currentLocation.target.latitude));
-    properties.add(DoubleProperty('longitude', currentLocation.target.longitude));
+  void updateAddress(String newAddress) {
+    address = newAddress;
   }
 
   void resetLocation() {
     LocationApi.getLocation().then((value) {
       var latlong = value;
       updateLocation(
-          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 16));
+          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 18));
+      updateAddress("");
     });
   }
 }
 
 class DesireLocation with ChangeNotifier, DiagnosticableTreeMixin {
-  CameraPosition location = const CameraPosition(target: LatLng(100, 200), zoom: 16);
+  CameraPosition location = const CameraPosition(target: LatLng(100, 200), zoom: 18);
+  String address = "";
 
   void updateLocation(CameraPosition newLocation) {
     location = newLocation;
   }
 
-  void resetLocation() {
-    updateLocation(const CameraPosition(target: LatLng(100, 200), zoom: 16));
+  void updateAddress(String newAddress) {
+    address = newAddress;
   }
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DoubleProperty('latitude', location.target.latitude));
-    properties.add(DoubleProperty('longitude', location.target.longitude));
+  get latitude => location.target.latitude;
+  get longitude => location.target.longitude;
+  get isExist => location.target.latitude != 90.0 && location.target.longitude != -160;
+
+  void resetLocation() {
+    updateLocation(const CameraPosition(target: LatLng(100, 200), zoom: 18));
+    updateAddress("");
   }
 }

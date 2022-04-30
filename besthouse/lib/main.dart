@@ -1,19 +1,4 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:besthouse/screens/land_lord_profile.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:besthouse/screens/customer_profile.dart';
-import 'package:besthouse/screens/favourite.dart';
-import 'package:besthouse/screens/get_start.dart';
-import 'package:besthouse/screens/guide.dart';
-import 'package:besthouse/screens/home.dart';
-import 'package:besthouse/screens/house_detailed.dart';
-import 'package:besthouse/screens/offer_form.dart';
-import 'package:besthouse/screens/search.dart';
-import 'package:besthouse/screens/sign_in.dart';
-import 'package:besthouse/screens/sign_up.dart';
-import 'package:besthouse/services/dio.dart';
-import 'package:besthouse/services/provider.dart';
-import 'package:besthouse/services/location_api.dart';
+// packages
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,6 +23,7 @@ import './screens/forget_password.dart';
 // services
 import './services/dio.dart';
 import './services/provider.dart';
+import './services/location_api.dart';
 
 void main() {
   if (defaultTargetPlatform == TargetPlatform.android) {
@@ -72,6 +58,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch().copyWith(
           primary: const Color(0xFF24577A),
           secondary: const Color.fromARGB(255, 84, 156, 160),
+          tertiary: const Color.fromARGB(255, 240, 241, 243),
+        ),
+        iconTheme: const IconThemeData(
+          color: Color.fromARGB(255, 84, 156, 160),
         ),
         textTheme: TextTheme(
             headline3: GoogleFonts.poppins(
@@ -164,9 +154,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     LocationApi.getLocation().then((value) {
       var latlong = value;
-      return context.read<CurrentLocation>().updateLocation(CameraPosition(
-          target: LatLng(latlong[1] as double, latlong[0] as double),
-          zoom: 16));
+      return context.read<CurrentLocation>().updateLocation(
+          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 18));
     });
     // print(context.watch<CurrentLocation>().currentLocation);
     super.initState();
