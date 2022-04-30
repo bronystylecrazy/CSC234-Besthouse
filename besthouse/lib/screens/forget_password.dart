@@ -1,8 +1,12 @@
-import 'package:besthouse/screens/sign_in.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+
+//widget
 import 'package:besthouse/widgets/common/custom_textfield.dart';
 import 'package:besthouse/widgets/common/button.dart';
-import 'package:flutter/gestures.dart';
+
+//screen
+import 'package:besthouse/screens/sign_in.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({Key? key}) : super(key: key);

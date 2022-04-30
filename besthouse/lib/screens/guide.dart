@@ -4,8 +4,10 @@ import 'package:besthouse/widgets/common/my_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../models/guide_model.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+//model
+import 'package:besthouse/models/guide_model.dart';
 
 class Guide extends StatefulWidget {
   const Guide({Key? key}) : super(key: key);
@@ -16,7 +18,7 @@ class Guide extends StatefulWidget {
 }
 
 class _GuideState extends State<Guide> {
-  late List<GuideModel>? guides = null;
+  List<GuideModel>? guides;
 
   Future<void> readJson(bool isCustomer) async {
     final String response = isCustomer
@@ -25,9 +27,11 @@ class _GuideState extends State<Guide> {
     final List<dynamic> data = await json.decode(response);
     List<GuideModel> temp = data.map((element) => GuideModel.fromJson(element)).toList();
     await Future.delayed(const Duration(seconds: 1), () {});
-    setState(() {
-      guides = temp;
-    });
+    if (mounted) {
+      setState(() {
+        guides = temp;
+      });
+    }
   }
 
   @override
@@ -60,7 +64,7 @@ class _GuideState extends State<Guide> {
                   ),
                 ),
                 guides == null
-                    ? Container(
+                    ? SizedBox(
                         height: MediaQuery.of(context).size.height - 200,
                         child: spinkit,
                       )
@@ -76,7 +80,7 @@ class _GuideState extends State<Guide> {
           Positioned(
             width: MediaQuery.of(context).size.width,
             child: Container(
-              color: Color(0xfff4f4f4),
+              color: const Color(0xfff4f4f4),
               width: MediaQuery.of(context).size.width,
               child: const Text(
                 "Made with love by Best house",

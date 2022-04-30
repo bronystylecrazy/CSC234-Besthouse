@@ -5,8 +5,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+//service
 import '../services/location_api.dart';
 import '../services/provider.dart';
+
+//widget
 import '../widgets/google_location/address_search.dart';
 
 class GoogleLocation extends StatefulWidget {
@@ -148,9 +151,4 @@ class _GoogleLocationState extends State<GoogleLocation> {
     );
   }
 }
-
-// class GoogleLocationArgument {
-//   final CameraPosition location;
-
-//   GoogleLocationArgument(this.location);
-// }
+          
