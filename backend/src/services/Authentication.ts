@@ -3,7 +3,7 @@ const saltRounds = 10;
 
 import { User } from "@/database/models";
 
-import type { SignUpPost } from "@/interface/api/User";
+import { SignUpPost } from "@/interface/api/User";
 import type { ResultHandler } from "@/interface/handler";
 import { genericError, infoResponse } from "@/services/Handler";
 import { generateJwtToken } from "@/utils";
@@ -31,18 +31,16 @@ export const login = async (email: string, password: string): ResultHandler => {
 	}
 };
 
-export const signup = async (data: SignUpPost): ResultHandler => {
+export const signUp = async (data: SignUpPost): ResultHandler => {
 	try {
 		// Hash password
 		const { password, ...props } = data;
-
 		if (password.length < 4) {
 			return genericError("Password lenght must not less than 4", 400);
 		}
 
-		const hashedPassword = await bcrypt.hash(password, saltRounds);
-
 		// Create user
+		const hashedPassword = await bcrypt.hash(password, saltRounds);
 		const myUser = new User({ ...props, password: hashedPassword });
 		try {
 			await myUser.save();
@@ -53,7 +51,7 @@ export const signup = async (data: SignUpPost): ResultHandler => {
 		// Return token
 		const token = generateJwtToken(myUser._id, myUser.email);
 
-		return infoResponse(token, "Sign up success");
+		return infoResponse(token, "Sign up success", 201);
 	} catch (e) {
 		return genericError(e.message, 503);
 	}

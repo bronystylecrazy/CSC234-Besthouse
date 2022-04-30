@@ -1,9 +1,8 @@
 import express from "express";
-import { login, signup } from "@/services/Authentication";
+import { login, signUp } from "@/services/Authentication";
 import { SignInPost, SignUpPost } from "@/interface/api/User";
 import { responseHandler } from "@/services/Handler";
 
-// eslint-disable-next-line new-cap
 const userRoute = express.Router();
 
 userRoute.post("/signin", async (req, res) => {
@@ -13,7 +12,7 @@ userRoute.post("/signin", async (req, res) => {
 
 userRoute.post("/signup", async (req, res) => {
 	const data: SignUpPost = req.body;
-	return responseHandler(res, await signup(data));
+	return responseHandler(res, await signUp(data));
 });
 
 userRoute.post("/forgot", (req, res) => {

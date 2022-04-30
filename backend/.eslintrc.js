@@ -15,8 +15,9 @@ module.exports = {
 	rules: {
 		"no-unused-vars": "off",
 		camelcase: "off",
-		"@typescript-eslint/no-unused-vars": "off",
-		"@typescript-eslint/no-unused-vars-experimental": "off",
+		"new-cap": "off",
+		"@typescript-eslint/no-unused-vars": "warn",
 		// turn off capitalization for all variables
+		"no-var": "off",
 	},
 };

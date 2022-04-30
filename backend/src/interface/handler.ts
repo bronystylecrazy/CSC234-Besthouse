@@ -1,9 +1,7 @@
-import type HttpStatus from "@/utils/httpStatus";
-
-export type Response<T = unknown> = {
+export type Response<T = {}> = {
 	success: boolean;
 	message: string;
-	status: HttpStatus;
+	status: number;
 	data: T;
 };
 

@@ -3,9 +3,10 @@ import User from "@/interface/models/User";
 import UserProfile from "@/interface/models/UserProfile";
 import House from "@/interface/models/House";
 import HouseDetail from "@/interface/models/HouseDetail";
+import { type } from "os";
 
 const validateEmail = function (email) {
-	const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 	return re.test(email);
 };
 
@@ -60,13 +61,27 @@ export const houseSchema = new Schema<House>({
 		required: [true, "Enter a house name."],
 	},
 	picture_url: String,
+	address: { type: String, required: true },
 	location: {
 		type: {
-			address: String,
-			latitude: String,
-			longtitude: String,
+			type: String, // Don't do `{ location: { type: String } }`
+			enum: ["Point"], // 'location.type' must be 'Point'
+			required: true,
 		},
-		required: [true, "Location required"],
+		coordinates: {
+			type: [Number],
+			required: true,
+		},
+	},
+	price: {
+		type: Number,
+		required: [true, "Price is required"],
+		min: [1, "Price should not be less than 0"],
+	},
+	type: {
+		type: String,
+		enum: Object.values(HouseType),
+		default: HouseType.house,
 	},
 	status: { type: Boolean, default: true },
 	tags: [String],
@@ -82,11 +97,6 @@ export const houseDetailSchema = new Schema<HouseDetail>({
 		type: Types.ObjectId,
 		ref: "User",
 		required: [true, "User id is required"],
-	},
-	type: {
-		type: String,
-		enum: Object.values(HouseType),
-		default: HouseType.house,
 	},
 	rooms: {
 		type: [
@@ -108,17 +118,7 @@ export const houseDetailSchema = new Schema<HouseDetail>({
 		minlength: [1, "At least one room required"],
 	},
 	description: String,
-	price: {
-		type: Number,
-		required: [true, "Price is required"],
-		min: [1, "Price should not be less than 0"],
-	},
-	facilities: [
-		{
-			name: String,
-			checked: Boolean,
-		},
-	],
+	facilities: [String],
 	electric_fee: Number,
 	likes: { type: Number, default: 0 },
 	total_size: { type: Number, required: [true, "Size is required"] },

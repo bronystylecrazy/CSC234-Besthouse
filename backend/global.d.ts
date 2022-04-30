@@ -15,7 +15,6 @@ declare module "express-jwt" {
 		}
 	}
 }
-
 declare global {
 	namespace Express {
 		// tslint:disable-next-line:no-empty-interface

@@ -1,5 +1,8 @@
+require("dotenv").config();
 require("module-alias/register");
+
 /** Internal Modules */
+import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import jwt from "express-jwt";
@@ -13,16 +16,18 @@ import profileRoute from "./routes/profile";
 import config from "./config";
 
 import mongoose from "mongoose";
-import { User, House } from "./database/models";
+import { House } from "./database/models";
 import favoriteRoute from "./routes/favorite";
 import offerRoute from "./routes/offer";
 import userRoute from "./routes/user";
 import houseRoute from "./routes/house";
+import storageRoute from "./routes/storage";
 
 /** Instantiate Application */
 const app = express();
 
 /** Express configurations */
+dotenv.config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -51,6 +56,7 @@ app.use(
 		},
 	})
 );
+
 /** Routes */
 app.use("/auth", authRoute);
 app.use("/profile", profileRoute);
@@ -58,24 +64,28 @@ app.use("/favorite", favoriteRoute);
 app.use("/offer", offerRoute);
 app.use("/house", houseRoute);
 app.use("/user", userRoute);
+app.use("/storage", storageRoute);
 
 // for test
 app.get("/api", async (req, res) => {
-	const user1 = new User({
-		email: "float@mail.com",
-		password: "12345678",
-		tel: "0891231234",
-		username: "kasemtan",
-	});
-	const house1 = new House({
-		name: "Condo1",
+	// var user1 = new User({
+	// 	email: "float@mail.com",
+	// 	password: "12345678",
+	// 	tel: "0891231234",
+	// 	username: "kasemtan",
+	// });
+	var house1 = new House({
+		name: "Korea Condo",
 		picture_url:
 			"https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/ZFZlzPBXT8GEoefOiG62vz0oLFY7n2gkvbzGwcQsE0G.jpeg",
 		location: {
-			address: "---",
-			latitude: "13.736717",
-			longtitude: "100.523186",
+			type: "Point",
+			coordinates: [36.253573, 126.9152424],
 		},
+		price: 8000,
+		status: true,
+		tags: ["Korea", "Condo"],
+		type: "CONDOMINIUM",
 	});
 
 	try {
@@ -90,12 +100,6 @@ app.get("/api", async (req, res) => {
 	} catch (e) {
 		return res.status(400).json(e);
 	}
-});
-
-app.get("/", (req, res) => {
-	return res.send(
-		"Hello, we are Float, Art, Ann, Willy, and Spy (FaawS)<br> We are a team of 5 students from the University of Information Technology, Faculty of Engineering, Department of Computer Engineering. Also called us Fivesome!<br/> <b>This API is sooooo awesome!</b>"
-	);
 });
 
 /** Start a server */
