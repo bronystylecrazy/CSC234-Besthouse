@@ -253,20 +253,21 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: AnimatedSwitcher(
+        layoutBuilder: (currentChild, previousChildren) =>
+            currentChild as Widget,
         switchInCurve: Curves.easeOutExpo,
-        switchOutCurve: Curves.easeOutBack,
         transitionBuilder: (child, animation) => SlideTransition(
           position: isSwapRight
               ? Tween<Offset>(
-                      begin: const Offset(1, 0), end: const Offset(0, 0))
+                      begin: const Offset(2, 0), end: const Offset(0, 0))
                   .animate(animation)
               : Tween<Offset>(
-                      begin: const Offset(-1, 0), end: const Offset(0, 0))
+                      begin: const Offset(-2, 0), end: const Offset(0, 0))
                   .animate(animation),
           child: child,
         ),
         child: screen.elementAt(_selectedIndex),
-        duration: const Duration(milliseconds: 650),
+        duration: const Duration(milliseconds: 500),
       ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(boxShadow: [
