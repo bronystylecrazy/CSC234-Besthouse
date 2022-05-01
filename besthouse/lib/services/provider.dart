@@ -1,21 +1,51 @@
-import 'package:provider/provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
-class Counter with ChangeNotifier, DiagnosticableTreeMixin {
-  int _count = 0;
+import 'location_api.dart';
 
-  int get count => _count;
+class CurrentLocation with ChangeNotifier, DiagnosticableTreeMixin {
+  CameraPosition currentLocation = const CameraPosition(target: LatLng(100, 200), zoom: 18);
+  String address = "";
 
-  void increment() {
-    _count++;
-    notifyListeners();
+  get latitude => currentLocation.target.latitude;
+  get longitude => currentLocation.target.longitude;
+
+  void updateLocation(CameraPosition newLocation) {
+    currentLocation = newLocation;
   }
 
-  /// Makes `Counter` readable inside the devtools by listing all of its properties
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(IntProperty('count', count));
+  void updateAddress(String newAddress) {
+    address = newAddress;
+  }
+
+  void resetLocation() {
+    LocationApi.getLocation().then((value) {
+      var latlong = value;
+      updateLocation(
+          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 18));
+      updateAddress("");
+    });
+  }
+}
+
+class DesireLocation with ChangeNotifier, DiagnosticableTreeMixin {
+  CameraPosition location = const CameraPosition(target: LatLng(100, 200), zoom: 18);
+  String address = "";
+
+  void updateLocation(CameraPosition newLocation) {
+    location = newLocation;
+  }
+
+  void updateAddress(String newAddress) {
+    address = newAddress;
+  }
+
+  get latitude => location.target.latitude;
+  get longitude => location.target.longitude;
+  get isExist => location.target.latitude != 90.0 && location.target.longitude != -160;
+
+  void resetLocation() {
+    updateLocation(const CameraPosition(target: LatLng(100, 200), zoom: 18));
+    updateAddress("");
   }
 }

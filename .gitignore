@@ -105,3 +105,4 @@ dist
 .tern-port
 
 storage/
+.DS_Store

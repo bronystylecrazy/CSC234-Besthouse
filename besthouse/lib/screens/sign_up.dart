@@ -1,9 +1,8 @@
-import 'package:besthouse/widgets/sign_up/bottom_actions.dart';
-import 'package:besthouse/widgets/sign_up/custom_textfield.dart';
-import 'package:besthouse/widgets/sign_up/step_identifyer.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+//widget
+import 'package:besthouse/widgets/common/custom_textfield.dart';
+import 'package:besthouse/widgets/sign_up/bottom_actions.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -58,48 +57,87 @@ class _SignUpState extends State<SignUp> {
               isObscure: true),
         ],
       ),
-      Text("Form second step"), //TODOS here!
-    ];
-    return Scaffold(
-      body: Stack(
+      Column(
         children: [
-          Positioned(
-            child: Image.asset("assets/logo.png", scale: 0.8),
-            top: 50,
-            left: 18,
+          CustomTextField(
+            context: context,
+            controller: _firstnameController,
+            label: "Firstname",
+            isObscure: false,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Welcome",
-                      style: Theme.of(context).textTheme.headline1,
-                    ),
-                    Text(
-                      "Best house",
-                      style: Theme.of(context).textTheme.headline2,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                  // height: MediaQuery.of(context).size.height * 0.4,
-                  padding: const EdgeInsets.all(24),
-                  child: stepScreen.elementAt(_stepIndex)),
-              BottomActions(
-                stepIndex: _stepIndex,
-                next: next,
-              ),
-            ],
+          const SizedBox(
+            height: 20,
           ),
+          CustomTextField(
+            context: context,
+            controller: _lastnameController,
+            label: "Lastname",
+            isObscure: false,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          CustomTextField(
+            context: context,
+            controller: _emailController,
+            label: "Email",
+            isObscure: false,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          CustomTextField(
+            context: context,
+            controller: _phoneNumController,
+            label: "Phone",
+            isObscure: false,
+          )
         ],
+      )
+    ];
+
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Positioned(
+              child: Image.asset("assets/logo.png", scale: 14),
+              top: 50,
+              left: 18,
+            ),
+            Column(
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.only(left: 24, right: 24, top: 112),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Welcome",
+                        style: Theme.of(context).textTheme.headline1,
+                      ),
+                      Text(
+                        "Best house",
+                        style: Theme.of(context).textTheme.headline2,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                    // height: MediaQuery.of(context).size.height * 0.4,
+                    padding: const EdgeInsets.all(24),
+                    child: stepScreen.elementAt(_stepIndex)),
+                BottomActions(
+                  stepIndex: _stepIndex,
+                  next: next,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
