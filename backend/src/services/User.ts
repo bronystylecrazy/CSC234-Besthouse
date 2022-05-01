@@ -2,11 +2,11 @@ import { Profile, User } from "@/database/models";
 import { ProfilePatch, UserPatch } from "@/interface/api/ProfilePatch";
 import { Request } from "express";
 import { genericError, infoResponse } from "./Handler";
-import { Islogin } from "./Utils";
+import { isLogin } from "./Utils";
 
 export const GetUser = async (req: Request) => {
 	try {
-		if (!Islogin(req)) {
+		if (!isLogin(req)) {
 			return genericError(
 				"Unauthorize: Login is required to do function",
 				400
@@ -31,7 +31,7 @@ export const PatchUser = async (
 	bodyUser: UserPatch
 ) => {
 	try {
-		if (!Islogin(req)) {
+		if (!isLogin(req)) {
 			return genericError(
 				"Unauthorize: Login is required to do function",
 				400
