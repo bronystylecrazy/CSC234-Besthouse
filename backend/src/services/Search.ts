@@ -1,6 +1,6 @@
 import { House, HouseDetail } from "@/database/models";
 
-import { SearchPost } from "@/interface/api/Search";
+import { NearbySearchGet, SearchPost } from "@/interface/api/Search";
 import { ResultHandler } from "@/interface/handler";
 import { infoResponse, genericError } from "./Handler";
 
@@ -77,4 +77,28 @@ export const searchHouse = async (data: SearchPost): ResultHandler => {
 	}
 };
 
-export function SearchNearbyHouse() {}
+export const SearchNearbyHouse = async (data: NearbySearchGet) => {
+	try {
+		if (!data.lat || !data.long)
+			return genericError("Latitude and longtitude is required", 400);
+
+		const houses = await House.find({
+			status: true,
+			location: {
+				$near: {
+					$geometry: {
+						type: "Point",
+						coordinates: [data.long, data.lat],
+					},
+					$maxDistance: 10000,
+				},
+			},
+		}).exec();
+
+		if (houses.length === 0) return infoResponse([], "No house found");
+
+		return infoResponse(houses, "Search success");
+	} catch (e) {
+		return genericError(e.message, 503);
+	}
+};

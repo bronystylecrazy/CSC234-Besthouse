@@ -1,6 +1,6 @@
 import express from "express";
-import { SearchPost } from "@/interface/api/Search";
-import { searchHouse } from "@/services/Search";
+import { SearchPost, NearbySearchGet } from "@/interface/api/Search";
+import { searchHouse, SearchNearbyHouse } from "@/services/Search";
 import { genericError, responseHandler } from "@/services/Handler";
 import { isLogin } from "@/services/Utils";
 // eslint-disable-next-line new-cap
@@ -22,8 +22,9 @@ houseRoute.post("/", async (req, res) => {
 // feature and nearby house are the same api
 // you check by query string if no query string it mean get the position of user then search
 // sorry for my mistake float
-houseRoute.get("/near", (req, res) => {
-	return res.send();
+houseRoute.get("/near", async (req, res) => {
+	const data: NearbySearchGet = req.body;
+	return responseHandler(res, await SearchNearbyHouse(data));
 });
 
 export default houseRoute;
