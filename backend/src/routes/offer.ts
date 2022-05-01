@@ -24,7 +24,6 @@ offerRoute.get("/:id", async (req, res) => {
 
 offerRoute.post("/", async (req, res) => {
 	const body: OfferPatch = req.body;
-	console.log("body <-", req.body);
 	return responseHandler(res, await CreateOffer(req, body));
 });
 

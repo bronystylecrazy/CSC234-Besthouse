@@ -66,6 +66,8 @@ const storageRoute = express.Router();
 storageRoute.use(uploadFilesMiddleware);
 
 storageRoute.post("/", (req, res, err) => {
+	console.log(`storage <-`, req);
+
 	return res.json(
 		(req as any).files.map((file) => ({
 			url: "/storage/" + file.filename,
