@@ -6,8 +6,8 @@ import { responseHandler } from "@/services/Handler";
 const userRoute = express.Router();
 
 userRoute.post("/signin", async (req, res) => {
-	const { email, password }: SignInPost = req.body;
-	return responseHandler(res, await login(email, password));
+	const { username, password }: SignInPost = req.body;
+	return responseHandler(res, await login(username, password));
 });
 
 userRoute.post("/signup", async (req, res) => {

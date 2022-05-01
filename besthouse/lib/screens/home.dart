@@ -1,3 +1,4 @@
+import 'package:besthouse/services/share_preference.dart';
 import 'package:flutter/material.dart';
 
 //model
@@ -126,7 +127,6 @@ class _HomeState extends State<Home> {
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
-            //Text("Where ?"),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -180,7 +180,6 @@ class _HomeState extends State<Home> {
                 textAlign: TextAlign.left,
               ),
             ),
-
             housesFeature.isNotEmpty
                 ? SizedBox(
                     height: 150,
@@ -208,7 +207,6 @@ class _HomeState extends State<Home> {
                 textAlign: TextAlign.left,
               ),
             ),
-
             housesRec.isNotEmpty
                 ? SizedBox(
                     height: 150,

@@ -1,4 +1,9 @@
 import 'package:besthouse/main.dart';
+import 'package:besthouse/models/response/error_response.dart';
+import 'package:besthouse/models/response/info_response.dart';
+import 'package:besthouse/services/dio.dart';
+import 'package:besthouse/services/share_preference.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -21,111 +26,171 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  void _loginHandler() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        var result = await _login();
+        if (result is InfoResponse) {
+          SharePreference.prefs.setString("token", result.data);
+        }
+        Navigator.pushReplacementNamed(context, MyHomePage.routeName);
+      } on DioError catch (e) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Something went wrong!'),
+                  content: Text(e.response?.data["message"]),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'OK'),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ));
+      }
+    }
+  }
+
+  Future<dynamic> _login() async {
+    var response = await DioInstance.dio.post("/user/signin", data: {
+      "username": _usernameController.text,
+      "password": _passwordController.text
+    });
+    print(response.data["data"]);
+    print(response);
+    if (response.statusCode != 200) {
+      return ErrorResponse.fromJson(response.data);
+    }
+    return InfoResponse.fromJson(response.data);
+  }
+
+  String? usernameValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Username can't be empty";
+    }
+    return null;
+  }
+
+  String? passwordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Password can't be empty";
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            child: Image.asset("assets/logo.png", scale: 14),
-            top: 50,
-            left: 18,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Welcome",
-                      style: Theme.of(context).textTheme.headline1,
-                    ),
-                    Text(
-                      "Best house",
-                      style: Theme.of(context).textTheme.headline2,
-                    ),
-                    const SizedBox(height: 50),
-                    CustomTextField(
-                        context: context,
-                        controller: _usernameController,
-                        label: "Username",
-                        isObscure: false),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextField(
-                        context: context,
-                        controller: _passwordController,
-                        label: "Password",
-                        isObscure: true),
-                    Container(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Forget password ?',
-                            style: Theme.of(context).textTheme.caption,
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushNamed(
-                                    context, ForgetPassword.routeName);
-                              },
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Positioned(
+              child: Image.asset("assets/logo.png", scale: 14),
+              top: 50,
+              left: 18,
+            ),
+            Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.only(right: 24, left: 24, top: 112),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Welcome",
+                        style: Theme.of(context).textTheme.headline1,
+                      ),
+                      Text(
+                        "Best house",
+                        style: Theme.of(context).textTheme.headline2,
+                      ),
+                      const SizedBox(height: 50),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            CustomTextField(
+                                context: context,
+                                controller: _usernameController,
+                                label: "Username",
+                                validator: usernameValidator,
+                                isObscure: false),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            CustomTextField(
+                                context: context,
+                                controller: _passwordController,
+                                label: "Password",
+                                validator: passwordValidator,
+                                isObscure: true),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Forget password ?',
+                              style: Theme.of(context).textTheme.caption,
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.pushNamed(
+                                      context, ForgetPassword.routeName);
+                                },
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: Column(
-                        children: [
-                          ElevatedButton(
-                            onPressed: null,
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.all(0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                              ),
-                            ),
-                            child: Button(
-                                text: "Start your journey",
-                                clickHandler: () {
-                                  Navigator.pushReplacementNamed(
-                                      context, MyHomePage.routeName);
-                                }),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: RichText(
-                              text: TextSpan(
-                                text: 'or Sign Up here',
-                                style: const TextStyle(
-                                  color: Color(0xFF022B3A),
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pushReplacementNamed(
-                                        context, SignUp.routeName);
-                                  },
-                              ),
-                            ),
-                          ),
-                        ],
+                      const SizedBox(
+                        height: 20,
                       ),
-                    )
-                  ],
+                      Center(
+                        child: Column(
+                          children: [
+                            ElevatedButton(
+                              onPressed: null,
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
+                              ),
+                              child: Button(
+                                  text: "Start your journey",
+                                  clickHandler: _loginHandler),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'or Sign Up here',
+                                  style: const TextStyle(
+                                    color: Color(0xFF022B3A),
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.pushNamed(
+                                          context, SignUp.routeName);
+                                    },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

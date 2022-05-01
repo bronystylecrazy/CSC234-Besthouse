@@ -11,6 +11,7 @@ class DioInstance {
     );
     try {
       dio = Dio(options);
+      print("Dio is ready");
     } catch (e) {
       print(e);
     }

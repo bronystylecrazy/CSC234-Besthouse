@@ -32,7 +32,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /** Plugins */
-app.use(cors());
+app.use(
+	cors({
+		origin: "http://localhost",
+		credentials: true,
+	})
+);
 app.use(cookieParser());
 
 /** Json Web Token */

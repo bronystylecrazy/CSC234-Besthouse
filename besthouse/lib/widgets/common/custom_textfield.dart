@@ -7,12 +7,14 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     required this.label,
     required this.isObscure,
+    this.validator,
   }) : super(key: key);
 
   final BuildContext context;
   final TextEditingController controller;
   final String label;
   final bool isObscure;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class CustomTextField extends StatelessWidget {
         TextFormField(
           controller: controller,
           obscureText: isObscure,
+          validator: validator,
           decoration: const InputDecoration(
             fillColor: Color(0xFFE9E9E9),
             filled: true,

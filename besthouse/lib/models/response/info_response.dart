@@ -1,6 +1,8 @@
 class InfoResponse {
+  final bool success = true;
   final dynamic data;
   final String message;
+  final int status = 200;
 
   InfoResponse(this.data, this.message);
 

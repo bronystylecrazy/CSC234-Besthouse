@@ -8,14 +8,17 @@ import type { ResultHandler } from "@/interface/handler";
 import { genericError, infoResponse } from "@/services/Handler";
 import { generateJwtToken } from "@/utils";
 
-export const login = async (email: string, password: string): ResultHandler => {
+export const login = async (
+	username: string,
+	password: string
+): ResultHandler => {
 	try {
 		// Fetches user from database
 		const myUser = await User.findOne({
-			email,
+			username,
 		}).exec();
 
-		if (!myUser) return genericError("Oh my god, user is not found!", 400);
+		if (!myUser) return genericError("User is not found!", 400);
 
 		// Check password
 		const match = await bcrypt.compare(password, myUser.password);
@@ -23,7 +26,7 @@ export const login = async (email: string, password: string): ResultHandler => {
 			return genericError("Sorry, your password is not correct.", 400);
 
 		// Return token
-		const token = generateJwtToken(myUser._id, myUser.email);
+		const token = generateJwtToken(myUser._id, myUser.username);
 
 		return infoResponse(token, "Sign in success");
 	} catch (e) {

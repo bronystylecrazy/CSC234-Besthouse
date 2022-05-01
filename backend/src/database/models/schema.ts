@@ -32,6 +32,7 @@ export const userSchema = new Schema<User>({
 	password: {
 		type: String,
 		required: [true, "Enter a password."],
+		minlength: [4, "Password must be at least 4 characters"],
 	},
 	email: {
 		type: String,
