@@ -1,6 +1,7 @@
 import 'package:besthouse/main.dart';
 import 'package:besthouse/models/response/error_response.dart';
 import 'package:besthouse/models/response/info_response.dart';
+import 'package:besthouse/services/api/user.dart';
 import 'package:besthouse/services/dio.dart';
 import 'package:besthouse/services/share_preference.dart';
 import 'package:dio/dio.dart';
@@ -31,39 +32,28 @@ class _SignInState extends State<SignIn> {
   void _loginHandler() async {
     if (_formKey.currentState!.validate()) {
       try {
-        var result = await _login();
+        var result = await UserApi.login(_usernameController.text, _passwordController.text);
+
         if (result is InfoResponse) {
           SharePreference.prefs.setString("token", result.data);
         }
         Navigator.pushReplacementNamed(context, MyHomePage.routeName);
       } on DioError catch (e) {
         showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-                  title: const Text('Something went wrong!'),
-                  content: Text(e.response?.data["message"]),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, 'OK'),
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ));
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Something went wrong!'),
+            content: Text(e.response?.data["message"] ?? e.message),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'OK'),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
       }
     }
-  }
-
-  Future<dynamic> _login() async {
-    var response = await DioInstance.dio.post("/user/signin", data: {
-      "username": _usernameController.text,
-      "password": _passwordController.text
-    });
-    print(response.data["data"]);
-    print(response);
-    if (response.statusCode != 200) {
-      return ErrorResponse.fromJson(response.data);
-    }
-    return InfoResponse.fromJson(response.data);
   }
 
   String? usernameValidator(String? value) {
@@ -140,8 +130,7 @@ class _SignInState extends State<SignIn> {
                               style: Theme.of(context).textTheme.caption,
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Navigator.pushNamed(
-                                      context, ForgetPassword.routeName);
+                                  Navigator.pushNamed(context, ForgetPassword.routeName);
                                 },
                             ),
                           ),
@@ -161,9 +150,8 @@ class _SignInState extends State<SignIn> {
                                   borderRadius: BorderRadius.circular(18.0),
                                 ),
                               ),
-                              child: Button(
-                                  text: "Start your journey",
-                                  clickHandler: _loginHandler),
+                              child:
+                                  Button(text: "Start your journey", clickHandler: _loginHandler),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(16),
@@ -175,8 +163,7 @@ class _SignInState extends State<SignIn> {
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      Navigator.pushNamed(
-                                          context, SignUp.routeName);
+                                      Navigator.pushNamed(context, SignUp.routeName);
                                     },
                                 ),
                               ),
