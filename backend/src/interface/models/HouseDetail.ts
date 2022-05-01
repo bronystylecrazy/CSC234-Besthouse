@@ -22,6 +22,7 @@ export default interface HouseDetail {
 		}
 	];
 	electric_fee: number;
+	water_fee: number;
 	likes: number;
 	total_size: number;
 }

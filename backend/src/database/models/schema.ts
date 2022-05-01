@@ -85,6 +85,7 @@ export const houseSchema = new Schema<House>({
 	},
 	status: { type: Boolean, default: true },
 	tags: [String],
+	isAdvertised: { type: Boolean, default: false },
 });
 
 export const houseDetailSchema = new Schema<HouseDetail>({
@@ -107,11 +108,7 @@ export const houseDetailSchema = new Schema<HouseDetail>({
 					required: [true, "Room type is required"],
 				},
 				numbers: Number,
-				pictures: [
-					{
-						url: String,
-					},
-				],
+				pictures: [String],
 			},
 		],
 		required: [true, "Rooms required"],
@@ -120,6 +117,7 @@ export const houseDetailSchema = new Schema<HouseDetail>({
 	description: String,
 	facilities: [String],
 	electric_fee: Number,
+	water_fee: Number,
 	likes: { type: Number, default: 0 },
 	total_size: { type: Number, required: [true, "Size is required"] },
 });

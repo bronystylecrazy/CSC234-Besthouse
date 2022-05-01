@@ -128,7 +128,6 @@ export const UpdateOffer = async (
 				400
 			);
 		}
-
 		const user_id = req.user.user_id;
 
 		// check permission
@@ -187,7 +186,6 @@ export const DeleteOffer = async (house_id: Types.ObjectId, req: Request) => {
 				400
 			);
 		}
-
 		const user_id = req.user.user_id;
 
 		const houseDetail = await HouseDetail.findOne({
