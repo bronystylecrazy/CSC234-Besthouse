@@ -72,7 +72,7 @@ class BottomActions extends StatelessWidget {
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    Navigator.pushReplacementNamed(context, SignIn.routeName);
+                    Navigator.pop(context);
                   }),
           ),
         ),

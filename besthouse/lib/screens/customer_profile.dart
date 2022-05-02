@@ -1,6 +1,8 @@
 import 'package:besthouse/screens/offer_form.dart';
 import 'package:besthouse/screens/sign_in.dart';
+import 'package:besthouse/services/share_preference.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:uuid/uuid.dart';
 
 //model
@@ -42,6 +44,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
         isAvailable: false,
         name: "Chapter One"),
   ];
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -132,22 +135,35 @@ class _CustomerProfileState extends State<CustomerProfile> {
                       ),
                       ElevatedButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            setState(() {
+                              isLoading = true;
+                            });
+                            Future.delayed(const Duration(seconds: 1), (() {
+                              isLoading = false;
+                              SharePreference.prefs.remove("token");
+                              Navigator.pop(context);
+                            }));
                           },
                           style: ElevatedButton.styleFrom(
-                              primary: Color(0xffB30000)),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(Icons.logout),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "Sign out",
-                                  textAlign: TextAlign.center,
+                              primary: const Color(0xffB30000)),
+                          child: isLoading
+                              ? const SpinKitRing(
+                                  lineWidth: 2,
+                                  color: Colors.white,
+                                  size: 20.0,
                                 )
-                              ]))
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                      Icon(Icons.logout),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        "Sign out",
+                                        textAlign: TextAlign.center,
+                                      )
+                                    ]))
                     ],
                   ),
                 ),
