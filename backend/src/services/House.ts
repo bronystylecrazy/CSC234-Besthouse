@@ -70,10 +70,11 @@ export const CreateOffer = async (req: Request, body: OfferPatch) => {
 			});
 			await HouseDetail.create({
 				user_id: user_id,
+				house_id: new_house._id,
 				description: body.description,
 				electric_fee: body.electric_fee,
+				water_fee: body.water_fee,
 				facilities: body.facilities,
-				house_id: new_house._id,
 				rooms: body.rooms,
 				total_size: body.total_size,
 			});
@@ -81,7 +82,7 @@ export const CreateOffer = async (req: Request, body: OfferPatch) => {
 			return genericError(error.message, 400);
 		}
 
-		return infoResponse(null, "offer added!");
+		return infoResponse(null, "offer added!", 201);
 	} catch (error) {
 		return genericError(error.message, 500);
 	}
