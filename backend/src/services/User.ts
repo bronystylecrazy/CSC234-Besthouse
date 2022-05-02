@@ -12,14 +12,13 @@ export const GetUser = async (req: Request) => {
 				400
 			);
 		}
-		// @ts-ignore
 		const user_id = req.user.user_id;
 
-		// List houses detail by user id
+		const user = await User.findById(user_id, "email username tel");
 		const profile = await Profile.findOne({ user_id: user_id });
 		//if (!profile) return infoResponse([], "No profile found");
 
-		return infoResponse(profile);
+		return infoResponse({ user, profile });
 	} catch (error) {
 		return genericError(error.message, 500);
 	}
@@ -37,7 +36,6 @@ export const PatchUser = async (
 				400
 			);
 		}
-		// @ts-ignore
 		const user_id = req.user.user_id;
 
 		// List houses detail by user id
@@ -46,8 +44,6 @@ export const PatchUser = async (
 			bodyProfile,
 			{ new: true }
 		);
-		if (!profile)
-			profile = await Profile.create({ ...bodyProfile, user_id });
 
 		const user = await User.findOneAndUpdate({ _id: user_id }, bodyUser, {
 			new: true,

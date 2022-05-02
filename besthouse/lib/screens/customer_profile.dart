@@ -1,6 +1,9 @@
+import 'package:besthouse/models/response/info_response.dart';
 import 'package:besthouse/screens/offer_form.dart';
-import 'package:besthouse/screens/sign_in.dart';
+import 'package:besthouse/services/api/user.dart';
 import 'package:besthouse/services/share_preference.dart';
+import 'package:besthouse/widgets/common/alert.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:uuid/uuid.dart';
@@ -14,9 +17,6 @@ import 'package:besthouse/widgets/customer_profile/avatar_profile.dart';
 import 'package:besthouse/widgets/customer_profile/offer_card.dart';
 import 'package:besthouse/widgets/customer_profile/text_info.dart';
 
-//screen
-import 'package:besthouse/screens/offer_form.dart';
-
 class CustomerProfile extends StatefulWidget {
   const CustomerProfile({Key? key}) : super(key: key);
   static const routeName = "/customer_profile";
@@ -26,15 +26,16 @@ class CustomerProfile extends StatefulWidget {
 }
 
 class _CustomerProfileState extends State<CustomerProfile> {
-  final String username = "Shirayuki_hime";
-  final String name = "Shinomiya Kaguya";
-  final String email = "kaguya@mail.com";
-  final String phoneNo = "000-000-0000";
-  final String lineId = "";
-  final String facebook = "";
-  final userPicture =
+  String username = "";
+  String firstname = "";
+  String lastname = "";
+  String email = "";
+  String phoneNo = "";
+  String lineId = "";
+  String facebook = "";
+  String userPicture =
       "https://i0.wp.com/shindekudasai.com/wp-content/uploads/2022/03/kaguya-sama.jpg";
-  final List<OfferCardModel> offerList = [
+  List<OfferCardModel> offerList = [
     OfferCardModel(
         id: const Uuid().v1().toString(),
         isAvailable: true,
@@ -46,11 +47,69 @@ class _CustomerProfileState extends State<CustomerProfile> {
   ];
   bool isLoading = false;
 
+  void getProfileHandler() async {
+    try {
+      var result = await UserApi.getUser();
+      if (result is InfoResponse) {
+        setState(() {
+          username = result.data['user']['username'];
+          firstname = result.data['profile']['firstname'];
+          lastname = result.data['profile']['lastname'];
+          email = result.data['user']['email'];
+          phoneNo = result.data['user']['tel'];
+          facebook = result.data['profile']['facebook'] ?? "";
+          lineId = result.data['profile']['line_id'] ?? "";
+        });
+      }
+    } on DioError catch (e) {
+      Alert.errorAlert(e, context);
+    }
+  }
+
+  void updateProfileHandler(String type, String value) async {
+    setState(() {
+      switch (type) {
+        case "Username":
+          username = value;
+          break;
+        case "Firstname":
+          firstname = value;
+          break;
+        case "Lastname":
+          lastname = value;
+          break;
+        case "Phone No.":
+          phoneNo = value;
+          break;
+        case "Line Id":
+          lineId = value;
+          break;
+        case "Facebook":
+          facebook = value;
+          break;
+        default:
+      }
+    });
+    try {
+      await UserApi.updateUser(
+          username, firstname, lastname, phoneNo, lineId, facebook);
+    } on DioError catch (e) {
+      Alert.errorAlert(e, context);
+    }
+  }
+
+  @override
+  void initState() {
+    getProfileHandler();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<UserProfileCard> infoList = [
       UserProfileCard("Username", username, true),
-      UserProfileCard("Name", name, false),
+      UserProfileCard("Firstname", firstname, true),
+      UserProfileCard("Lastname", lastname, true),
       UserProfileCard("Email", email, false),
       UserProfileCard("Phone No.", phoneNo, true),
       UserProfileCard("Line Id", lineId, true),
@@ -127,9 +186,11 @@ class _CustomerProfileState extends State<CustomerProfile> {
                               ))
                           .toList(),
                       ...infoList.map((e) => TextInfo(
-                          label: e.label,
-                          value: e.value,
-                          isEditable: e.isEditable)),
+                            label: e.label,
+                            value: e.value,
+                            isEditable: e.isEditable,
+                            updateProfileHandler: updateProfileHandler,
+                          )),
                       const SizedBox(
                         height: 20,
                       ),

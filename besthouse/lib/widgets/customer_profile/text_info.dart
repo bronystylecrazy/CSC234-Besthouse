@@ -6,12 +6,14 @@ class TextInfo extends StatefulWidget {
       {Key? key,
       required this.label,
       required this.value,
-      required this.isEditable})
+      required this.isEditable,
+      this.updateProfileHandler})
       : super(key: key);
 
   final String label;
   final String value;
   final bool isEditable;
+  final Function? updateProfileHandler;
 
   @override
   State<TextInfo> createState() => _TextInfoState();
@@ -41,8 +43,6 @@ class _TextInfoState extends State<TextInfo> {
                   bottom: BorderSide(width: 1.0, color: Colors.black12),
                 ),
               ),
-
-              // padding: const EdgeInsets.symmetric(),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -88,6 +88,8 @@ class _TextInfoState extends State<TextInfo> {
                                       const SizedBox(height: 20),
                                       ElevatedButton(
                                           onPressed: () {
+                                            widget.updateProfileHandler!(
+                                                widget.label, controller.text);
                                             Navigator.pop(context);
                                           },
                                           child: const Text("Confirm"))

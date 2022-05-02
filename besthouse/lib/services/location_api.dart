@@ -96,7 +96,8 @@ class GoogleApiProvider {
     if (response.statusCode == 200) {
       final result = response.data;
       if (result['status'] == 'OK') {
-        final locate = result['result']['geometry']['location'] as Map<String, dynamic>;
+        final locate =
+            result['result']['geometry']['location'] as Map<String, dynamic>;
         final address = result['result']['formatted_address'];
         final place = Place(
           CameraPosition(

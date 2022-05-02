@@ -6,6 +6,7 @@ class DioInstance {
   static void init() async {
     var options = BaseOptions(
       baseUrl: Constants.baseUrl,
+      contentType: 'application/json',
       connectTimeout: 5000,
       receiveTimeout: 3000,
     );

@@ -6,6 +6,6 @@ export interface ProfilePatch {
 }
 
 export interface UserPatch {
-	email: "String";
+	username: "String";
 	tel: "String";
 }
