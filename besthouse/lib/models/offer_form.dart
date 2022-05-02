@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+
 import 'location.dart';
 
 class Offer {
   String name = "";
   String type = "HOUSE";
   File pictureUrl = File('');
+  MultipartFile? file;
   Location location = Location(coordinates: [0, 0]);
   String address = "";
   String description = "";
@@ -74,6 +77,9 @@ class Offer {
       case "pictureUrl":
         pictureUrl = value;
         break;
+      case "file":
+        file = value;
+        break;
       case "location":
         location = value;
         break;
@@ -110,7 +116,7 @@ class Offer {
   Map<String, dynamic> toJson() => {
         "name": name,
         "type": type,
-        "pictureUrl": pictureUrl,
+        "file": file,
         "location": location.toJson(),
         "address": address,
         "description": description,
@@ -128,6 +134,7 @@ class OfferRoom {
   String type;
   int amount;
   List<File> pictures;
+  List<MultipartFile>? files;
 
   OfferRoom({
     required this.type,
@@ -142,6 +149,6 @@ class OfferRoom {
   Map<String, dynamic> toJson() => {
         "type": type,
         "amount": amount,
-        "pictures": pictures,
+        "files": files,
       };
 }

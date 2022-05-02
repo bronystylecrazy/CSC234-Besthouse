@@ -36,6 +36,7 @@ class _SignInState extends State<SignIn> {
 
         if (result is InfoResponse) {
           SharePreference.prefs.setString("token", result.data);
+          DioInstance.dio.options.headers["Authorization"] = "Bearer ${result.data}";
         }
         Navigator.pushReplacementNamed(context, MyHomePage.routeName);
       } on DioError catch (e) {
