@@ -1,4 +1,5 @@
 import 'package:besthouse/screens/offer_form.dart';
+import 'package:besthouse/screens/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -32,8 +33,14 @@ class _CustomerProfileState extends State<CustomerProfile> {
   final userPicture =
       "https://i0.wp.com/shindekudasai.com/wp-content/uploads/2022/03/kaguya-sama.jpg";
   final List<OfferCardModel> offerList = [
-    OfferCardModel(id: const Uuid().v1().toString(), isAvailable: true, name: "Diary Prachautid"),
-    OfferCardModel(id: const Uuid().v1().toString(), isAvailable: false, name: "Chapter One"),
+    OfferCardModel(
+        id: const Uuid().v1().toString(),
+        isAvailable: true,
+        name: "Diary Prachautid"),
+    OfferCardModel(
+        id: const Uuid().v1().toString(),
+        isAvailable: false,
+        name: "Chapter One"),
   ];
 
   @override
@@ -61,7 +68,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
         children: [
           const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text("Your Profile", style: TextStyle(color: Colors.white, fontSize: 20)),
+            child: Text("Your Profile",
+                style: TextStyle(color: Colors.white, fontSize: 20)),
           ),
           AvatarProfile(userPicture: userPicture, isEditable: true),
           const SizedBox(
@@ -91,7 +99,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
                               const SizedBox(
                                 width: 8,
                               ),
-                              Text("Created offer", style: Theme.of(context).textTheme.headline2),
+                              Text("Created offer",
+                                  style: Theme.of(context).textTheme.headline2),
                             ],
                           ),
                           IconButton(
@@ -114,8 +123,31 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                 key: Key(e.id),
                               ))
                           .toList(),
-                      ...infoList.map(
-                          (e) => TextInfo(label: e.label, value: e.value, isEditable: e.isEditable))
+                      ...infoList.map((e) => TextInfo(
+                          label: e.label,
+                          value: e.value,
+                          isEditable: e.isEditable)),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                              primary: Color(0xffB30000)),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(Icons.logout),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Sign out",
+                                  textAlign: TextAlign.center,
+                                )
+                              ]))
                     ],
                   ),
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Button extends StatelessWidget {
@@ -6,10 +7,12 @@ class Button extends StatelessWidget {
     Key? key,
     this.clickHandler,
     required this.text,
+    this.isLoading,
   }) : super(key: key);
 
   final Function()? clickHandler;
   final String text;
+  final bool? isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +39,17 @@ class Button extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
           width: MediaQuery.of(context).size.width * 0.6,
-          child: Text(
-            text,
-            style: GoogleFonts.poppins(fontSize: 14),
-            textAlign: TextAlign.center,
-          ),
+          child: isLoading != null && isLoading!
+              ? const SpinKitRing(
+                  lineWidth: 2,
+                  color: Colors.white,
+                  size: 20.0,
+                )
+              : Text(
+                  text,
+                  style: GoogleFonts.poppins(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
         ),
       ),
     );

@@ -1,9 +1,9 @@
 import 'package:besthouse/main.dart';
-import 'package:besthouse/models/response/error_response.dart';
 import 'package:besthouse/models/response/info_response.dart';
 import 'package:besthouse/services/api/user.dart';
 import 'package:besthouse/services/dio.dart';
 import 'package:besthouse/services/share_preference.dart';
+import 'package:besthouse/widgets/common/alert.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -28,31 +28,33 @@ class _SignInState extends State<SignIn> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   void _loginHandler() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
       try {
-        var result = await UserApi.login(_usernameController.text, _passwordController.text);
+        var result = await UserApi.login(
+            _usernameController.text, _passwordController.text);
 
         if (result is InfoResponse) {
           SharePreference.prefs.setString("token", result.data);
-          DioInstance.dio.options.headers["Authorization"] = "Bearer ${result.data}";
+          DioInstance.dio.options.headers["Authorization"] =
+              "Bearer ${result.data}";
+          Future.delayed(const Duration(seconds: 1), (() {
+            setState(() {
+              isLoading = false;
+            });
+            Navigator.pushNamed(context, MyHomePage.routeName);
+          }));
         }
-        Navigator.pushReplacementNamed(context, MyHomePage.routeName);
       } on DioError catch (e) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('Something went wrong!'),
-            content: Text(e.response?.data["message"] ?? e.message),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
+        setState(() {
+          isLoading = false;
+        });
+        Alert.errorAlert(e, context);
       }
     }
   }
@@ -67,6 +69,8 @@ class _SignInState extends State<SignIn> {
   String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Password can't be empty";
+    } else if (value.length <= 4) {
+      return "Password must have at least 4 character";
     }
     return null;
   }
@@ -131,7 +135,8 @@ class _SignInState extends State<SignIn> {
                               style: Theme.of(context).textTheme.caption,
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Navigator.pushNamed(context, ForgetPassword.routeName);
+                                  Navigator.pushNamed(
+                                      context, ForgetPassword.routeName);
                                 },
                             ),
                           ),
@@ -151,8 +156,10 @@ class _SignInState extends State<SignIn> {
                                   borderRadius: BorderRadius.circular(18.0),
                                 ),
                               ),
-                              child:
-                                  Button(text: "Start your journey", clickHandler: _loginHandler),
+                              child: Button(
+                                  text: "Start your journey",
+                                  isLoading: isLoading,
+                                  clickHandler: _loginHandler),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(16),
@@ -164,7 +171,8 @@ class _SignInState extends State<SignIn> {
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      Navigator.pushNamed(context, SignUp.routeName);
+                                      Navigator.pushNamed(
+                                          context, SignUp.routeName);
                                     },
                                 ),
                               ),

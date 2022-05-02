@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
-import { User } from "@/database/models";
+import { Profile, User } from "@/database/models";
 
 import { SignUpPost } from "@/interface/api/User";
 import type { ResultHandler } from "@/interface/handler";
@@ -45,8 +45,10 @@ export const signUp = async (data: SignUpPost): ResultHandler => {
 		// Create user
 		const hashedPassword = await bcrypt.hash(password, saltRounds);
 		const myUser = new User({ ...props, password: hashedPassword });
+		const myUserProfile = new Profile({ ...props, user_id: myUser._id });
 		try {
 			await myUser.save();
+			await myUserProfile.save();
 		} catch (e) {
 			return genericError(e.message, 400);
 		}
