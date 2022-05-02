@@ -49,6 +49,11 @@ export const userSchema = new Schema<User>({
 });
 
 export const userProfileSchema = new Schema<UserProfile>({
+	user_id: {
+		type: Types.ObjectId,
+		ref: "User",
+		required: [true, "User id is required"],
+	},
 	firstname: { type: String, required: [true, "Enter a firstname"] },
 	lastname: { type: String, required: [true, "Enter a lastname"] },
 	line_id: String,
