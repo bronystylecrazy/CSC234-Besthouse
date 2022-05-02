@@ -20,7 +20,7 @@ import { House } from "./database/models";
 import favoriteRoute from "./routes/favorite";
 import offerRoute from "./routes/offer";
 import userRoute from "./routes/user";
-import houseRoute from "./routes/house";
+import searchRoute from "./routes/search";
 import storageRoute from "./routes/storage";
 
 /** Instantiate Application */
@@ -67,7 +67,7 @@ app.use("/auth", authRoute);
 app.use("/profile", profileRoute);
 app.use("/favorite", favoriteRoute);
 app.use("/offer", offerRoute);
-app.use("/house", houseRoute);
+app.use("/search", searchRoute);
 app.use("/user", userRoute);
 app.use("/storage", storageRoute);
 

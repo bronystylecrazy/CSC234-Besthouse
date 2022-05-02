@@ -17,10 +17,10 @@ export enum HouseType {
 }
 
 export enum RoomType {
-	living = "LIVING",
-	bed = "BED",
+	living = "LIVING ROOM",
+	bed = "BEDROOM",
 	kitchen = "KITCHEN",
-	bath = "BATH",
+	bath = "BATHROOM",
 }
 
 export const userSchema = new Schema<User>({
