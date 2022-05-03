@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 
 class Alert {
   static Future<dynamic> successAlert(
-      InfoResponse result, String title, String? route, BuildContext context) {
+    InfoResponse result,
+    String title,
+    VoidCallback pressHandler,
+    BuildContext context,
+  ) {
     return showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -12,9 +16,7 @@ class Alert {
         content: Text(result.message),
         actions: <Widget>[
           TextButton(
-            onPressed: () => route == null
-                ? null
-                : Navigator.popAndPushNamed(context, route),
+            onPressed: pressHandler,
             child: const Text('OK'),
           ),
         ],

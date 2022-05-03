@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 //model
-import 'package:besthouse/models/offer.dart';
+import 'package:besthouse/models/offer_card.dart';
 import 'package:besthouse/models/user_profile.dart';
 
 //widget
@@ -22,14 +22,8 @@ class LandLordProfile extends StatelessWidget {
   final userPicture =
       "https://i0.wp.com/shindekudasai.com/wp-content/uploads/2022/03/kaguya-sama.jpg";
   final List<OfferCardModel> offerList = [
-    OfferCardModel(
-        id: const Uuid().v4().toString(),
-        isAvailable: true,
-        name: "Diary Prachautid"),
-    OfferCardModel(
-        id: const Uuid().v1().toString(),
-        isAvailable: true,
-        name: "Chapter One"),
+    OfferCardModel(id: const Uuid().v4().toString(), isAvailable: true, name: "Diary Prachautid"),
+    OfferCardModel(id: const Uuid().v1().toString(), isAvailable: true, name: "Chapter One"),
   ];
   @override
   Widget build(BuildContext context) {
@@ -98,15 +92,13 @@ class LandLordProfile extends StatelessWidget {
                                 Icon(
                                   Icons.home,
                                   size: 30,
-                                  color:
-                                      const Color(0xff24577a).withOpacity(0.5),
+                                  color: const Color(0xff24577a).withOpacity(0.5),
                                 ),
                                 const SizedBox(
                                   width: 8,
                                 ),
                                 Text("$username's offer",
-                                    style:
-                                        Theme.of(context).textTheme.headline2),
+                                    style: Theme.of(context).textTheme.headline2),
                               ],
                             ),
                           ],
@@ -119,10 +111,8 @@ class LandLordProfile extends StatelessWidget {
                                   key: Key(e.id),
                                 ))
                             .toList(),
-                        ...infoList.map((e) => TextInfo(
-                            label: e.label,
-                            value: e.value,
-                            isEditable: e.isEditable))
+                        ...infoList.map((e) =>
+                            TextInfo(label: e.label, value: e.value, isEditable: e.isEditable))
                       ],
                     ),
                   ),

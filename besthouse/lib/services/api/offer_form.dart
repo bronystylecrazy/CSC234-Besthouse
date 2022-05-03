@@ -1,37 +1,77 @@
 import 'package:dio/dio.dart';
-import 'package:http_parser/src/media_type.dart';
-import '../../models/offer_form.dart';
+import 'package:http_parser/http_parser.dart';
+// services
 import '../dio.dart';
+import '../share_preference.dart';
 // models
+import '../../models/offer_form.dart';
 import '../../models/response/error_response.dart';
 import '../../models/response/info_response.dart';
 
 class OfferFormApi {
-  static Future<dynamic> postOffer(Offer offer) async {
+  static Future<dynamic> postOffer(Offerform offer) async {
+    DioInstance.dio.options.headers["authorization"] =
+        "Bearer " + SharePreference.prefs.getString("token").toString();
+
+    // Extetior Picture
+    FormData exteriorPictureFormData = FormData.fromMap({
+      "files": await MultipartFile.fromFile(
+        offer.picture.path,
+        filename: offer.picture.path.split("/")[1],
+        contentType: MediaType("image", "jpeg"),
+      ),
+    });
+    final exteriorPicture = await DioInstance.dio.post("/storage", data: exteriorPictureFormData);
+    offer.pictureUrl = exteriorPicture.data[0]["url"];
+
+    // Rooms Pictures
     for (int i = 0; i < offer.rooms.length; i++) {
-      List<MultipartFile> files = [];
+      List<MultipartFile> roomPicturesFiles = [];
 
       for (int j = 0; j < offer.rooms[i].pictures.length; j++) {
-        var pic = offer.rooms[i].pictures[j];
-        var file = await MultipartFile.fromFile(pic.path,
-            filename: pic.path.split('/').last, contentType: MediaType('image', 'jpeg'));
-        files.add(file);
+        roomPicturesFiles.add(
+          await MultipartFile.fromFile(
+            offer.rooms[i].files[j].path,
+            filename: offer.rooms[i].files[j].path.split("/").last,
+            contentType: MediaType("image", "jpeg"),
+          ),
+        );
       }
 
-      offer.rooms[i].files = files;
+      FormData roomPicturesFormData = FormData.fromMap({
+        "files": roomPicturesFiles,
+      });
+
+      final roomPictures = await DioInstance.dio.post("/storage", data: roomPicturesFormData);
+
+      for (int j = 0; j < offer.rooms[i].pictures.length; j++) {
+        offer.rooms[i].pictures.add(roomPictures.data[j]["url"] as String);
+      }
     }
 
-    offer.file = await MultipartFile.fromFile(offer.pictureUrl.path,
-        filename: offer.pictureUrl.path.split('/').last);
+    print('ready ${offer.toJson()}');
 
-    FormData formData = FormData.fromMap(offer.toJson());
+    // Send an offer form
+    final response = await DioInstance.dio.post("/offer", data: offer.toJson());
 
-    print('formData: ${formData.files}');
+    print(response.statusCode);
+    if (response.statusCode != 201) {
+      return ErrorResponse.fromJson(response.data);
+    }
 
-    var response = await DioInstance.dio.post("/storage", data: formData);
+    return InfoResponse.fromJson(response.data);
+  }
+
+  static Future<dynamic> getOffer(String id) async {
+    DioInstance.dio.options.headers["authorization"] =
+        "Bearer " + SharePreference.prefs.getString("token").toString();
+
+    final response = await DioInstance.dio.get("/offer/$id");
+
     if (response.statusCode != 200) {
       return ErrorResponse.fromJson(response.data);
     }
+
     return InfoResponse.fromJson(response.data);
   }
 }

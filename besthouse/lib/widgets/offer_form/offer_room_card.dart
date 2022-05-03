@@ -11,7 +11,6 @@ class OfferRoomCard extends StatelessWidget {
     required this.room,
     required this.editHandler,
     required this.deleteHandler,
-    required this.deleteImageHandler,
     required this.index,
     Key? key,
   }) : super(key: key);
@@ -19,7 +18,6 @@ class OfferRoomCard extends StatelessWidget {
   final OfferRoom room;
   final Function(OfferRoom room, int index) editHandler;
   final Function(int index) deleteHandler;
-  final Function(int imgIndex) deleteImageHandler;
   final int index;
 
   @override
@@ -46,16 +44,18 @@ class OfferRoomCard extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    IconButton(
-                      onPressed: () => _buildModalRoom(context),
-                      icon: Icon(
-                        Icons.edit,
-                        size: 18,
-                        color: Theme.of(context).colorScheme.secondary.withOpacity(0.8),
-                      ),
-                      splashRadius: 14,
-                      tooltip: 'edit room',
-                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: IconButton(
+                          onPressed: () => _buildModalRoom(context),
+                          icon: Icon(
+                            Icons.edit,
+                            size: 18,
+                            color: Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+                          ),
+                          splashRadius: 14,
+                          tooltip: 'edit room',
+                        )),
                     IconButton(
                       onPressed: () => deleteHandler(index),
                       icon: Icon(
@@ -71,8 +71,7 @@ class OfferRoomCard extends StatelessWidget {
               ],
             ),
             ListImage(
-              pictures: room.pictures,
-              deleteHandler: deleteImageHandler,
+              pictures: room.files,
             ),
           ],
         ),

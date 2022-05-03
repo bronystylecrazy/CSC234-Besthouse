@@ -244,7 +244,7 @@ class _HouseDetailedState extends State<HouseDetailed> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
                     child: Text(
-                      houseDetail?.description ?? "No describetion",
+                      houseDetail?.description ?? "No description",
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ),

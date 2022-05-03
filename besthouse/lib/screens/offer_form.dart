@@ -1,10 +1,16 @@
 import 'dart:io';
 
+import 'package:besthouse/models/response/error_response.dart';
+import 'package:besthouse/screens/customer_profile.dart';
+import 'package:besthouse/services/api/offer_form.dart';
+import 'package:besthouse/widgets/common/alert.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 // services
+import '../models/response/info_response.dart';
 import '../services/debouncer.dart';
 import '../services/image_picker.dart';
 import '../services/provider.dart';
@@ -39,8 +45,11 @@ class _OfferFormState extends State<OfferForm> {
   final _formKey = GlobalKey<FormState>();
   final _locationController = TextEditingController();
   final _debouncer = Debouncer(milliseconds: 1500);
-  RegExp decimalRegex = RegExp(r'(^\d*\.?\d*)');
-  Offer offer = Offer();
+  final decimalRegex = RegExp(r'(^\d*\.?\d*)');
+
+  late Offerform offer;
+
+  bool isLoading = false;
 
   String typeValue = 'House';
   List<String> types = ['House', 'Condominium', 'Hotel', 'Shophouse'];
@@ -74,7 +83,7 @@ class _OfferFormState extends State<OfferForm> {
     Navigator.of(context).pushNamed(GoogleLocation.routeName).then((value) {
       final location = Provider.of<DesireLocation>(context, listen: false).location;
 
-      offer.location = Location(coordinates: [location.target.latitude, location.target.longitude]);
+      offer.location = Location(coordinates: [location.target.longitude, location.target.latitude]);
       offer.address = Provider.of<DesireLocation>(context, listen: false).address;
 
       _locationController.text = offer.address;
@@ -85,17 +94,60 @@ class _OfferFormState extends State<OfferForm> {
     final File? file = await ImagePickerService().getImageFromGallery();
     if (file != null) {
       setState(() {
-        offer.pictureUrl = File(file.path);
+        offer.picture = File(file.path);
       });
     }
   }
 
-  void _addOfferHandler() {
+  void _createOffer() async {
+    if (offer.rooms.isEmpty) {
+      return _buildDialog(context, 'Rooms', 'Please add at least one room');
+    } else if (offer.picture.path == "") {
+      return _buildDialog(context, 'Exterior Picture', 'Please upload an exterior picture');
+    }
+
     if (_formKey.currentState!.validate()) {
+      setState(() => isLoading = true);
+
       offer.facilities = checkboxList.where((e) => e.checked).map((e) => e.name).toList();
       offer.type = typeValue.toUpperCase();
-      print(offer.toJson());
+      for (int i = 0; i < offer.rooms.length; i++) {
+        offer.rooms[i].type = offer.rooms[i].type.toUpperCase();
+      }
+
+      print('offer ${offer.type}');
+      print('sent offer ${offer.type}');
+
+      try {
+        var result = await OfferFormApi.postOffer(offer);
+
+        print('result: $result');
+
+        if (result is InfoResponse) {
+          setState(() => isLoading = false);
+          Alert.successAlert(
+            result,
+            'Success',
+            () => Navigator.of(context).pop(),
+            context,
+          ).then((_) => Navigator.of(context).pop());
+        }
+      } on DioError catch (e) {
+        setState(() => isLoading = false);
+        Alert.errorAlert(e, context);
+      }
     }
+  }
+
+  @override
+  void initState() {
+    final args = ModalRoute.of(context)!.settings.arguments as OfferArguments;
+    if (args.id.isNotEmpty) {
+      OfferFormApi.getOffer(args.id).then((result) {});
+    } else {
+      offer = Offerform();
+    }
+    super.initState();
   }
 
   @override
@@ -106,11 +158,6 @@ class _OfferFormState extends State<OfferForm> {
 
   @override
   Widget build(BuildContext context) {
-    // final args = ModalRoute.of(context)!.settings.arguments as OfferArguments;
-    // if (args.offer != null) {
-    //   offer = args.offer as Offer;
-    // }
-
     final InputDecoration _decorator = InputDecoration(
       fillColor: Theme.of(context).colorScheme.tertiary,
       filled: true,
@@ -198,16 +245,16 @@ class _OfferFormState extends State<OfferForm> {
                     ),
                   ),
                   const TextLabel('Exterior Pictures'),
-                  Container(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: RectangleAddButton(clickHandler: getPicture)),
-                  if (offer.pictureUrl.path.isNotEmpty)
-                    ListImage(
-                      pictures: [offer.pictureUrl],
-                      deleteHandler: (index) => setState(
-                        () => offer.pictureUrl = File(''),
-                      ),
-                    ),
+                  offer.picture.path.isNotEmpty
+                      ? ListImage(
+                          pictures: [offer.picture],
+                          deleteHandler: (index) => setState(
+                            () => offer.picture = File(''),
+                          ),
+                        )
+                      : Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: RectangleAddButton(clickHandler: getPicture)),
                   const TextLabel("Total space", subLabel: "(Sq.m.)"),
                   TextFormField(
                     initialValue: offer.totalSize.toString(),
@@ -270,11 +317,11 @@ class _OfferFormState extends State<OfferForm> {
                             deleteHandler: (index) => setState(() {
                               offer.rooms.removeAt(index);
                             }),
-                            deleteImageHandler: (idx) => setState(
-                              () {
-                                offer.rooms[index].pictures.removeAt(idx);
-                              },
-                            ),
+                            // deleteImageHandler: (idx) => setState(
+                            //   () {
+                            //     offer.rooms[index].pictures.removeAt(idx);
+                            //   },
+                            // ),
                           ),
                         );
                       })
@@ -324,7 +371,13 @@ class _OfferFormState extends State<OfferForm> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 20),
-                    child: Center(child: Button(clickHandler: _addOfferHandler, text: "Add offer")),
+                    child: Center(
+                      child: Button(
+                        clickHandler: _createOffer,
+                        text: "Add offer",
+                        isLoading: isLoading,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -351,10 +404,26 @@ class _OfferFormState extends State<OfferForm> {
           });
         });
   }
+
+  void _buildDialog(BuildContext ctx, String field, String message) {
+    showDialog(
+      context: ctx,
+      builder: (_) => AlertDialog(
+        title: Text('$field is required'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class OfferArguments {
-  final Offer? offer;
+  final String id;
 
-  OfferArguments([this.offer]);
+  OfferArguments(this.id);
 }

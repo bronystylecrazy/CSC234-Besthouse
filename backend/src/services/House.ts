@@ -41,7 +41,7 @@ export const GetOfferInfo = async (house_id: Types.ObjectId) => {
 		const house = await House.findById(house_id);
 		const houseDetail = await HouseDetail.findOne({ house_id: house_id });
 
-		return infoResponse({ ...house, ...houseDetail });
+		return infoResponse({ house, houseDetail });
 	} catch (error) {
 		return genericError(error.message, 500);
 	}

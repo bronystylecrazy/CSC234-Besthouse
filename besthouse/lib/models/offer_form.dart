@@ -1,70 +1,59 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
-
 import 'location.dart';
 
-class Offer {
+class Offerform {
   String name = "";
   String type = "HOUSE";
-  File pictureUrl = File('');
-  MultipartFile? file;
   Location location = Location(coordinates: [0, 0]);
   String address = "";
-  String description = "";
   int price = 0;
+  List<String> tags = [];
   List<OfferRoom> rooms = [];
+  String description = "";
   List<String> facilities = [];
   double electricFee = 0;
   double waterFee = 0;
   double totalSize = 0;
-  List<String> tags = [];
+  String pictureUrl = "";
+  File? picture;
 
-  Offer() {
-    name = "";
-    type = "HOUSE";
-    pictureUrl = File('');
-    location = Location(coordinates: [0, 0]);
-    address = "";
-    description = "";
-    price = 0;
-    rooms = [];
-    facilities = [];
-    electricFee = 0;
-    waterFee = 0;
-    totalSize = 0;
-    tags = [];
+  Offerform();
+
+  Offerform.fromJson(Map<String, dynamic> json) {
+    name = json['house']['name'];
+    type = json['house']['type'];
+    location = json['house']['location'];
+    address = json['house']['address'];
+    price = json['house']['price'];
+    tags = json['house']['tags'];
+    rooms = json['houseDetail']['rooms'];
+    description = json['houseDetail']['description'];
+    facilities = json['houseDetail']['facilities'];
+    electricFee = json['houseDetail']['electricFee'];
+    waterFee = json['houseDetail']['waterFee'];
+    totalSize = json['houseDetail']['totalSize'];
+    pictureUrl = json['house']['picture_url'];
+    picture = null;
   }
 
-  Offer.set(Offer offer) {
-    name = offer.name;
-    type = offer.type;
-    pictureUrl = offer.pictureUrl;
-    location = offer.location;
-    address = offer.address;
-    description = offer.description;
-    price = offer.price;
-    rooms = offer.rooms;
-    facilities = offer.facilities;
-    electricFee = offer.electricFee;
-    waterFee = offer.waterFee;
-    totalSize = offer.totalSize;
-    tags = offer.tags;
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'type': type,
+      'picture_url': pictureUrl,
+      'location': location.toJson(),
+      'address': address,
+      'description': description,
+      'price': price,
+      'rooms': rooms.map((e) => e.toJson()).toList(),
+      'facilities': facilities,
+      'electric_fee': electricFee,
+      'water_fee': waterFee,
+      'total_size': totalSize,
+      'tags': tags,
+    };
   }
-
-  set setName(String value) => name = value;
-  set setType(String value) => type = value;
-  set setPictureUrl(File value) => pictureUrl = value;
-  set setLocation(Location value) => location = value;
-  set setAddress(String value) => address = value;
-  set setDescription(String value) => description = value;
-  set setPrice(int value) => price = value;
-  set setRooms(List<OfferRoom> value) => rooms = value;
-  set setFacilities(List<String> value) => facilities = value;
-  set setElectricFee(double value) => electricFee = value;
-  set setWaterFee(double value) => waterFee = value;
-  set setTotalSize(double value) => totalSize = value;
-  set setTags(List<String> value) => tags = value;
 
   void update(String prop, dynamic value) {
     switch (prop) {
@@ -74,11 +63,8 @@ class Offer {
       case "type":
         type = value;
         break;
-      case "pictureUrl":
-        pictureUrl = value;
-        break;
-      case "file":
-        file = value;
+      case "picture":
+        picture = value;
         break;
       case "location":
         location = value;
@@ -112,43 +98,24 @@ class Offer {
         break;
     }
   }
-
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "type": type,
-        "file": file,
-        "location": location.toJson(),
-        "address": address,
-        "description": description,
-        "price": price,
-        "rooms": rooms.map((e) => e.toJson()).toList(),
-        "facilities": facilities,
-        "electricFee": electricFee,
-        "waterFee": waterFee,
-        "totalSize": totalSize,
-        "tags": tags,
-      };
 }
 
 class OfferRoom {
   String type;
   int amount;
-  List<File> pictures;
-  List<MultipartFile>? files;
+  List<String> pictures = <String>[];
+  List<File>? files;
 
   OfferRoom({
     required this.type,
     required this.amount,
-    required this.pictures,
+    this.files,
+    this.pictures = const [],
   });
 
-  set setType(String value) => type = value;
-  set setAmount(int value) => amount = value;
-  set setPictures(List<File> value) => pictures = value;
-
   Map<String, dynamic> toJson() => {
-        "type": type,
-        "amount": amount,
-        "files": files,
+        'type': type,
+        'amount': amount,
+        'pictures': pictures,
       };
 }

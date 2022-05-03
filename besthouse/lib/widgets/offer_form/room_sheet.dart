@@ -42,39 +42,30 @@ class _RoomSheetState extends State<RoomSheet> {
     Icons.bathtub_rounded,
     Icons.local_restaurant_rounded,
   ];
-
-  late OfferRoom _room;
   bool isDisabled = true;
+
+  late final OfferRoom _room = widget.room != null
+      ? OfferRoom(
+          type: widget.room!.type,
+          amount: widget.room!.amount,
+          files: widget.room!.files,
+        )
+      : OfferRoom(
+          type: roomTypes[0],
+          amount: 0,
+          files: [],
+        );
 
   void getRoomPictures() async {
     final List<File>? files = await ImagePickerService().getImagesFromGallery();
     if (files != null) {
       setState(() {
-        _room.pictures.addAll(files);
+        _room.files.addAll(files);
 
         if (isDisabled && _room.amount > 0) {
           isDisabled = false;
         }
       });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.room != null) {
-      _room = OfferRoom(
-        type: widget.room!.type,
-        amount: widget.room!.amount,
-        pictures: widget.room!.pictures,
-      );
-    } else {
-      _room = OfferRoom(
-        type: roomTypes[0],
-        amount: 0,
-        pictures: [],
-      );
-      print('test');
     }
   }
 
@@ -112,7 +103,15 @@ class _RoomSheetState extends State<RoomSheet> {
                     child: DropdownMenu(
                       list: roomTypes,
                       typeValue: _room.type,
-                      changeHandler: (value) => setState(() => _room.type = value),
+                      changeHandler: (value) {
+                        setState(() {
+                          _room.type = value;
+
+                          if (isDisabled && _room.amount > 0 && _room.pictures.isNotEmpty) {
+                            isDisabled = false;
+                          }
+                        });
+                      },
                       iconList: roomIcons,
                     ),
                   ),
@@ -184,11 +183,14 @@ class _RoomSheetState extends State<RoomSheet> {
               ),
               if (_room.pictures.isNotEmpty)
                 ListImage(
-                  pictures: _room.pictures,
+                  pictures: _room.files,
                   deleteHandler: (index) => setState(
                     () {
                       _room.pictures.removeAt(index);
 
+                      if (_room.pictures.isNotEmpty && isDisabled) {
+                        isDisabled = false;
+                      }
                       if (_room.pictures.isEmpty) {
                         isDisabled = true;
                       }

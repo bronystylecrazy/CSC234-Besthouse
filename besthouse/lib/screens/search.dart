@@ -29,8 +29,6 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  RangeValues currentRangeValues = const RangeValues(0, 20000);
-
   final List<House> houses = [
     House(
       id: "634gf3438",
@@ -69,13 +67,15 @@ class _SearchState extends State<Search> {
     ),
   ];
 
+  RangeValues currentRangeValues = const RangeValues(0, 20000);
+
   List<AccommodationObject> radioList = [
     AccommodationObject("All", Accommodation.all),
     AccommodationObject("House", Accommodation.house),
     AccommodationObject("Condo", Accommodation.condo),
     AccommodationObject("Hotel", Accommodation.hotel),
   ];
-  Accommodation? type = Accommodation.all;
+  Accommodation type = Accommodation.all;
 
   List<Facilities> checkboxList = [
     Facilities("Wifi", false),
@@ -100,16 +100,20 @@ class _SearchState extends State<Search> {
     });
   }
 
-  void radioHandler(Accommodation? value) {
+  void radioHandler(Accommodation value) {
     setState(() {
       type = value;
     });
   }
 
-  void checkBoxHandler(value, e) {
+  void checkBoxHandler(List<Facilities> value) {
     setState(() {
-      e.checked = value!;
+      checkboxList = value;
     });
+  }
+
+  void applyFilter() {
+    print("apply filter");
   }
 
   @override
@@ -159,9 +163,7 @@ class _SearchState extends State<Search> {
                           itemBuilder: (BuildContext context, int index) {
                             return Tag(
                               title: index == 0
-                                  ? radioList
-                                      .firstWhere((e) => e.type == type)
-                                      .name
+                                  ? radioList.firstWhere((e) => e.type == type).name
                                   : selectedFacilities[index - 1],
                             );
                           },
@@ -232,13 +234,16 @@ class _SearchState extends State<Search> {
         context: ctx,
         builder: (_) {
           return FilterSheet(
-            checkBoxHandler: checkBoxHandler,
-            checkboxList: checkboxList,
             currentRangeValues: currentRangeValues,
-            radioHandler: radioHandler,
             radioList: radioList,
-            slideHandler: slideHandler,
             type: type,
+            checkboxList: checkboxList,
+            filterHandler: (RangeValues range, Accommodation type, List<Facilities> facilities) {
+              slideHandler(range);
+              radioHandler(type);
+              checkBoxHandler(facilities);
+              applyFilter();
+            },
           );
         });
   }

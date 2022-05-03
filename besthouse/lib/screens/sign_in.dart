@@ -36,13 +36,11 @@ class _SignInState extends State<SignIn> {
         isLoading = true;
       });
       try {
-        var result = await UserApi.login(
-            _usernameController.text, _passwordController.text);
+        var result = await UserApi.login(_usernameController.text, _passwordController.text);
 
         if (result is InfoResponse) {
           SharePreference.prefs.setString("token", result.data);
-          DioInstance.dio.options.headers["Authorization"] =
-              "Bearer ${result.data}";
+          DioInstance.dio.options.headers["Authorization"] = "Bearer ${result.data}";
           Future.delayed(const Duration(seconds: 1), (() {
             setState(() {
               isLoading = false;
@@ -135,8 +133,7 @@ class _SignInState extends State<SignIn> {
                               style: Theme.of(context).textTheme.caption,
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Navigator.pushNamed(
-                                      context, ForgetPassword.routeName);
+                                  Navigator.pushNamed(context, ForgetPassword.routeName);
                                 },
                             ),
                           ),
@@ -171,8 +168,7 @@ class _SignInState extends State<SignIn> {
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      Navigator.pushNamed(
-                                          context, SignUp.routeName);
+                                      Navigator.pushNamed(context, SignUp.routeName);
                                     },
                                 ),
                               ),
