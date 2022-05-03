@@ -102,7 +102,7 @@ class _OfferFormState extends State<OfferForm> {
   void _createOffer() async {
     if (offer.rooms.isEmpty) {
       return _buildDialog(context, 'Rooms', 'Please add at least one room');
-    } else if (offer.picture.path == "") {
+    } else if (offer.picture!.path == "") {
       return _buildDialog(context, 'Exterior Picture', 'Please upload an exterior picture');
     }
 
@@ -245,9 +245,9 @@ class _OfferFormState extends State<OfferForm> {
                     ),
                   ),
                   const TextLabel('Exterior Pictures'),
-                  offer.picture.path.isNotEmpty
+                  offer.picture!.path.isNotEmpty
                       ? ListImage(
-                          pictures: [offer.picture],
+                          pictures: [offer.picture!],
                           deleteHandler: (index) => setState(
                             () => offer.picture = File(''),
                           ),

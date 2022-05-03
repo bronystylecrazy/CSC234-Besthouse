@@ -16,8 +16,8 @@ class OfferFormApi {
     // Extetior Picture
     FormData exteriorPictureFormData = FormData.fromMap({
       "files": await MultipartFile.fromFile(
-        offer.picture.path,
-        filename: offer.picture.path.split("/")[1],
+        offer.picture!.path,
+        filename: offer.picture!.path.split("/")[1],
         contentType: MediaType("image", "jpeg"),
       ),
     });
@@ -31,8 +31,8 @@ class OfferFormApi {
       for (int j = 0; j < offer.rooms[i].pictures.length; j++) {
         roomPicturesFiles.add(
           await MultipartFile.fromFile(
-            offer.rooms[i].files[j].path,
-            filename: offer.rooms[i].files[j].path.split("/").last,
+            offer.rooms[i].files![j].path,
+            filename: offer.rooms[i].files![j].path.split("/").last,
             contentType: MediaType("image", "jpeg"),
           ),
         );
