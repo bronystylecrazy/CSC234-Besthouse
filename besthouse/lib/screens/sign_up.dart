@@ -83,7 +83,7 @@ class _SignUpState extends State<SignUp> {
   String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Password can't be empty";
-    } else if (value.length <= 4) {
+    } else if (value.length < 4) {
       return "Password must have at least 4 character";
     } else if (value != _passwordController.text) {
       return "Password is not match";

@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:besthouse/services/share_preference.dart';
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 
 import '../dio.dart';
 // models
@@ -59,5 +63,20 @@ class UserApi {
       return ErrorResponse.fromJson(response.data);
     }
     return InfoResponse.fromJson(response.data);
+  }
+
+  static Future<Response<dynamic>> uploadProfilePicture(File file) async {
+    FormData exteriorPictureFormData = FormData.fromMap({
+      "files": await MultipartFile.fromFile(
+        file.path,
+        filename: file.path.split("/")[1],
+        contentType: MediaType("image", "jpeg"),
+      ),
+    });
+    final exteriorPicture =
+        await DioInstance.dio.post("/storage", data: exteriorPictureFormData);
+    DioInstance.dio.patch("/profile/picture",
+        data: {"picture_url": exteriorPicture.data[0]['url']});
+    return exteriorPicture;
   }
 }

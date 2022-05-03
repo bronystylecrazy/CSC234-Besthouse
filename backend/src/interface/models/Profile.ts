@@ -5,4 +5,5 @@ export default interface UserProfile {
 	lastname: string;
 	line_id: string;
 	facebook: string;
+	picture_url: string;
 }

@@ -43,8 +43,8 @@ export const userSchema = new Schema<User>({
 	tel: {
 		type: String,
 		required: [true, "Enter a phone number."],
-		minLength: [11, "Phone number should be at least 11 characters"],
-		maxlength: [11, "Phone number should be at most 11 characters"],
+		minLength: [10, "Phone number should be at least 11 characters"],
+		maxlength: [10, "Phone number should be at most 11 characters"],
 	},
 });
 
@@ -58,6 +58,7 @@ export const userProfileSchema = new Schema<UserProfile>({
 	lastname: { type: String, required: [true, "Enter a lastname"] },
 	line_id: String,
 	facebook: String,
+	picture_url: String,
 });
 
 export const houseSchema = new Schema<House>({

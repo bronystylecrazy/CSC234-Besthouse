@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 // models
 import '../../models/offer_form.dart';
@@ -51,7 +53,10 @@ class OfferRoomCard extends StatelessWidget {
                           icon: Icon(
                             Icons.edit,
                             size: 18,
-                            color: Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .secondary
+                                .withOpacity(0.8),
                           ),
                           splashRadius: 14,
                           tooltip: 'edit room',
@@ -61,7 +66,10 @@ class OfferRoomCard extends StatelessWidget {
                       icon: Icon(
                         Icons.delete,
                         size: 18,
-                        color: Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withOpacity(0.8),
                       ),
                       splashRadius: 14,
                       tooltip: 'delete room',
@@ -71,7 +79,7 @@ class OfferRoomCard extends StatelessWidget {
               ],
             ),
             ListImage(
-              pictures: room.files,
+              pictures: room.files!,
             ),
           ],
         ),

@@ -29,7 +29,10 @@ export const GetOffer = async (req: Request) => {
 		);
 
 		// List houses by id of house detail
-		const houses = await House.find({ _id: { $in: ids } });
+		const houses = await House.find(
+			{ _id: { $in: ids } },
+			"_id status name"
+		);
 		return infoResponse(houses);
 	} catch (error) {
 		return genericError(error.message, 500);
@@ -169,7 +172,7 @@ export const DeleteOffer = async (house_id: Types.ObjectId, req: Request) => {
 			return genericError("Unauthorize: User is not own this offer", 400);
 		}
 
-		await houseDetail.delete().exec();
+		await houseDetail.delete();
 		return infoResponse(null, "offer deleted!");
 	} catch (error) {
 		return genericError(error.message, 500);

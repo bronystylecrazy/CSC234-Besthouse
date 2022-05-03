@@ -1,5 +1,5 @@
 import express from "express";
-import { GetUser, PatchUser } from "@/services/User";
+import { GetUser, PatchUser, PatchUserPicture } from "@/services/User";
 import { responseHandler } from "@/services/Handler";
 import { ProfilePatch, UserPatch } from "@/interface/api/ProfilePatch";
 
@@ -8,6 +8,10 @@ const profileRoute = express.Router();
 
 profileRoute.get("/", async (req, res) => {
 	return responseHandler(res, await GetUser(req));
+});
+
+profileRoute.patch("/picture", async (req, res) => {
+	return responseHandler(res, await PatchUserPicture(req));
 });
 
 profileRoute.patch("/", async (req, res) => {

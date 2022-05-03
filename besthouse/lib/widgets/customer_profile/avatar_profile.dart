@@ -1,3 +1,4 @@
+import 'package:besthouse/services/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -6,10 +7,12 @@ class AvatarProfile extends StatelessWidget {
     Key? key,
     required this.userPicture,
     required this.isEditable,
+    this.updateImageHandler,
   }) : super(key: key);
 
   final String userPicture;
   final bool isEditable;
+  final VoidCallback? updateImageHandler;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +23,16 @@ class AvatarProfile extends StatelessWidget {
         width: 125,
         child: Stack(
           children: [
-            Image.network(
-              userPicture,
-              fit: BoxFit.cover,
-              width: 125,
-              height: 125,
-            ),
+            Image.network(Constants.baseUrl + userPicture,
+                fit: BoxFit.cover,
+                width: 125,
+                height: 125,
+                errorBuilder: (context, error, stackTrace) => Image.asset(
+                      "assets/Portrait_Placeholder.png",
+                      fit: BoxFit.cover,
+                      width: 125,
+                      height: 125,
+                    )),
             isEditable
                 ? Align(
                     alignment: Alignment.bottomCenter,
@@ -53,7 +60,7 @@ class AvatarProfile extends StatelessWidget {
                         color: Colors.transparent,
                         child: InkWell(
                           splashColor: const Color(0xff24577a).withOpacity(0.5),
-                          onTap: () {},
+                          onTap: updateImageHandler,
                         )))
                 : Positioned(
                     child: Container(),

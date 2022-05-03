@@ -67,7 +67,7 @@ class _SignInState extends State<SignIn> {
   String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Password can't be empty";
-    } else if (value.length <= 4) {
+    } else if (value.length < 4) {
       return "Password must have at least 4 character";
     }
     return null;

@@ -1,3 +1,4 @@
+import 'package:besthouse/services/share_preference.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 // services
@@ -21,7 +22,8 @@ class OfferFormApi {
         contentType: MediaType("image", "jpeg"),
       ),
     });
-    final exteriorPicture = await DioInstance.dio.post("/storage", data: exteriorPictureFormData);
+    final exteriorPicture =
+        await DioInstance.dio.post("/storage", data: exteriorPictureFormData);
     offer.pictureUrl = exteriorPicture.data[0]["url"];
 
     // Rooms Pictures
@@ -42,7 +44,8 @@ class OfferFormApi {
         "files": roomPicturesFiles,
       });
 
-      final roomPictures = await DioInstance.dio.post("/storage", data: roomPicturesFormData);
+      final roomPictures =
+          await DioInstance.dio.post("/storage", data: roomPicturesFormData);
 
       for (int j = 0; j < offer.rooms[i].pictures.length; j++) {
         offer.rooms[i].pictures.add(roomPictures.data[j]["url"] as String);
@@ -72,6 +75,26 @@ class OfferFormApi {
       return ErrorResponse.fromJson(response.data);
     }
 
+    return InfoResponse.fromJson(response.data);
+  }
+
+  static Future<dynamic> getOfferList() async {
+    DioInstance.dio.options.headers["authorization"] =
+        "Bearer " + SharePreference.prefs.getString("token").toString();
+    var response = await DioInstance.dio.get("/offer");
+    if (response.statusCode != 200) {
+      return ErrorResponse.fromJson(response.data);
+    }
+    return InfoResponse.fromJson(response.data);
+  }
+
+  static Future<dynamic> deleteOffer(String id) async {
+    DioInstance.dio.options.headers["authorization"] =
+        "Bearer " + SharePreference.prefs.getString("token").toString();
+    var response = await DioInstance.dio.delete("/offer/$id");
+    if (response.statusCode != 200) {
+      return ErrorResponse.fromJson(response.data);
+    }
     return InfoResponse.fromJson(response.data);
   }
 }

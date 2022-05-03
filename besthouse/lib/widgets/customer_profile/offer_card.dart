@@ -7,11 +7,18 @@ class OfferCard extends StatelessWidget {
       {Key? key,
       required this.name,
       required this.isAvailable,
-      required this.isEditable})
+      required this.isEditable,
+      this.deleteHandler,
+      required this.id,
+      this.toggleOfferHandler})
       : super(key: key);
+  final String id;
   final String name;
   final bool isAvailable;
   final bool isEditable;
+  final Function? deleteHandler;
+  final Function? toggleOfferHandler;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -79,18 +86,53 @@ class OfferCard extends StatelessWidget {
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             child: Text(isAvailable ? "Disable" : "Enable"),
-                            onTap: () {},
+                            onTap: () {
+                              toggleOfferHandler!(id);
+                            },
                           ),
                           PopupMenuItem(
                             child: const Text("Edit"),
                             onTap: () {},
                           ),
                           PopupMenuItem(
-                            child: Text("Delete",
-                                style: GoogleFonts.poppins(
-                                    color: Theme.of(context).errorColor)),
-                            onTap: () {},
-                          )
+                              child: Text("Delete",
+                                  style: GoogleFonts.poppins(
+                                      color: Theme.of(context).errorColor)),
+                              onTap: () {
+                                Future.delayed(const Duration(seconds: 0), (() {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: const Text('Are you sure?'),
+                                      content: const Text(
+                                          "You cannot undo the action"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Cancel',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            deleteHandler!(id);
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('OK',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1
+                                                  ?.apply(color: Colors.red)),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }));
+                              })
                         ],
                         child: const Icon(
                           Icons.more_vert,

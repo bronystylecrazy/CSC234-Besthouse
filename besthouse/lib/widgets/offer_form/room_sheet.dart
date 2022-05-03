@@ -60,7 +60,7 @@ class _RoomSheetState extends State<RoomSheet> {
     final List<File>? files = await ImagePickerService().getImagesFromGallery();
     if (files != null) {
       setState(() {
-        _room.files.addAll(files);
+        _room.files!.addAll(files);
 
         if (isDisabled && _room.amount > 0) {
           isDisabled = false;
@@ -107,7 +107,9 @@ class _RoomSheetState extends State<RoomSheet> {
                         setState(() {
                           _room.type = value;
 
-                          if (isDisabled && _room.amount > 0 && _room.pictures.isNotEmpty) {
+                          if (isDisabled &&
+                              _room.amount > 0 &&
+                              _room.pictures.isNotEmpty) {
                             isDisabled = false;
                           }
                         });
@@ -118,7 +120,8 @@ class _RoomSheetState extends State<RoomSheet> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.35,
                     child: TextFormField(
-                      initialValue: _room.amount == 0 ? '' : _room.amount.toString(),
+                      initialValue:
+                          _room.amount == 0 ? '' : _room.amount.toString(),
                       onChanged: (value) {
                         if (value.isNotEmpty && int.parse(value) > 0) {
                           setState(() {
@@ -139,8 +142,8 @@ class _RoomSheetState extends State<RoomSheet> {
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       decoration: InputDecoration(
                         hintText: 'Enter Amount',
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 12.0),
                         fillColor: Theme.of(context).colorScheme.tertiary,
                         filled: true,
                         border: const OutlineInputBorder(
@@ -183,7 +186,7 @@ class _RoomSheetState extends State<RoomSheet> {
               ),
               if (_room.pictures.isNotEmpty)
                 ListImage(
-                  pictures: _room.files,
+                  pictures: _room.files!,
                   deleteHandler: (index) => setState(
                     () {
                       _room.pictures.removeAt(index);
