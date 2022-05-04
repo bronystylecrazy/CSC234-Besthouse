@@ -226,11 +226,46 @@ export const FavoriteHouse = async (body: FavouritePost, req: Request) => {
 			return infoResponse(null, "Removed from favorite");
 		}
 
+		await HouseDetail.findOneAndUpdate(
+			{ house_id: body.house_id },
+			{ $inc: { likes: 1 } }
+		).exec();
+
 		await new Favorite({
 			house_id: body.house_id,
 			user_id: user_id,
 		}).save();
 		return infoResponse(null, "Added to favorite!");
+	} catch (error) {
+		return genericError(error.message, 500);
+	}
+};
+
+export const ToggleAvailable = async (house_id: any, req: Request) => {
+	try {
+		if (!isLogin(req)) {
+			return genericError(
+				"Unauthorize: Login is required to do function",
+				400
+			);
+		}
+		const user_id = req.user.user_id;
+
+		const id = new Types.ObjectId(house_id);
+		// check permission
+		const houseDetail = await HouseDetail.findOne({
+			user_id: user_id,
+			house_id: id,
+		}).exec();
+
+		if (houseDetail == null) {
+			return genericError("Unauthorize: User is not own this offer", 400);
+		}
+
+		// update house
+		const house = await House.findById(id).exec();
+		await house.updateOne({ $set: { status: !house.status } });
+		return infoResponse(null, "Offer updated!");
 	} catch (error) {
 		return genericError(error.message, 500);
 	}

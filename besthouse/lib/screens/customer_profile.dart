@@ -133,16 +133,21 @@ class _CustomerProfileState extends State<CustomerProfile> {
 
   void toggleOfferHandler(String id) async {
     try {
-      var temp = offerList.map((element) {
-        if (element.id == id) {
-          element.isAvailable = !element.isAvailable;
-        }
-        return element;
-      }).toList();
-      setState(() {
-        offerList = temp;
-      });
-    } catch (e) {}
+      var result = await OfferFormApi.toggleOffer(id);
+      if (result is InfoResponse) {
+        var temp = offerList.map((element) {
+          if (element.id == id) {
+            element.isAvailable = !element.isAvailable;
+          }
+          return element;
+        }).toList();
+        setState(() {
+          offerList = temp;
+        });
+      }
+    } on DioError catch (e) {
+      Alert.errorAlert(e, context);
+    }
   }
 
   void deleteOfferHandler(String id) async {

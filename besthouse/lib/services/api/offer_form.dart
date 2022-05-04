@@ -97,4 +97,14 @@ class OfferFormApi {
     }
     return InfoResponse.fromJson(response.data);
   }
+
+  static Future<dynamic> toggleOffer(String id) async {
+    DioInstance.dio.options.headers["authorization"] =
+        "Bearer " + SharePreference.prefs.getString("token").toString();
+    var response = await DioInstance.dio.patch("/offer/toggle/$id");
+    if (response.statusCode != 200) {
+      return ErrorResponse.fromJson(response.data);
+    }
+    return InfoResponse.fromJson(response.data);
+  }
 }

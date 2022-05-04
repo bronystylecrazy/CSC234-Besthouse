@@ -5,6 +5,7 @@ import {
 	DeleteOffer,
 	GetOffer,
 	GetOfferInfo,
+	ToggleAvailable,
 	UpdateOffer,
 } from "@/services/House";
 import express from "express";
@@ -39,6 +40,12 @@ offerRoute.delete("/:id", async (req, res) => {
 	const { id } = req.params;
 	const house_id = new Types.ObjectId(id);
 	return responseHandler(res, await DeleteOffer(house_id, req));
+});
+
+offerRoute.patch("/toggle/:id", async (req, res) => {
+	// get params
+	const { id } = req.params;
+	return responseHandler(res, await ToggleAvailable(id, req));
 });
 
 export default offerRoute;
