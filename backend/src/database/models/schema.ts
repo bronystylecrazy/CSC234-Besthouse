@@ -113,7 +113,7 @@ export const houseDetailSchema = new Schema<HouseDetail>({
 					enum: Object.values(RoomType),
 					required: [true, "Room type is required"],
 				},
-				numbers: Number,
+				amount: Number,
 				pictures: [String],
 			},
 		],
