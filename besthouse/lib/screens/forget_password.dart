@@ -17,59 +17,68 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           Positioned(
-            child: Image.asset("assets/logo.png", scale: 0.8),
+            child: Image.asset("assets/logo.png", scale: 14),
             top: 50,
             left: 18,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.only(right: 24, left: 24, top: 112),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 30),
                     Text(
-                      "Change password",
+                      "Update password",
                       style: Theme.of(context).textTheme.headline1,
                     ),
                     Text(
                       "BestHouse",
                       style: Theme.of(context).textTheme.headline2,
                     ),
-                    const SizedBox(height: 30),
-                    CustomTextField(
-                        context: context,
-                        controller: _usernameController,
-                        label: "Username",
-                        isObscure: false),
+                    const SizedBox(height: 60),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "We will send you new password\n     via your registered email",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter some detail about your property';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Email',
+                          fillColor: Theme.of(context).colorScheme.tertiary,
+                          filled: true,
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(16),
+                            ),
+                          ),
+                        )),
                     const SizedBox(
                       height: 20,
                     ),
-                    CustomTextField(
-                        context: context,
-                        controller: _passwordController,
-                        label: "Enter new password",
-                        isObscure: true),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextField(
-                        context: context,
-                        controller: _passwordController,
-                        label: "Enter new password",
-                        isObscure: true),
                     const SizedBox(
                       height: 20,
                     ),
@@ -84,7 +93,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                 borderRadius: BorderRadius.circular(18.0),
                               ),
                             ),
-                            child: Button(text: "Comfirm", clickHandler: () {}),
+                            child: Button(
+                                text: "Get new password", clickHandler: () {}),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(16),
