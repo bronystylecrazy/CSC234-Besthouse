@@ -43,8 +43,8 @@ export const userSchema = new Schema<User>({
 	tel: {
 		type: String,
 		required: [true, "Enter a phone number."],
-		minLength: [10, "Phone number should be at least 11 characters"],
-		maxlength: [10, "Phone number should be at most 11 characters"],
+		minLength: [10, "Phone number should be at least 10 characters"],
+		maxlength: [10, "Phone number should be at most 10 characters"],
 	},
 });
 
