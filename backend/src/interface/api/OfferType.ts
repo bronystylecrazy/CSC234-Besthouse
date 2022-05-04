@@ -11,7 +11,7 @@ export interface OfferPatch {
 	rooms: [
 		{
 			type: "String";
-			numbers: 0;
+			amount: 0;
 			pictures: [
 				{
 					url: "String";

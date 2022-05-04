@@ -6,7 +6,7 @@ export default interface HouseDetail {
 	rooms: [
 		{
 			type: string;
-			numbers: number;
+			amount: number;
 			pictures: [
 				{
 					url: string;
