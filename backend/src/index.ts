@@ -1,5 +1,4 @@
 import * as chalk from "chalk";
-require("module-alias/register");
 
 /** Internal Modules */
 import dotenv from "dotenv";
