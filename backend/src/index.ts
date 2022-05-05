@@ -1,4 +1,4 @@
-require("dotenv").config();
+import * as chalk from "chalk";
 require("module-alias/register");
 
 /** Internal Modules */
@@ -22,6 +22,7 @@ import offerRoute from "./routes/offer";
 import userRoute from "./routes/user";
 import searchRoute from "./routes/search";
 import storageRoute from "./routes/storage";
+import { log } from "./services";
 
 /** Instantiate Application */
 const app = express();
@@ -71,7 +72,7 @@ app.use("/search", searchRoute);
 app.use("/user", userRoute);
 app.use("/storage", storageRoute);
 
-// for test
+// for testing only
 app.get("/api", async (req, res) => {
 	// var user1 = new User({
 	// 	email: "float@mail.com",
@@ -112,7 +113,12 @@ mongoose
 	.connect(config.MONGODB_HOST)
 	.then(() =>
 		app.listen(config.PORT, "0.0.0.0", () => {
-			console.log(`Server is running on port ${config.PORT}`);
+			log(
+				"Server",
+				`running on port ${chalk.bold(":" + config.PORT)}`,
+				"🚀",
+				"😃"
+			);
 		})
 	)
 	.catch((err) => console.error("What the fuck is going on??", err));

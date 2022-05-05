@@ -6,6 +6,7 @@ import path from "path";
 import fs from "fs";
 import { nanoid } from "nanoid";
 import { genericError, responseHandler } from "@/services/Handler";
+import { log } from "@/services";
 
 // import sharp from "sharp";
 // const resizeImages = async (req, res, next) => {
@@ -28,18 +29,15 @@ import { genericError, responseHandler } from "@/services/Handler";
 //   next();
 // };
 
-console.log(
-	`Storage service will be on ${path.join(`${__dirname}/../../../storage`)}`
-);
-if (fs.existsSync(path.join(`${__dirname}/../../../storage`))) {
-	console.log("Storage service is already exist");
+if (fs.existsSync(path.join(`./storage`))) {
+	log("StorageAPI", "initialized", "🧊", "🤓");
 } else {
-	fs.mkdirSync(path.join(`${__dirname}/../../../storage`));
+	fs.mkdirSync(path.join(`./storage`));
 }
 
 var storage = multer.diskStorage({
 	destination: (req, file, callback) => {
-		callback(null, path.join(`${__dirname}/../../../storage`));
+		callback(null, path.join(`./storage`));
 	},
 	filename: async (req, file, callback) => {
 		const match = ["image/png", "image/jpeg"];
@@ -58,16 +56,13 @@ var storage = multer.diskStorage({
 	},
 });
 
-var uploadFiles = multer({ storage: storage }).array("files", 10);
+var uploadFiles = multer({ storage: storage }).array("file", 10);
 var uploadFilesMiddleware = util.promisify<any>(uploadFiles);
-
 const storageRoute = express.Router();
 
 storageRoute.use(uploadFilesMiddleware);
 
 storageRoute.post("/", (req, res, err) => {
-	console.log(`storage <-`, req);
-
 	return res.json(
 		(req as any).files.map((file) => ({
 			url: "/storage/" + file.filename,
@@ -82,21 +77,14 @@ storageRoute.post("/", (req, res, err) => {
 storageRoute.get("/:filename", async (req, res) => {
 	try {
 		const { filename } = req.params;
-		if (
-			!filename ||
-			!fs.existsSync(
-				path.join(`${__dirname}/../../../storage/${filename}`)
-			)
-		) {
+		if (!filename || !fs.existsSync(path.join(`./storage/${filename}`))) {
 			return responseHandler(
 				res,
 				await genericError("File not found!", 404)
 			);
 		}
 		// return picture by file stream
-		const file = fs.createReadStream(
-			path.join(`${__dirname}/../../../storage`, filename)
-		);
+		const file = fs.createReadStream(path.join(`./storage`, filename));
 		res.setHeader("Content-Type", "image/jpg");
 		return file.pipe(res);
 	} catch (e) {

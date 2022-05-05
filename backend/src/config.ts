@@ -1,5 +1,9 @@
+import chalk from "chalk";
 import dotenv from "dotenv";
+import { log } from "./services";
 dotenv.config();
+
+log("DotEnv", "ready", "✨", "😃");
 
 const AppConfig = {
 	PORT: +process.env.SERVER_PORT || 8080,

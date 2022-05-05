@@ -4,9 +4,9 @@
 	"description": "A project backend...",
 	"main": "index.js",
 	"scripts": {
-		"dev": "rimraf dist && tsc-watch --onSuccess \"node ./dist/index.js\"",
-		"build": "rimraf dist && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
-		"serve": "nodemon ./dist/index.js",
+		"build": "rimraf dist && node build",
+		"dev": "node watch",
+		"serve": "node dist/index.js",
 		"test": "jest"
 	},
 	"repository": {
@@ -25,6 +25,7 @@
 	"dependencies": {
 		"@types/express-jwt": "^6.0.4",
 		"bcrypt": "^5.0.1",
+		"chalk": "^4.1.0",
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",
 		"express": "^4.17.3",
@@ -50,6 +51,8 @@
 		"@typescript-eslint/parser": "^5.14.0",
 		"deepmerge": "^4.2.2",
 		"dotenv": "^16.0.0",
+		"esbuild": "^0.14.38",
+		"esbuild-node-externals": "^1.4.1",
 		"eslint": "^8.11.0",
 		"eslint-config-google": "^0.14.0",
 		"eslint-config-prettier": "^8.5.0",
