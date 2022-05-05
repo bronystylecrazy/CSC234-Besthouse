@@ -29,7 +29,7 @@ esbuild
 		entryPoints: ["./src/index.ts"],
 		outfile: "dist/index.js",
 		bundle: true,
-		minify: true,
+		minify: false,
 		platform: "node",
 		sourcemap: false,
 		target: "node16",
