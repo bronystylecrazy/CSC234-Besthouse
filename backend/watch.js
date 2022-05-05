@@ -11,16 +11,17 @@ let t = performance.now();
 const time = () => (performance.now() - t).toFixed(2);
 function stopNodejsProcess() {
 	if (node) {
-		node.stdin.pause();
+		if (node.stdin) node.stdin.pause();
 		node.kill();
 		t = performance.now();
-		console.log("stop!");
 	}
 }
 
 function startNodejsProcess(app = "dist/index.js") {
-	node = spawn("node", [app]);
-	node.stdout.on("data", (data) => process.stdout.write(data));
+	node = spawn("node", [app], { stdio: "inherit" });
+	// node.stdout.on("data", (data) => process.stdout.write(data));
+	node.stdout.pipe(process.stdout);
+	node.stdin.pipe(process.stdin);
 }
 
 esbuild
@@ -36,21 +37,25 @@ esbuild
 		incremental: true,
 		watch: {
 			onRebuild: (err, res) => {
-				stopNodejsProcess();
-				if (err) {
-					console.log(chalk.red(err));
-					return;
-				}
-				console.log(
-					`⚡ ${chalk.blueBright(
-						`Build completed`
-					)} ${chalk.greenBright(`(${time()}ms)`)} ⚡`
-				);
-				startNodejsProcess();
+				try {
+					console.clear();
+					stopNodejsProcess();
+					if (err) {
+						console.log(chalk.red(err));
+						return;
+					}
+					console.log(
+						`⚡ ${chalk.blueBright(
+							`Build completed, restarting server...`
+						)} ${chalk.greenBright(`(${time()}ms)`)} ⚡`
+					);
+					startNodejsProcess();
+				} catch (e) {}
 			},
 		},
 	})
 	.then(() => {
+		console.clear();
 		console.log(
 			`⚡ ${chalk.blueBright(`Build completed`)} ${chalk.greenBright(
 				`(${time()}ms)`
@@ -59,4 +64,4 @@ esbuild
 		console.log(`🔥 ${chalk.cyanBright(`Watching for changes...`)} 🔥`);
 		startNodejsProcess();
 	})
-	.catch(() => process.exit(1));
+	.catch((err) => {});

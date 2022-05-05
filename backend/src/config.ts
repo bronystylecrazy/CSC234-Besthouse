@@ -1,4 +1,3 @@
-import chalk from "chalk";
 import dotenv from "dotenv";
 import { log } from "./services";
 dotenv.config();
