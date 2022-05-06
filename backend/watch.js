@@ -5,6 +5,7 @@ const esbuild = require("esbuild");
 const { nodeExternalsPlugin } = require("esbuild-node-externals");
 const chalk = require("chalk");
 const { spawn } = require("child_process");
+const { performance } = require('perf_hooks');
 
 let node = null;
 let t = performance.now();
