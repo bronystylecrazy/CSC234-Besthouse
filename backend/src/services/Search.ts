@@ -15,6 +15,7 @@ export const searchHouse = async (data: SearchPost): ResultHandler => {
 			//@ts-ignore
 			condition.price = { ...condition.price, $lte: data.pricehigh };
 		}
+
 		if (data.type) {
 			//@ts-ignore
 			condition.type = data.type;
@@ -37,7 +38,7 @@ export const searchHouse = async (data: SearchPost): ResultHandler => {
 			};
 		} else if (data.address) {
 			//@ts-ignore
-			condition.address = { $contains: data.address };
+			condition.address = { $regex: data.address, $options: "i" };
 		}
 
 		// Get houses from provied condition
@@ -48,17 +49,17 @@ export const searchHouse = async (data: SearchPost): ResultHandler => {
 		// Check if user want to get facilities
 		//@ts-ignore
 		if (condition.facilities) {
-			const housesDetail = await HouseDetail.find({
+			const housesDetails = await HouseDetail.find({
 				house_id: { $in: houses.map((house) => house._id) },
 				facilities: { $all: data.facilities },
 			});
 
-			if (housesDetail.length === 0)
+			if (housesDetails.length === 0)
 				return infoResponse([], "No house with the facilities found");
 
 			// Get only houseDetail that match the id from houses
 			var finalHouses = houses.filter((house) => {
-				return housesDetail.find((houseDetail) => {
+				return housesDetails.find((houseDetail) => {
 					return (
 						houseDetail.house_id.toString() === house._id.toString()
 					);
@@ -90,7 +91,7 @@ export const SearchNearbyHouse = async (data: NearbySearchGet) => {
 						type: "Point",
 						coordinates: [data.long, data.lat],
 					},
-					$maxDistance: 10000,
+					$maxDistance: 5000,
 				},
 			},
 		}).exec();

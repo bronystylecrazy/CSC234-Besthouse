@@ -8,7 +8,7 @@ const searchRoute = express.Router();
 
 searchRoute.post("/", async (req, res) => {
 	if (!isLogin(req))
-		return responseHandler(res, await genericError("Unauthorized", 403));
+		return responseHandler(res, await genericError("Unauthorized", 401));
 
 	const data: SearchPost = req.body;
 	return responseHandler(res, await searchHouse(data));
