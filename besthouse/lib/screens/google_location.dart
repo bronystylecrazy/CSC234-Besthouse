@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 
 //service
 import '../services/location_api.dart';
-import '../services/provider.dart';
+import '../services/provider/location.dart';
 
 //widget
 import '../widgets/google_location/address_search.dart';
@@ -151,4 +151,3 @@ class _GoogleLocationState extends State<GoogleLocation> {
     );
   }
 }
-          

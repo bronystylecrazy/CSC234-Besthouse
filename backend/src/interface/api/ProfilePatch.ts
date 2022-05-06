@@ -1,11 +1,11 @@
 export interface ProfilePatch {
-	firstname: "String";
-	lastname: "String";
-	line_id: "String";
-	facebook: "String";
+	firstname: string;
+	lastname: string;
+	line_id: string;
+	facebook: string;
 }
 
 export interface UserPatch {
-	username: "String";
-	tel: "String";
+	username: string;
+	tel: string;
 }

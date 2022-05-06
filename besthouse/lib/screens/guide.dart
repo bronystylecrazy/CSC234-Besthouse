@@ -47,8 +47,11 @@ class _GuideState extends State<Guide> {
     return Scaffold(
       backgroundColor: const Color(0xffF5F5F5),
       appBar: AppBar(
-        leadingWidth: 100,
-        leading: const MyBackButton(),
+        leadingWidth: 80,
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: MyBackButton(),
+        ),
         elevation: 0,
         backgroundColor: const Color(0xffF5F5F5),
       ),

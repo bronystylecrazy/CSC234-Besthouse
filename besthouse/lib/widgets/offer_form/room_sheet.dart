@@ -49,18 +49,22 @@ class _RoomSheetState extends State<RoomSheet> {
           type: widget.room!.type,
           amount: widget.room!.amount,
           files: widget.room!.files,
+          pictures: widget.room!.pictures,
         )
       : OfferRoom(
           type: roomTypes[0],
           amount: 0,
-          files: [],
         );
 
   void getRoomPictures() async {
     final List<File>? files = await ImagePickerService().getImagesFromGallery();
     if (files != null) {
+      print('file $files');
       setState(() {
+        _room.files ??= [];
         _room.files!.addAll(files);
+
+        print('room files ${_room.files}');
 
         if (isDisabled && _room.amount > 0) {
           isDisabled = false;
@@ -109,7 +113,7 @@ class _RoomSheetState extends State<RoomSheet> {
 
                           if (isDisabled &&
                               _room.amount > 0 &&
-                              _room.pictures.isNotEmpty) {
+                              (_room.pictures.isNotEmpty || _room.files != null)) {
                             isDisabled = false;
                           }
                         });
@@ -120,14 +124,13 @@ class _RoomSheetState extends State<RoomSheet> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.35,
                     child: TextFormField(
-                      initialValue:
-                          _room.amount == 0 ? '' : _room.amount.toString(),
+                      initialValue: _room.amount == 0 ? '' : _room.amount.toString(),
                       onChanged: (value) {
                         if (value.isNotEmpty && int.parse(value) > 0) {
                           setState(() {
                             _room.amount = int.parse(value);
 
-                            if (_room.pictures.isNotEmpty && isDisabled) {
+                            if ((_room.pictures.isNotEmpty || _room.files != null) && isDisabled) {
                               isDisabled = false;
                             }
                           });
@@ -142,8 +145,8 @@ class _RoomSheetState extends State<RoomSheet> {
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       decoration: InputDecoration(
                         hintText: 'Enter Amount',
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 20.0, horizontal: 12.0),
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
                         fillColor: Theme.of(context).colorScheme.tertiary,
                         filled: true,
                         border: const OutlineInputBorder(
@@ -184,21 +187,27 @@ class _RoomSheetState extends State<RoomSheet> {
                   ),
                 ],
               ),
-              if (_room.pictures.isNotEmpty)
+              if (_room.pictures.isNotEmpty || _room.files != null)
                 ListImage(
-                  pictures: _room.files!,
-                  deleteHandler: (index) => setState(
-                    () {
-                      _room.pictures.removeAt(index);
+                  files: _room.files,
+                  pictures: _room.pictures.isNotEmpty ? _room.pictures : null,
+                  deleteHandler: (bool isFile, String path) => setState(() {
+                    if (isFile) {
+                      if (_room.files!.length == 1) {
+                        _room.files = null;
+                      } else {
+                        _room.files!.removeWhere((file) => file.path == path);
+                      }
+                    } else {
+                      _room.pictures.removeWhere((picture) => picture == path);
+                    }
 
-                      if (_room.pictures.isNotEmpty && isDisabled) {
-                        isDisabled = false;
-                      }
-                      if (_room.pictures.isEmpty) {
-                        isDisabled = true;
-                      }
-                    },
-                  ),
+                    if (_room.pictures.isEmpty && _room.files == null) {
+                      isDisabled = true;
+                    } else if (isDisabled) {
+                      isDisabled = false;
+                    }
+                  }),
                 ),
               Container(
                 margin: const EdgeInsets.only(top: 16),

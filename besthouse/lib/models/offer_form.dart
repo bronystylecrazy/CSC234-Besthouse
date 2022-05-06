@@ -4,41 +4,66 @@ import 'location.dart';
 
 class Offerform {
   String name = "";
-  String type = "HOUSE";
-  Location location = Location(coordinates: [0, 0]);
+  String type = "House";
+  Location location = Location(coordinates: [0.0, 0.0]);
   String address = "";
   int price = 0;
   List<String> tags = [];
   List<OfferRoom> rooms = [];
   String description = "";
   List<String> facilities = [];
-  double electricFee = 0;
-  double waterFee = 0;
-  double totalSize = 0;
+  double electricFee = 0.0;
+  double waterFee = 0.0;
+  double totalSize = 0.0;
   String pictureUrl = "";
   File? picture;
+  String? houseId;
 
   Offerform();
 
-  Offerform.fromJson(Map<String, dynamic> json) {
-    name = json['house']['name'];
-    type = json['house']['type'];
-    location = json['house']['location'];
-    address = json['house']['address'];
-    price = json['house']['price'];
-    tags = json['house']['tags'];
-    rooms = json['houseDetail']['rooms'];
-    description = json['houseDetail']['description'];
-    facilities = json['houseDetail']['facilities'];
-    electricFee = json['houseDetail']['electricFee'];
-    waterFee = json['houseDetail']['waterFee'];
-    totalSize = json['houseDetail']['totalSize'];
-    pictureUrl = json['house']['picture_url'];
-    picture = null;
+  Offerform.set({
+    required this.name,
+    required this.type,
+    required this.location,
+    required this.address,
+    required this.price,
+    required this.tags,
+    required this.rooms,
+    required this.description,
+    required this.facilities,
+    required this.electricFee,
+    required this.waterFee,
+    required this.totalSize,
+    required this.pictureUrl,
+    this.picture,
+    this.houseId,
+  });
+
+  factory Offerform.fromJson(Map<String, dynamic> data) {
+    return Offerform.set(
+        name: data['house']['name'],
+        type: data['house']['type'].toString().substring(0, 1) +
+            data['house']['type'].toString().substring(1).toLowerCase(),
+        location: Location(coordinates: [
+          data['house']['location']['coordinates'][0] as double,
+          data['house']['location']['coordinates'][1] as double,
+        ]),
+        address: data['house']['address'],
+        price: data['house']['price'],
+        tags: [...data['house']['tags']],
+        rooms: [...data['houseDetail']['rooms'].map((room) => OfferRoom.fromJson(room))],
+        description: data['houseDetail']['description'],
+        facilities: [...data['houseDetail']['facilities']],
+        electricFee: double.parse(data['houseDetail']['electric_fee'].toString()),
+        waterFee: double.parse(data['houseDetail']['water_fee'].toString()),
+        totalSize: double.parse(data['houseDetail']['total_size'].toString()),
+        pictureUrl: data['house']['picture_url'],
+        houseId: data['house']['_id'],
+        picture: null);
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    var req = {
       'name': name,
       'type': type,
       'picture_url': pictureUrl,
@@ -53,6 +78,12 @@ class Offerform {
       'total_size': totalSize,
       'tags': tags,
     };
+
+    if (houseId != null) {
+      req['house_id'] = houseId!;
+    }
+
+    return req;
   }
 
   void update(String prop, dynamic value) {
@@ -103,15 +134,26 @@ class Offerform {
 class OfferRoom {
   String type;
   int amount;
-  List<String> pictures = <String>[];
+  List<String> pictures;
   List<File>? files;
+  String? roomId;
 
   OfferRoom({
     required this.type,
     required this.amount,
-    this.files,
     this.pictures = const [],
+    this.files,
+    this.roomId,
   });
+
+  OfferRoom.fromJson(Map<String, dynamic> data)
+      : this(
+          type: data['type'].toString().substring(0, 1) +
+              data['type'].toString().substring(1).toLowerCase(),
+          amount: data['amount'],
+          pictures: [...data['pictures']],
+          roomId: data['_id'],
+        );
 
   Map<String, dynamic> toJson() => {
         'type': type,

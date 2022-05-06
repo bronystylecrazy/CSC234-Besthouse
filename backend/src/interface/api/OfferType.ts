@@ -1,35 +1,35 @@
 export interface OfferPatch {
-	name: "String";
-	picture_url: "String";
-	address: "String";
+	name: string;
+	picture_url: string;
+	address: string;
 	location: {
 		type: "Point";
 		coordinates: [];
 	};
-	tags: ["String"];
-	type: "String";
+	tags: [string];
+	type: string;
 	rooms: [
 		{
-			type: "String";
-			amount: 0;
+			type: string;
+			amount: number;
 			pictures: [
 				{
-					url: "String";
+					url: string;
 				}
 			];
 		}
 	];
-	description: "String";
-	price: "String";
+	description: string;
+	price: string;
 	facilities: [
 		{
-			name: "String";
+			name: string;
 			checked: true;
 		}
 	];
-	electric_fee: 0;
-	water_fee: 0;
-	likes: 0;
-	total_size: 0;
+	electric_fee: number;
+	water_fee: number;
+	likes: number;
+	total_size: number;
 	status: true;
 }

@@ -9,7 +9,7 @@ import '../services/constants.dart';
 import 'house_detailed.dart';
 import 'google_location.dart';
 // widgets
-import '../services/provider.dart';
+import '../services/provider/location.dart';
 import '../widgets/common/tag.dart';
 import '../widgets/common/house_detail_card.dart';
 import '../widgets/search/filter_sheet.dart';

@@ -69,7 +69,7 @@ export const CreateOffer = async (req: Request, body: OfferPatch) => {
 				picture_url: body.picture_url,
 				price: body.price,
 				tags: body.tags,
-				type: body.type,
+				type: body.type.toUpperCase(),
 			});
 			await HouseDetail.create({
 				user_id: user_id,
@@ -78,7 +78,10 @@ export const CreateOffer = async (req: Request, body: OfferPatch) => {
 				electric_fee: body.electric_fee,
 				water_fee: body.water_fee,
 				facilities: body.facilities,
-				rooms: body.rooms,
+				rooms: body.rooms.map((room) => {
+					room.type = room.type.toUpperCase();
+					return room;
+				}),
 				total_size: body.total_size,
 			});
 		} catch (error) {
@@ -127,8 +130,7 @@ export const UpdateOffer = async (
 						picture_url: body.picture_url,
 						price: body.price,
 						tags: body.tags,
-						type: body.type,
-						status: body.status,
+						type: body.type.toUpperCase(),
 					},
 				}
 			).exec();
@@ -137,8 +139,12 @@ export const UpdateOffer = async (
 					$set: {
 						description: body.description,
 						electric_fee: body.electric_fee,
+						water_fee: body.water_fee,
 						facilities: body.facilities,
-						rooms: body.rooms,
+						rooms: body.rooms.map((room) => {
+							room.type = room.type.toUpperCase();
+							return room;
+						}),
 						total_size: body.total_size,
 					},
 				})
