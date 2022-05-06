@@ -128,6 +128,7 @@ class _OfferFormState extends State<OfferForm> {
             () => Navigator.of(context).pop(),
             context,
           ).then((_) => Navigator.of(context).pop());
+          Provider.of<DesireLocation>(context, listen: false).resetLocation();
         }
       } on DioError catch (e) {
         setState(() => _isSubmitting = false);
@@ -146,7 +147,6 @@ class _OfferFormState extends State<OfferForm> {
         if (result is InfoResponse) {
           setState(() {
             offer = Offerform.fromJson(result.data);
-            print('offer type ${offer.type}');
             for (var e in offer.facilities) {
               checkboxList.firstWhere((f) => f.name == e).checked = true;
             }
@@ -196,9 +196,12 @@ class _OfferFormState extends State<OfferForm> {
           elevation: 0,
           backgroundColor: const Color.fromARGB(255, 249, 249, 249),
           leadingWidth: 80,
-          leading: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: MyBackButton(),
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MyBackButton(
+              onpressedHanlder: () =>
+                  Provider.of<DesireLocation>(context, listen: false).resetLocation(),
+            ),
           ),
           actions: <Widget>[
             IconButton(

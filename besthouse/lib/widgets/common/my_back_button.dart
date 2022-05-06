@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyBackButton extends StatelessWidget {
-  const MyBackButton({Key? key}) : super(key: key);
+  final VoidCallback? onpressedHanlder;
+
+  const MyBackButton({this.onpressedHanlder, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +18,9 @@ class MyBackButton extends StatelessWidget {
         ),
       ),
       onPressed: () {
+        if (onpressedHanlder != null) {
+          onpressedHanlder!();
+        }
         Navigator.of(context).pop();
       },
       style: TextButton.styleFrom(
