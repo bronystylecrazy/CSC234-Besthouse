@@ -7,11 +7,11 @@ import { infoResponse, genericError } from "./Handler";
 export const searchHouse = async (data: SearchPost): ResultHandler => {
 	try {
 		let condition = { status: true };
-		if (data.pricelow) {
+		if (data.price_low) {
 			//@ts-ignore
 			condition.price = { $gte: data.pricelow };
 		}
-		if (data.pricehigh) {
+		if (data.price_high) {
 			//@ts-ignore
 			condition.price = { ...condition.price, $lte: data.pricehigh };
 		}
