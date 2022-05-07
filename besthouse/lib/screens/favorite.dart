@@ -82,29 +82,35 @@ class _FavoriteState extends State<Favorite> {
 
       if (result is InfoResponse) {
         List<dynamic> housesList = result.data;
-        var temp = housesList
-            .map(
-              (e) => House(
-                id: e['_id'],
-                name: e['name'],
-                pictureUrl: e['picture_url'],
-                price: e['price'],
-                address: e['address'],
-                location: Location(coordinates: [
-                  e['location']['coordinates'][1],
-                  e['location']['coordinates'][0]
-                ]),
-              ),
-            )
-            .toList();
-        setState(() {
-          Future.delayed(const Duration(seconds: 0), () {
-            setState(() {
-              houses = temp;
-            });
+        for (var e in housesList) {
+          setState(() {
+            houses.add(House.fromJson(e));
           });
-        });
-      }
+          }
+        }
+        // var temp = housesList
+        //     .map(
+        //       (e) => House(
+        //         id: e['_id'],
+        //         name: e['name'],
+        //         pictureUrl: e['picture_url'],
+        //         price: e['price'],
+        //         address: e['address'],
+        //         location: Location(coordinates: [
+        //           e['location']['coordinates'][1],
+        //           e['location']['coordinates'][0]
+        //         ]),
+        //       ),
+        //     )
+        //     .toList();
+        // setState(() {
+        //   Future.delayed(const Duration(seconds: 0), () {
+        //     setState(() {
+        //       houses = temp;
+        //     });
+        //   });
+        // });
+      
     } on DioError catch (e) {
       setState(() {
         isLoading = false;
@@ -168,79 +174,6 @@ class _FavoriteState extends State<Favorite> {
                 : const Text('No houses found'),
           ],
         ),
-        // Container(
-        //   child: ListView.builder(
-        //     itemCount: houses.length,
-        //     itemBuilder: (context, index) {
-        //       return Padding(
-        //         padding: const EdgeInsets.all(8.0),
-        //         child: Container(
-        //           decoration: BoxDecoration(
-        //             borderRadius: BorderRadius.circular(10),
-        //             color: Colors.white,
-        //           ),
-        //           child: Padding(
-        //             padding: const EdgeInsets.all(8.0),
-        //             child: Row(
-        //               children: [
-        //                 Container(
-        //                   height: 100,
-        //                   width: 100,
-        //                   decoration: BoxDecoration(
-        //                     borderRadius: BorderRadius.circular(10),
-        //                     image: DecorationImage(
-        //                       image: NetworkImage(houses[index].pictureUrl),
-        //                       fit: BoxFit.cover,
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 const SizedBox(
-        //                   width: 10,
-        //                 ),
-        //                 Expanded(
-        //                   child: Column(
-        //                       crossAxisAlignment: CrossAxisAlignment.start,
-        //                       children: [
-        //                         Text(
-        //                           houses[index].name,
-        //                           style: GoogleFonts.poppins(
-        //                             fontSize: 18,
-        //                             fontWeight: FontWeight.bold,
-        //                             color: Color.fromARGB(255, 5, 5, 5),
-        //                           ),
-        //                         ),
-        //                         const SizedBox(
-        //                           height: 10,
-        //                         ),
-        //                         Text(
-        //                           houses[index].address,
-        //                           style: GoogleFonts.poppins(
-        //                             fontSize: 14,
-        //                             fontWeight: FontWeight.bold,
-        //                             color: Color.fromARGB(255, 5, 5, 5),
-        //                           ),
-        //                         ),
-        //                         const SizedBox(
-        //                           height: 10,
-        //                         ),
-        //                         Text(
-        //                           "Price: ${houses[index].price}",
-        //                           style: GoogleFonts.poppins(
-        //                             fontSize: 14,
-        //                             fontWeight: FontWeight.bold,
-        //                             color: Color.fromARGB(255, 5, 5, 5),
-        //                           ),
-        //                         ),
-        //                       ]),
-        //                 ),
-        //               ],
-        //             ),
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ),
       ),
     );
   }

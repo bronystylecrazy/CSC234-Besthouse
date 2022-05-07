@@ -112,67 +112,75 @@ class _HouseDetailedState extends State<HouseDetailed> {
       if (result is InfoResponse) {
         var offers = result.data;
         print(offers);
-
-        List<String> pictures = [];
-        List<Room> rooms = [];
-        for (int i = 0; i < offers['houseDetail']['rooms']?.length; i++) {
-          for (int j = 0;
-              j < offers['houseDetail']['rooms'][i]['pictures']?.length;
-              j++) {
-            pictures.add(
-                offers['houseDetail']['rooms'][i]['pictures'][j].toString());
-          }
-          rooms.add(Room(
-              type: offers['houseDetail']['rooms'][i]['type'],
-              amount: offers['houseDetail']['rooms'][i]['amount'],
-              pictures: pictures));
-        }
-        var temp = House(
-          id: offers['house']['_id'],
-          name: offers['house']['name'],
-          pictureUrl: offers['house']['picture_url'],
-          price: offers['house']['price'],
-          address: offers['house']['address'],
-          location: Location(coordinates: [
-            offers['house']['location']['coordinates'][0],
-            offers['house']['location']['coordinates'][1]
-          ]),
-          type: offers['house']['type'],
-          tags: offers['tags'] ?? [],
-          detail: HouseDetail(
-            houseId: offers['houseDetail']['house_id'],
-            userId: offers['houseDetail']['user_id'],
-            rooms: rooms,
-            facilities: offers['houseDetail']['facilities']
-                .toString()
-                .split(',')
-                .toList(),
-            description: offers['houseDetail']['description'],
-            electricFee: offers['houseDetail']['electric_fee'] ?? 0,
-            waterFee: offers['houseDetail']['water_fee'] ?? 0,
-            likes: offers['houseDetail']['likes'],
-            totalSize: offers['houseDetail']['total_size'] + 0.0 ?? 0,
-          ),
-        );
-        setState(() {
-          Future.delayed(const Duration(seconds: 1), () {
-            setState(() {
-              _favoriteHandler();
-              print(favorites);
-              isLiked = favorites.contains(houseId);
-              print(isLiked);
-              isLoading = false;
-              house = temp;
-            });
+        _favoriteHandler();
+        print(favorites);
+        isLiked = favorites.contains(houseId);
+        for (var e in offers) {
+          setState(() {
+            house = House.fromJson(e);
           });
-        });
-        // house = temp;
-        Alert.successAlert(
-          result,
-          'Success',
-          () => Navigator.of(context).pop(),
-          context,
-        );
+        }
+
+        // List<String> pictures = [];
+        // List<Room> rooms = [];
+        // for (int i = 0; i < offers['houseDetail']['rooms']?.length; i++) {
+        //   for (int j = 0;
+        //       j < offers['houseDetail']['rooms'][i]['pictures']?.length;
+        //       j++) {
+        //     pictures.add(
+        //         offers['houseDetail']['rooms'][i]['pictures'][j].toString());
+        //   }
+        //   rooms.add(Room(
+        //       type: offers['houseDetail']['rooms'][i]['type'],
+        //       amount: offers['houseDetail']['rooms'][i]['amount'],
+        //       pictures: pictures));
+        // }
+        // var temp = House(
+        //   id: offers['house']['_id'],
+        //   name: offers['house']['name'],
+        //   pictureUrl: offers['house']['picture_url'],
+        //   price: offers['house']['price'],
+        //   address: offers['house']['address'],
+        //   location: Location(coordinates: [
+        //     offers['house']['location']['coordinates'][0],
+        //     offers['house']['location']['coordinates'][1]
+        //   ]),
+        //   type: offers['house']['type'],
+        //   tags: offers['tags'] ?? [],
+        //   detail: HouseDetail(
+        //     houseId: offers['houseDetail']['house_id'],
+        //     userId: offers['houseDetail']['user_id'],
+        //     rooms: rooms,
+        //     facilities: offers['houseDetail']['facilities']
+        //         .toString()
+        //         .split(',')
+        //         .toList(),
+        //     description: offers['houseDetail']['description'],
+        //     electricFee: offers['houseDetail']['electric_fee'] ?? 0,
+        //     waterFee: offers['houseDetail']['water_fee'] ?? 0,
+        //     likes: offers['houseDetail']['likes'],
+        //     totalSize: offers['houseDetail']['total_size'] + 0.0 ?? 0,
+        //   ),
+        // );
+        // setState(() {
+        //   Future.delayed(const Duration(seconds: 1), () {
+        //     setState(() {
+        //       _favoriteHandler();
+        //       print(favorites);
+        //       isLiked = favorites.contains(houseId);
+        //       print(isLiked);
+        //       isLoading = false;
+        //       house = temp;
+        //     });
+        //   });
+        // });
+        // // house = temp;
+        // Alert.successAlert(
+        //   result,
+        //   'Success',
+        //   () => Navigator.of(context).pop(),
+        //   context,
+        // );
       }
     } on DioError catch (e) {
       Alert.errorAlert(e, context);
@@ -229,34 +237,39 @@ class _HouseDetailedState extends State<HouseDetailed> {
       if (result is InfoResponse) {
         List<dynamic> houses = result.data;
         print(houses);
-        var temp = houses
-            .map(
-              (e) => House(
-                id: e['_id'],
-                name: e['name'],
-                pictureUrl: e['picture_url'],
-                price: e['price'],
-                address: e['address'],
-                location: Location(coordinates: [
-                  e['location']['coordinates'][1],
-                  e['location']['coordinates'][0]
-                ]),
-              ),
-            )
-            .toList();
-        setState(() {
-          Future.delayed(const Duration(seconds: 0), () {
-            setState(() {
-              housesRec = temp;
-            });
+        for (var e in houses) {
+          setState(() {
+            housesRec.add(House.fromJson(e));
           });
-        });
-        Alert.successAlert(
-          result,
-          'Success',
-          () => Navigator.of(context).pop(),
-          context,
-        );
+        }
+        // var temp = houses
+        //     .map(
+        //       (e) => House(
+        //         id: e['_id'],
+        //         name: e['name'],
+        //         pictureUrl: e['picture_url'],
+        //         price: e['price'],
+        //         address: e['address'],
+        //         location: Location(coordinates: [
+        //           e['location']['coordinates'][1],
+        //           e['location']['coordinates'][0]
+        //         ]),
+        //       ),
+        //     )
+        //     .toList();
+        // setState(() {
+        //   Future.delayed(const Duration(seconds: 0), () {
+        //     setState(() {
+        //       housesRec = temp;
+        //     });
+        //   });
+        // });
+        // Alert.successAlert(
+        //   result,
+        //   'Success',
+        //   () => Navigator.of(context).pop(),
+        //   context,
+        // );
       }
     } on DioError catch (e) {
       Alert.errorAlert(e, context);

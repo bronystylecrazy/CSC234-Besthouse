@@ -52,9 +52,9 @@ class _HomeState extends State<Home> {
         for (var e in houses) {
           setState(() {
             housesFeature.add(House.fromJson(e));
-          housesRec.add(House.fromJson(e));
+            housesRec.add(House.fromJson(e));
           });
-          
+
           print(e);
         }
       }
