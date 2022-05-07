@@ -91,7 +91,7 @@ export const houseSchema = new Schema<House>({
 	},
 	status: { type: Boolean, default: true },
 	tags: [String],
-	isAdvertised: { type: Boolean, default: false },
+	is_advertised: { type: Boolean, default: false },
 });
 
 export const houseDetailSchema = new Schema<HouseDetail>({

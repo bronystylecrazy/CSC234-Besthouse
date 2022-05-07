@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 // models
 import '../../models/offer_form.dart';
@@ -53,10 +51,7 @@ class OfferRoomCard extends StatelessWidget {
                           icon: Icon(
                             Icons.edit,
                             size: 18,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .secondary
-                                .withOpacity(0.8),
+                            color: Theme.of(context).colorScheme.secondary.withOpacity(0.8),
                           ),
                           splashRadius: 14,
                           tooltip: 'edit room',
@@ -66,10 +61,7 @@ class OfferRoomCard extends StatelessWidget {
                       icon: Icon(
                         Icons.delete,
                         size: 18,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .secondary
-                            .withOpacity(0.8),
+                        color: Theme.of(context).colorScheme.secondary.withOpacity(0.8),
                       ),
                       splashRadius: 14,
                       tooltip: 'delete room',
@@ -79,7 +71,8 @@ class OfferRoomCard extends StatelessWidget {
               ],
             ),
             ListImage(
-              pictures: room.files!,
+              pictures: room.pictures.isNotEmpty ? room.pictures : null,
+              files: room.files,
             ),
           ],
         ),
@@ -89,21 +82,22 @@ class OfferRoomCard extends StatelessWidget {
 
   void _buildModalRoom(BuildContext ctx) {
     showModalBottomSheet<dynamic>(
-        isScrollControlled: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-          ),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
         ),
-        context: ctx,
-        builder: (_) {
-          return RoomSheet(
-            room: room,
-            index: index,
-            editHandler: editHandler,
-            isEdit: true,
-          );
-        });
+      ),
+      context: ctx,
+      builder: (_) {
+        return RoomSheet(
+          room: room,
+          index: index,
+          editHandler: editHandler,
+          isEdit: true,
+        );
+      },
+    );
   }
 }

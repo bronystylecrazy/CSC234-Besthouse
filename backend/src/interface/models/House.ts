@@ -10,5 +10,5 @@ export default interface House {
 	type: string;
 	status: boolean;
 	tags: string[];
-	isAdvertised: boolean;
+	is_advertised: boolean;
 }

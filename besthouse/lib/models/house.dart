@@ -33,8 +33,25 @@ class House {
     this.type = "HOUSE",
     this.status = true,
     this.isAdvertised = false,
-
   });
+
+  factory House.fromJson(Map<String, dynamic> data) {
+    return House(
+      id: data['_id'],
+      name: data['name'],
+      pictureUrl: data['picture_url'],
+      price: data['price'],
+      address: data['address'],
+      location: Location(coordinates: [
+        data['location']['coordinates'][0] as double,
+        data['location']['coordinates'][1] as double,
+      ]),
+      tags: [...data['tags']],
+      type: data['type'].toString().substring(0, 1) +
+          data['type'].toString().substring(1).toLowerCase(),
+      isAdvertised: data['is_advertised'],
+    );
+  }
 
   get userId => null;
 }

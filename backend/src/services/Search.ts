@@ -6,15 +6,14 @@ import { infoResponse, genericError } from "./Handler";
 
 export const searchHouse = async (data: SearchPost): ResultHandler => {
 	try {
-		let condition = { status: true };
-		if (data.pricelow) {
-			//@ts-ignore
-			condition.price = { $gte: data.pricelow };
-		}
-		if (data.pricehigh) {
-			//@ts-ignore
-			condition.price = { ...condition.price, $lte: data.pricehigh };
-		}
+		let condition = {
+			status: true,
+			price: {
+				$gte: data.price_low,
+				$lte: data.price_high,
+			},
+		};
+
 		if (data.type) {
 			//@ts-ignore
 			condition.type = data.type;
@@ -37,7 +36,7 @@ export const searchHouse = async (data: SearchPost): ResultHandler => {
 			};
 		} else if (data.address) {
 			//@ts-ignore
-			condition.address = { $contains: data.address };
+			condition.address = { $regex: data.address, $options: "i" };
 		}
 
 		// Get houses from provied condition
@@ -48,17 +47,17 @@ export const searchHouse = async (data: SearchPost): ResultHandler => {
 		// Check if user want to get facilities
 		//@ts-ignore
 		if (condition.facilities) {
-			const housesDetail = await HouseDetail.find({
+			const housesDetails = await HouseDetail.find({
 				house_id: { $in: houses.map((house) => house._id) },
 				facilities: { $all: data.facilities },
 			});
 
-			if (housesDetail.length === 0)
+			if (housesDetails.length === 0)
 				return infoResponse([], "No house with the facilities found");
 
 			// Get only houseDetail that match the id from houses
 			var finalHouses = houses.filter((house) => {
-				return housesDetail.find((houseDetail) => {
+				return housesDetails.find((houseDetail) => {
 					return (
 						houseDetail.house_id.toString() === house._id.toString()
 					);

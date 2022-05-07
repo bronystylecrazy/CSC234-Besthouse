@@ -1,20 +1,22 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-
 // services
+import '../services/api/search.dart';
 import '../services/constants.dart';
+import '../services/provider/location.dart';
 // screens
 import 'house_detailed.dart';
 import 'google_location.dart';
 // widgets
-import '../services/provider.dart';
+import '../widgets/common/alert.dart';
 import '../widgets/common/tag.dart';
 import '../widgets/common/house_detail_card.dart';
 import '../widgets/search/filter_sheet.dart';
 // models
-import '../models/location.dart';
+import '../models/response/info_response.dart';
 import '../models/accommodation.dart';
 import '../models/facilities.dart';
 import '../models/house.dart';
@@ -29,43 +31,8 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  final List<House> houses = [
-    House(
-      id: "634gf3438",
-      name: "Cosmo Home",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 4000,
-      location: Location(
-        coordinates: [-6.2108, 106.8451],
-      ),
-      address: 'Soi 45 Prachauthid Thungkru, Bangkok',
-      type: 'CONDOMINIUM',
-    ),
-    House(
-      id: "634gf3438",
-      name: "Heliconia House",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 6000,
-      location: Location(
-        coordinates: [13.2108, 107.8451],
-      ),
-      address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    ),
-    House(
-      id: "634gf3438",
-      name: "Cosmo Home",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 4000,
-      location: Location(
-        coordinates: [-6.2108, 106.8451],
-      ),
-      address: 'Soi 45 Prachauthid Thungkru, Bangkok',
-      type: 'CONDOMINIUM',
-    ),
-  ];
+  bool _loadingList = true;
+  List<House> houses = [];
 
   RangeValues currentRangeValues = const RangeValues(0, 20000);
 
@@ -94,26 +61,66 @@ class _SearchState extends State<Search> {
     return result.toList();
   }
 
-  void slideHandler(RangeValues values) {
-    setState(() {
-      currentRangeValues = values;
-    });
+  void _filter([double? lat, double? long]) async {
+    setState(() => _loadingList = true);
+
+    Map<String, dynamic> reqJson = {};
+
+    if (lat != null && long != null) {
+      reqJson["lat"] = lat;
+      reqJson["long"] = long;
+    }
+    if (type != Accommodation.all) {
+      reqJson["type"] = type.name.toUpperCase();
+    }
+    if (selectedFacilities.isNotEmpty) {
+      reqJson["facilities"] = selectedFacilities;
+    }
+    reqJson["price_low"] = currentRangeValues.start;
+    reqJson["price_high"] = currentRangeValues.end;
+
+    _fetchHouses(reqJson);
   }
 
-  void radioHandler(Accommodation value) {
-    setState(() {
-      type = value;
-    });
+  Future<void> _fetchHouses(Map<String, dynamic> reqJson) async {
+    print('fetch houses: $reqJson');
+
+    try {
+      var result = await SearchApi.search(reqJson);
+
+      if (result is InfoResponse) {
+        print(result.data);
+        setState(() {
+          houses = [...result.data.map((house) => House.fromJson(house))];
+          _loadingList = false;
+        });
+      }
+    } on DioError catch (e) {
+      Alert.errorAlert(e, context).then(
+        (_) => setState(() {
+          _loadingList = false;
+        }),
+      );
+    }
   }
 
-  void checkBoxHandler(List<Facilities> value) {
-    setState(() {
-      checkboxList = value;
-    });
+  void _getFirstHouses() {
+    var latitude = Provider.of<CurrentLocation>(context, listen: false).latitude;
+    var longitude = Provider.of<CurrentLocation>(context, listen: false).longitude;
+
+    final reqJson = {
+      "lat": latitude,
+      "long": longitude,
+    };
+
+    _fetchHouses(reqJson);
   }
 
-  void applyFilter() {
-    print("apply filter");
+  @override
+  void initState() {
+    print('init');
+    _getFirstHouses();
+    super.initState();
   }
 
   @override
@@ -140,8 +147,13 @@ class _SearchState extends State<Search> {
                     Navigator.pushNamed(
                       context,
                       GoogleLocation.routeName,
-                    ).then((value) {
-                      setState(() {});
+                    ).then((_) {
+                      print('search');
+                      print(Provider.of<DesireLocation>(context, listen: false).address);
+                      _filter(
+                        Provider.of<DesireLocation>(context, listen: false).latitude,
+                        Provider.of<DesireLocation>(context, listen: false).longitude,
+                      );
                     });
                   },
                   child: Image.network(
@@ -198,19 +210,24 @@ class _SearchState extends State<Search> {
                     color: Colors.grey,
                   ),
                 ),
-                houses.isNotEmpty
-                    ? Expanded(
-                        child: ListView.builder(
-                          itemCount: houses.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return HouseDetailCard(
-                              house: houses[index],
-                              showInfoHandler: _showInfo,
-                            );
-                          },
-                        ),
-                      )
-                    : const Text('No houses found'),
+                _loadingList
+                    ? const Expanded(child: SpinKitRing(color: Color(0xFF24577A), size: 50.0))
+                    : houses.isNotEmpty
+                        ? Expanded(
+                            child: ListView.builder(
+                              itemCount: houses.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return HouseDetailCard(
+                                  house: houses[index],
+                                  showInfoHandler: _showInfo,
+                                );
+                              },
+                            ),
+                          )
+                        : const Text(
+                            'No house found',
+                            style: TextStyle(color: Colors.grey),
+                          ),
               ],
             ),
           );
@@ -238,11 +255,13 @@ class _SearchState extends State<Search> {
             radioList: radioList,
             type: type,
             checkboxList: checkboxList,
-            filterHandler: (RangeValues range, Accommodation type, List<Facilities> facilities) {
-              slideHandler(range);
-              radioHandler(type);
-              checkBoxHandler(facilities);
-              applyFilter();
+            filterHandler: (RangeValues range, Accommodation t, List<Facilities> facilities) {
+              setState(() {
+                currentRangeValues = range;
+                type = t;
+                checkboxList = facilities;
+              });
+              _filter();
             },
           );
         });

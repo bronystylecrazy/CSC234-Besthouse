@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 /** Plugins */
 app.use(
 	cors({
-		origin: "http://localhost",
+		origin: "http://localhost:3000",
 		credentials: true,
 	})
 );

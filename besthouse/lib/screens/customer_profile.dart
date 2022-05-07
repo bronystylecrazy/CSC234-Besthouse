@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:besthouse/services/provider/offer.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+
 //screen
 import '../screens/offer_form.dart';
 
@@ -89,8 +92,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
       }
     });
     try {
-      await UserApi.updateUser(
-          username, firstname, lastname, phoneNo, lineId, facebook);
+      await UserApi.updateUser(username, firstname, lastname, phoneNo, lineId, facebook);
     } on DioError catch (e) {
       Alert.errorAlert(e, context);
     }
@@ -99,8 +101,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
   void uploadPicture() async {
     final File? file = await ImagePickerService().getImageFromGallery();
     if (file != null) {
-      Response<dynamic> exteriorPicture =
-          await UserApi.uploadProfilePicture(file);
+      Response<dynamic> exteriorPicture = await UserApi.uploadProfilePicture(file);
       setState(() {
         userPicture = exteriorPicture.data[0]['url'];
       });
@@ -114,8 +115,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
       if (result is InfoResponse) {
         List<dynamic> offers = result.data;
         var temp = offers
-            .map((e) => OfferCardModel(
-                id: e['_id'], isAvailable: e['status'], name: e['name']))
+            .map((e) => OfferCardModel(id: e['_id'], isAvailable: e['status'], name: e['name']))
             .toList();
         setState(() {
           Future.delayed(const Duration(seconds: 1), () {
@@ -167,8 +167,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
   void initState() {
     if (mounted) {
       getProfileHandler();
-      getOfferHandler();
     }
+    getOfferHandler();
     super.initState();
   }
 
@@ -198,13 +198,10 @@ class _CustomerProfileState extends State<CustomerProfile> {
         children: [
           const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text("Your Profile",
-                style: TextStyle(color: Colors.white, fontSize: 20)),
+            child: Text("Your Profile", style: TextStyle(color: Colors.white, fontSize: 20)),
           ),
           AvatarProfile(
-              userPicture: userPicture,
-              isEditable: true,
-              updateImageHandler: uploadPicture),
+              userPicture: userPicture, isEditable: true, updateImageHandler: uploadPicture),
           const SizedBox(
             height: 40,
           ),
@@ -232,8 +229,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                               const SizedBox(
                                 width: 8,
                               ),
-                              Text("Created offer",
-                                  style: Theme.of(context).textTheme.headline2),
+                              Text("Created offer", style: Theme.of(context).textTheme.headline2),
                             ],
                           ),
                           IconButton(
@@ -243,7 +239,11 @@ class _CustomerProfileState extends State<CustomerProfile> {
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                             onPressed: () {
-                              Navigator.pushNamed(context, OfferForm.routeName);
+                              context.read<OfferFormProvider>().updateHouseId("");
+                              Navigator.pushNamed(
+                                context,
+                                OfferForm.routeName,
+                              );
                             },
                           ),
                         ],
@@ -273,26 +273,23 @@ class _CustomerProfileState extends State<CustomerProfile> {
                               Navigator.pop(context);
                             }));
                           },
-                          style: ElevatedButton.styleFrom(
-                              primary: const Color(0xffB30000)),
+                          style: ElevatedButton.styleFrom(primary: const Color(0xffB30000)),
                           child: isLoading
                               ? const SpinKitRing(
                                   lineWidth: 2,
                                   color: Colors.white,
                                   size: 20.0,
                                 )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                      Icon(Icons.logout),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        "Sign out",
-                                        textAlign: TextAlign.center,
-                                      )
-                                    ]))
+                              : Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+                                  Icon(Icons.logout),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "Sign out",
+                                    textAlign: TextAlign.center,
+                                  )
+                                ]))
                     ],
                   ),
                 ),

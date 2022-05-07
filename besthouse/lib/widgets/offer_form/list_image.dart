@@ -1,26 +1,47 @@
 import 'dart:io';
 
+import 'package:besthouse/services/constants.dart';
 import 'package:flutter/material.dart';
 
 class ListImage extends StatelessWidget {
   const ListImage({
-    required this.pictures,
+    this.pictures,
+    this.files,
     this.deleteHandler,
     Key? key,
   }) : super(key: key);
 
-  final List<File> pictures;
-  final Function(int index)? deleteHandler;
+  final List<String>? pictures;
+  final List<File>? files;
+  final Function(bool isFile, String path)? deleteHandler;
+
+  List<dynamic> get _pictures {
+    var list = [];
+    if (pictures != null) {
+      for (var pic in pictures!) {
+        list.add(pic);
+      }
+    }
+    if (files != null) {
+      for (var file in files!) {
+        list.add(file);
+      }
+    }
+
+    return list;
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('list $files');
+    print('list2 $_pictures');
     final BorderRadius borderRadius = BorderRadius.circular(14);
 
     return SizedBox(
       height: 130,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: pictures.length,
+        itemCount: _pictures.length,
         itemBuilder: (BuildContext context, int index) {
           return Card(
             shape: RoundedRectangleBorder(
@@ -30,12 +51,25 @@ class ListImage extends StatelessWidget {
               borderRadius: borderRadius,
               child: Stack(
                 children: [
-                  Image.file(
-                    pictures[index],
-                    fit: BoxFit.cover,
-                    height: 130,
-                    width: 240,
-                  ),
+                  _pictures[index] is File
+                      ? Image.file(
+                          _pictures[index] as File,
+                          fit: BoxFit.cover,
+                          width: 240,
+                          height: 130,
+                        )
+                      : Image.network(
+                          Constants.baseUrl + _pictures[index] as String,
+                          fit: BoxFit.cover,
+                          width: 240,
+                          height: 130,
+                          errorBuilder: (context, error, stackTrace) => Image.asset(
+                            "assets/Portrait_Placeholder.png",
+                            fit: BoxFit.cover,
+                            width: 240,
+                            height: 130,
+                          ),
+                        ),
                   if (deleteHandler != null)
                     Positioned(
                       top: 0,
@@ -50,7 +84,13 @@ class ListImage extends StatelessWidget {
                           primary: Colors.white.withOpacity(0.5),
                           shape: const CircleBorder(),
                         ),
-                        onPressed: () => deleteHandler!(index),
+                        onPressed: () {
+                          if (_pictures[index] is File) {
+                            deleteHandler!(true, _pictures[index].path);
+                          } else {
+                            deleteHandler!(false, _pictures[index]);
+                          }
+                        },
                       ),
                     ),
                 ],
