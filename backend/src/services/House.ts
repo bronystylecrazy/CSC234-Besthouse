@@ -39,6 +39,29 @@ export const GetOffer = async (req: Request) => {
 	}
 };
 
+export const GetOfferById = async (user_id: String) => {
+	try {
+		// List houses detail by user id
+		const houseDetails = await HouseDetail.find(
+			{ user_id: user_id },
+			"house_id"
+		);
+
+		const ids: Schema.Types.ObjectId[] = houseDetails.map(
+			(houseDetail) => houseDetail.house_id
+		);
+
+		// List houses by id of house detail
+		const houses = await House.find(
+			{ _id: { $in: ids } },
+			"_id status name"
+		);
+		return infoResponse(houses);
+	} catch (error) {
+		return genericError(error.message, 500);
+	}
+};
+
 export const GetOfferInfo = async (house_id: Types.ObjectId, req: Request) => {
 	try {
 		if (!isLogin(req)) {

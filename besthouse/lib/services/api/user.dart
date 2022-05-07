@@ -11,16 +11,16 @@ import '../../models/response/info_response.dart';
 
 class UserApi {
   static Future<dynamic> login(String username, String password) async {
-    var response = await DioInstance.dio
-        .post("/user/signin", data: {"username": username, "password": password});
+    var response = await DioInstance.dio.post("/user/signin",
+        data: {"username": username, "password": password});
     if (response.statusCode != 200) {
       return ErrorResponse.fromJson(response.data);
     }
     return InfoResponse.fromJson(response.data);
   }
 
-  static Future<dynamic> resgister(String username, String password, String email, String firstname,
-      String lastname, String tel) async {
+  static Future<dynamic> resgister(String username, String password,
+      String email, String firstname, String lastname, String tel) async {
     var response = await DioInstance.dio.post("/user/signup", data: {
       "username": username,
       "password": password,
@@ -47,8 +47,18 @@ class UserApi {
     return InfoResponse.fromJson(response.data);
   }
 
-  static Future<dynamic> updateUser(String username, String firstname, String lastname, String tel,
-      String line, String facebook) async {
+  static Future<dynamic> getUserById(id) async {
+    var response = await DioInstance.dio.get(
+      "/profile/$id",
+    );
+    if (response.statusCode != 200) {
+      return ErrorResponse.fromJson(response.data);
+    }
+    return InfoResponse.fromJson(response.data);
+  }
+
+  static Future<dynamic> updateUser(String username, String firstname,
+      String lastname, String tel, String line, String facebook) async {
     DioInstance.dio.options.headers["authorization"] =
         "Bearer " + SharePreference.prefs.getString("token").toString();
     var response = await DioInstance.dio.patch("/profile", data: {
@@ -73,9 +83,10 @@ class UserApi {
         contentType: MediaType("image", "jpeg"),
       ),
     });
-    final exteriorPicture = await DioInstance.dio.post("/storage", data: exteriorPictureFormData);
-    DioInstance.dio
-        .patch("/profile/picture", data: {"picture_url": exteriorPicture.data[0]['url']});
+    final exteriorPicture =
+        await DioInstance.dio.post("/storage", data: exteriorPictureFormData);
+    DioInstance.dio.patch("/profile/picture",
+        data: {"picture_url": exteriorPicture.data[0]['url']});
     return exteriorPicture;
   }
 }

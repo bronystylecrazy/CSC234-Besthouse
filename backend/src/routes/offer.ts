@@ -4,6 +4,7 @@ import {
 	CreateOffer,
 	DeleteOffer,
 	GetOffer,
+	GetOfferById,
 	GetOfferInfo,
 	ToggleAvailable,
 	UpdateOffer,
@@ -15,6 +16,11 @@ const offerRoute = express.Router();
 
 offerRoute.get("/", async (req, res) => {
 	return responseHandler(res, await GetOffer(req));
+});
+
+offerRoute.get("/user/:id", async (req, res) => {
+	const { id } = req.params;
+	return responseHandler(res, await GetOfferById(id));
 });
 
 offerRoute.get("/:id", async (req, res) => {

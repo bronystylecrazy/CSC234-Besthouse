@@ -24,7 +24,8 @@ class OfferFormApi {
       ),
     });
 
-    final exteriorPicture = await DioInstance.dio.post("/storage", data: exteriorPictureFormData);
+    final exteriorPicture =
+        await DioInstance.dio.post("/storage", data: exteriorPictureFormData);
     offer.pictureUrl = exteriorPicture.data[0]["url"];
 
     // Rooms Pictures
@@ -45,7 +46,8 @@ class OfferFormApi {
         "file": roomPicturesFiles,
       });
 
-      final roomPictures = await DioInstance.dio.post("/storage", data: roomPicturesFormData);
+      final roomPictures =
+          await DioInstance.dio.post("/storage", data: roomPicturesFormData);
 
       var tempList = <String>[];
       for (int j = 0; j < offer.rooms[i].files!.length; j++) {
@@ -89,6 +91,15 @@ class OfferFormApi {
     return InfoResponse.fromJson(response.data);
   }
 
+  /// Fetch list of offers by userid
+  static Future<dynamic> getOfferListByUserId(String userId) async {
+    var response = await DioInstance.dio.get("/offer/user/$userId");
+    if (response.statusCode != 200) {
+      return ErrorResponse.fromJson(response.data);
+    }
+    return InfoResponse.fromJson(response.data);
+  }
+
   /// Update offer by house_id
   static Future<dynamic> updateOffer(Offerform offer, String id) async {
     DioInstance.dio.options.headers["authorization"] =
@@ -104,7 +115,8 @@ class OfferFormApi {
         ),
       });
 
-      final exteriorPicture = await DioInstance.dio.post("/storage", data: exteriorPictureFormData);
+      final exteriorPicture =
+          await DioInstance.dio.post("/storage", data: exteriorPictureFormData);
       offer.pictureUrl = exteriorPicture.data[0]["url"];
     }
 
@@ -127,7 +139,8 @@ class OfferFormApi {
           "file": roomPicturesFiles,
         });
 
-        final roomPictures = await DioInstance.dio.post("/storage", data: roomPicturesFormData);
+        final roomPictures =
+            await DioInstance.dio.post("/storage", data: roomPicturesFormData);
 
         for (int j = 0; j < room.files!.length; j++) {
           room.pictures.add(roomPictures.data[j]["url"] as String);
@@ -136,7 +149,8 @@ class OfferFormApi {
     }
 
     // Send an edit form
-    final response = await DioInstance.dio.patch("/offer/$id", data: offer.toJson());
+    final response =
+        await DioInstance.dio.patch("/offer/$id", data: offer.toJson());
 
     if (response.statusCode != 200) {
       return ErrorResponse.fromJson(response.data);

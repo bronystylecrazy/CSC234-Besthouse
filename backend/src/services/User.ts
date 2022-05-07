@@ -24,6 +24,18 @@ export const GetUser = async (req: Request) => {
 	}
 };
 
+export const GetUserById = async (user_id: String) => {
+	try {
+		const user = await User.findById(user_id, "email username tel");
+		const profile = await Profile.findOne({ user_id: user_id });
+		//if (!profile) return infoResponse([], "No profile found");
+
+		return infoResponse({ user, profile });
+	} catch (error) {
+		return genericError(error.message, 500);
+	}
+};
+
 export const PatchUserPicture = async (req: Request) => {
 	try {
 		if (!isLogin(req)) {

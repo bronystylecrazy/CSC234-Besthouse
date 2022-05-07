@@ -53,8 +53,8 @@ class DesireLocation with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
-  void resetLocation() {
-    updateLocation(const CameraPosition(target: LatLng(100, 200), zoom: 18));
+  void resetLocation(CameraPosition newCameraPosition) {
+    updateLocation(newCameraPosition);
     updateAddress("");
     notifyListeners();
   }

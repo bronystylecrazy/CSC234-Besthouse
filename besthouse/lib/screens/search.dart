@@ -59,15 +59,15 @@ class _SearchState extends State<Search> {
     return result.toList();
   }
 
-  void _filter([double? lat, double? long]) async {
+  void _filter() async {
     Provider.of<SearchList>(context, listen: false).changeLoadState(true);
 
     Map<String, dynamic> reqJson = {};
 
-    if (lat != null && long != null) {
-      reqJson["lat"] = lat;
-      reqJson["long"] = long;
-    }
+    reqJson["lat"] =
+        Provider.of<DesireLocation>(context, listen: false).latitude;
+    reqJson["long"] =
+        Provider.of<DesireLocation>(context, listen: false).longitude;
     if (type != Accommodation.all) {
       reqJson["type"] = type.name.toUpperCase();
     }
@@ -136,21 +136,7 @@ class _SearchState extends State<Search> {
                       GoogleLocation.routeName,
                     ).then((_) {
                       print('search');
-                      if (Provider.of<DesireLocation>(context, listen: false)
-                          .isExist) {
-                        _filter(
-                          Provider.of<DesireLocation>(context, listen: false)
-                              .latitude,
-                          Provider.of<DesireLocation>(context, listen: false)
-                              .longitude,
-                        );
-                      }
-                      _filter(
-                        Provider.of<CurrentLocation>(context, listen: false)
-                            .latitude,
-                        Provider.of<CurrentLocation>(context, listen: false)
-                            .longitude,
-                      );
+                      _filter();
                     });
                   },
                   child: Image.network(

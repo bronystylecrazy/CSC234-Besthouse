@@ -29,11 +29,17 @@ class _GoogleLocationState extends State<GoogleLocation> {
   final _textController = TextEditingController();
   final Completer<GoogleMapController> _controller = Completer();
 
-  void _resetLocation() {
+  void _resetLocation() async {
+    final address = await GoogleApiProvider(sessionToken).getAddress(
+      Provider.of<CurrentLocation>(context, listen: false).latitude,
+      Provider.of<CurrentLocation>(context, listen: false).longitude,
+    );
     setState(() {
       _textController.text = "";
-
-      Provider.of<DesireLocation>(context, listen: false).resetLocation();
+      Provider.of<DesireLocation>(context, listen: false).updateLocation(
+          Provider.of<CurrentLocation>(context, listen: false).currentLocation);
+      Provider.of<DesireLocation>(context, listen: false)
+          .updateAddress(address);
 
       _controller.future.then((value) => value.animateCamera(
           CameraUpdate.newCameraPosition(

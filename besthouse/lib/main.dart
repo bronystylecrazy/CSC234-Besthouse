@@ -134,7 +134,9 @@ class MyApp extends StatelessWidget {
         OfferForm.routeName: (context) => const OfferForm(),
         ForgetPassword.routeName: (context) => const ForgetPassword(),
         GoogleLocation.routeName: (context) => const GoogleLocation(),
-        LandLordProfile.routeName: (context) => LandLordProfile(),
+        LandLordProfile.routeName: (context) => LandLordProfile(
+            args: ModalRoute.of(context)!.settings.arguments
+                as Map<String, dynamic>),
       },
     );
   }
