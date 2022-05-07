@@ -16,8 +16,10 @@ searchRoute.post("/", async (req, res) => {
 
 // feature and nearby house are the same api
 // you check by query string if no query string it mean get the position of user then search
-searchRoute.post("/near", async (req, res) => {
-	const data: NearbySearchGet = req.body;
+searchRoute.get("/near", async (req, res) => {
+	const data: NearbySearchGet = req.query;
+	console.log(data);
+
 	return responseHandler(res, await SearchNearbyHouse(data));
 });
 

@@ -1,11 +1,13 @@
 import 'package:besthouse/services/api/search.dart';
 import 'package:besthouse/services/location_api.dart';
+import 'package:besthouse/services/provider/location.dart';
+
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 //model
 import '../models/house.dart';
-import '../models/location.dart';
 
 //widget
 import '../services/provider/offer.dart';
@@ -18,9 +20,6 @@ import '../screens/house_detailed.dart';
 
 //dio
 import 'package:besthouse/models/response/info_response.dart';
-import 'package:besthouse/services/api/user.dart';
-import 'package:besthouse/services/dio.dart';
-import 'package:besthouse/services/share_preference.dart';
 import 'package:besthouse/widgets/common/alert.dart';
 import 'package:dio/dio.dart';
 
@@ -35,45 +34,29 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _searchController = TextEditingController();
   final controller1 = PageController(initialPage: 1);
-  List<House> housesFeature = [];
 
-  List<House> housesRec = [];
+  final List<House> housesFeature = [];
+  final List<House> housesRec = [];
 
   void houseHandler() async {
     try {
-      var location = await LocationApi.getLocation();
-      var result = await SearchApi.getHousesList(location[0], location[1]);
+      print(Provider.of<CurrentLocation>(context, listen: false).longitude);
+
+      var result = await SearchApi.getHousesList(
+          Provider.of<CurrentLocation>(context, listen: false).longitude,
+          Provider.of<CurrentLocation>(context, listen: false).latitude);
+
       if (result is InfoResponse) {
         List<dynamic> houses = result.data;
-        var temp = houses
-            .map(
-              (e) => House(
-                id: e['_id'],
-                name: e['name'],
-                pictureUrl: e['picture_url'],
-                price: e['price'],
-                address: e['address'],
-                location: Location(coordinates: [
-                  e['location']['coordinates'][1],
-                  e['location']['coordinates'][0]
-                ]),
-              ),
-            )
-            .toList();
-        setState(() {
-          Future.delayed(const Duration(seconds: 0), () {
-            setState(() {
-              housesFeature = temp;
-              housesRec = temp;
-            });
+        print(houses);
+        for (var e in houses) {
+          setState(() {
+            housesFeature.add(House.fromJson(e));
+          housesRec.add(House.fromJson(e));
           });
-        });
-        Alert.successAlert(
-          result,
-          'Success',
-          () => Navigator.of(context).pop(),
-          context,
-        );
+          
+          print(e);
+        }
       }
     } on DioError catch (e) {
       Alert.errorAlert(e, context);
@@ -164,7 +147,15 @@ class _HomeState extends State<Home> {
                       },
                     ),
                   )
-                : const Text('No houses found'),
+                : Container(
+                    margin: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 80),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF173651)),
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    child: const Text('No houses found')),
             const SizedBox(
               height: 20,
             ),
@@ -191,11 +182,15 @@ class _HomeState extends State<Home> {
                       },
                     ),
                   )
-                : const Text('No houses found'),
-            // Button(
-            //   clickHandler: houseHandler,
-            //   text: "Add offer",
-            // ),
+                : Container(
+                    margin: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 80),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF173651)),
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    child: const Text('No houses found')),
           ],
         ),
       ),

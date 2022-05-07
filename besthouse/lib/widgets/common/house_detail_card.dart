@@ -1,4 +1,5 @@
 import 'package:besthouse/models/house.dart';
+import 'package:besthouse/services/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -32,10 +33,11 @@ class HouseDetailCard extends StatelessWidget {
             ClipRRect(
               borderRadius: borderRadius,
               child: Image.network(
-                house.pictureUrl,
+                Constants.baseUrl + house.pictureUrl,
                 fit: BoxFit.cover,
                 height: 140,
                 width: double.infinity,
+                errorBuilder: (context, error, stackTrace) => Container(),
               ),
             ),
             Container(
@@ -60,10 +62,14 @@ class HouseDetailCard extends StatelessWidget {
                     children: [
                       Container(
                         constraints: const BoxConstraints(maxWidth: 150),
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 6.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18.0),
-                          color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.5),
                         ),
                         child: Text(
                           house.name,
