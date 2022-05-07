@@ -1,7 +1,14 @@
 import 'package:besthouse/screens/land_lord_profile.dart';
+import 'package:besthouse/widgets/common/button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:like_button/like_button.dart';
+import 'package:besthouse/services/api/favorite.dart';
+import 'package:besthouse/widgets/common/alert.dart';
+import 'package:besthouse/models/response/info_response.dart';
+import 'package:dio/dio.dart';
+import 'package:provider/provider.dart';
+import '../services/api/offer_form.dart';
 
 //model
 import 'package:besthouse/models/house.dart';
@@ -11,6 +18,9 @@ import 'package:besthouse/models/room.dart';
 
 //widget
 import '../models/location.dart';
+import '../services/api/search.dart';
+import '../services/api/user.dart';
+import '../services/provider/offer.dart';
 import '../widgets/common/tag.dart';
 import '../widgets/house_detail/room_image.dart';
 import '../widgets/home/house_card.dart';
@@ -32,109 +42,244 @@ class _HouseDetailedState extends State<HouseDetailed> {
   final bool _floating = false;
   double buttonSize = 20;
   final scrollController = ScrollController();
+
+  House house = House(
+      id: "0",
+      name: "Sorry About This Page",
+      pictureUrl: "https://i.imgur.com/DvpvklR.png",
+      price: 999999999,
+      address: "Moon",
+      location: Location(coordinates: <double>[1.0, 1.0]),
+      detail: HouseDetail(
+          houseId: "0",
+          userId: "0",
+          description: "Sorry About This Page. Please refresh page.",
+          rooms: [Room(type: "living", amount: 999, pictures: [])],
+          facilities: []));
+
+  UserProfile landlord = UserProfile(
+    firstname: "Flutter Condo",
+    lastname: "Landlord",
+  );
+
+  List<House> housesRec = [
+    // House(
+    //   id: "634gf3438",
+    //   name: "Spy Home",
+    //   pictureUrl:
+    //       "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+    //   price: 4000,
+    //   location: Location(
+    //     coordinates: [-6.2108, 106.8451],
+    //   ),
+    //   address: 'Soi 45 Prachauthid Thungkru, Bangkok',
+    //   type: 'CONDOMINIUM',
+    // ),
+    // House(
+    //   id: "634gf3438",
+    //   name: "Willy House",
+    //   pictureUrl:
+    //       "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+    //   price: 6000,
+    //   location: Location(
+    //     coordinates: [13.2108, 107.8451],
+    //   ),
+    //   address: 'KMUTT university Prachauthid Thungkru, Bangkok',
+    // ),
+    // House(
+    //   id: "634gf3438",
+    //   name: "Jannie House",
+    //   pictureUrl:
+    //       "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+    //   price: 6000,
+    //   location: Location(
+    //     coordinates: [13.2108, 107.8451],
+    //   ),
+    //   address: 'KMUTT university Prachauthid Thungkru, Bangkok',
+    // ),
+  ];
+
+  bool isLoading = false;
+
+  List favorites = [];
+  bool success = false;
+  bool isLiked = false;
+
+  void getDetailHandler(String houseId) async {
+    try {
+      var result = await OfferFormApi.getOfferInfo(houseId);
+
+      if (result is InfoResponse) {
+        var offers = result.data;
+        print(offers);
+
+        List<String> pictures = [];
+        List<Room> rooms = [];
+        for (int i = 0; i < offers['houseDetail']['rooms']?.length; i++) {
+          for (int j = 0;
+              j < offers['houseDetail']['rooms'][i]['pictures']?.length;
+              j++) {
+            pictures.add(
+                offers['houseDetail']['rooms'][i]['pictures'][j].toString());
+          }
+          rooms.add(Room(
+              type: offers['houseDetail']['rooms'][i]['type'],
+              amount: offers['houseDetail']['rooms'][i]['amount'],
+              pictures: pictures));
+        }
+        var temp = House(
+          id: offers['house']['_id'],
+          name: offers['house']['name'],
+          pictureUrl: offers['house']['picture_url'],
+          price: offers['house']['price'],
+          address: offers['house']['address'],
+          location: Location(coordinates: [
+            offers['house']['location']['coordinates'][0],
+            offers['house']['location']['coordinates'][1]
+          ]),
+          type: offers['house']['type'],
+          tags: offers['tags'] ?? [],
+          detail: HouseDetail(
+            houseId: offers['houseDetail']['house_id'],
+            userId: offers['houseDetail']['user_id'],
+            rooms: rooms,
+            facilities: offers['houseDetail']['facilities']
+                .toString()
+                .split(',')
+                .toList(),
+            description: offers['houseDetail']['description'],
+            electricFee: offers['houseDetail']['electric_fee'] ?? 0,
+            waterFee: offers['houseDetail']['water_fee'] ?? 0,
+            likes: offers['houseDetail']['likes'],
+            totalSize: offers['houseDetail']['total_size'] + 0.0 ?? 0,
+          ),
+        );
+        setState(() {
+          Future.delayed(const Duration(seconds: 1), () {
+            setState(() {
+              _favoriteHandler();
+              print(favorites);
+              isLiked = favorites.contains(houseId);
+              print(isLiked);
+              isLoading = false;
+              house = temp;
+            });
+          });
+        });
+        // house = temp;
+        Alert.successAlert(
+          result,
+          'Success',
+          () => Navigator.of(context).pop(),
+          context,
+        );
+      }
+    } on DioError catch (e) {
+      Alert.errorAlert(e, context);
+    }
+  }
+
+  Future<bool> onLikeButtonTapped(bool isLiked, String houseId) async {
+    try {
+      var result = await FavoriteApi.addFavoriteHouse(houseId.toString());
+
+      if (result is InfoResponse) {
+        success = true;
+        // print(success);
+        return success ? !isLiked : isLiked;
+      }
+    } on DioError catch (e) {
+      Alert.errorAlert(e, context);
+    }
+    return !isLiked;
+  }
+
+  void _favoriteHandler() async {
+    try {
+      var result = await FavoriteApi.getFavoriteHouseList();
+
+      if (result is InfoResponse) {
+        List<dynamic> housesList = result.data;
+        var temp = housesList
+            .map(
+              (e) => e['_id'],
+            )
+            .toList();
+        setState(() {
+          Future.delayed(const Duration(seconds: 0), () {
+            setState(() {
+              favorites = temp;
+              //isLiked = favorites.contains(house.id);
+            });
+          });
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      Alert.errorAlert(e, context);
+    }
+  }
+
+  void getNearby() async {
+    try {
+      var result = await SearchApi.getHousesList(
+          house.location.coordinates[0], house.location.coordinates[1]);
+      if (result is InfoResponse) {
+        List<dynamic> houses = result.data;
+        print(houses);
+        var temp = houses
+            .map(
+              (e) => House(
+                id: e['_id'],
+                name: e['name'],
+                pictureUrl: e['picture_url'],
+                price: e['price'],
+                address: e['address'],
+                location: Location(coordinates: [
+                  e['location']['coordinates'][1],
+                  e['location']['coordinates'][0]
+                ]),
+              ),
+            )
+            .toList();
+        setState(() {
+          Future.delayed(const Duration(seconds: 0), () {
+            setState(() {
+              housesRec = temp;
+            });
+          });
+        });
+        Alert.successAlert(
+          result,
+          'Success',
+          () => Navigator.of(context).pop(),
+          context,
+        );
+      }
+    } on DioError catch (e) {
+      Alert.errorAlert(e, context);
+    }
+  }
+
+  @override
+  void initState() {
+    _favoriteHandler();
+    getDetailHandler(
+        Provider.of<OfferFormProvider>(context, listen: false).houseId);
+
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final routeArgs = (ModalRoute.of(context)?.settings.arguments ?? <String, String>{"id": "0"})
-        as Map<String, String>;
+    final routeArgs = (ModalRoute.of(context)?.settings.arguments ??
+        <String, String>{"id": "0"}) as Map<String, String>;
     final houseId = routeArgs['id'];
 
-    final house = House(
-      id: houseId ?? "0",
-      name: "Flutter Condo",
-      location: Location(coordinates: <double>[1.0, 1.0]),
-      pictureUrl: "https://i.imgur.com/DvpvklR.png",
-      price: 1000000,
-      address: "123 Fake Street",
-      tags: ["Hello", "World", "Flutter", "Condo", "House", "Flutter", "Condo", "House"],
-      detail: HouseDetail(
-        houseId: "0",
-        userId: "0",
-        rooms: [
-          Room(type: "bath", amount: 2, pictures: [
-            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-          ]),
-          Room(type: "living", amount: 3, pictures: [
-            "https://i.imgur.com/DvpvklR.png",
-            "https://i.imgur.com/DvpvklR.png",
-            "https://i.imgur.com/DvpvklR.png",
-          ]),
-          Room(type: "kitchen", amount: 1, pictures: [
-            "https://i.imgur.com/DvpvklR.png",
-            "https://i.imgur.com/DvpvklR.png",
-            "https://i.imgur.com/DvpvklR.png",
-          ]),
-        ],
-        facilities: ["wifi", "parking", "air", "fitness", "water", "furnished", "pool"],
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        electricFee: 0,
-        likes: 1200,
-        totalSize: 33,
-      ),
-    );
-
-    final landlord = UserProfile(
-      firstname: "Flutter Condo",
-      lastname: "Landlord",
-    );
-
-    final List<House> housesRec = [
-      House(
-        id: "634gf3438",
-        name: "Spy Home",
-        pictureUrl:
-            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-        price: 4000,
-        location: Location(
-          coordinates: [-6.2108, 106.8451],
-        ),
-        address: 'Soi 45 Prachauthid Thungkru, Bangkok',
-        type: 'CONDOMINIUM',
-      ),
-      House(
-        id: "634gf3438",
-        name: "Willy House",
-        pictureUrl:
-            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-        price: 6000,
-        location: Location(
-          coordinates: [13.2108, 107.8451],
-        ),
-        address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-      ),
-      House(
-        id: "634gf3438",
-        name: "Jannie House",
-        pictureUrl:
-            "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-        price: 6000,
-        location: Location(
-          coordinates: [13.2108, 107.8451],
-        ),
-        address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-      ),
-    ];
-
-    final houseDetail = house.detail;
-    int living = 0;
-    int kitchen = 0;
-    int bath = 0;
-    int bed = 0;
-    int total = 0;
-    for (var i = 0; i < houseDetail!.rooms.length; i++) {
-      if (houseDetail.rooms[i].type == "living") {
-        living = houseDetail.rooms[i].amount;
-      } else if (houseDetail.rooms[i].type == "kitchen") {
-        kitchen = houseDetail.rooms[i].amount;
-      } else if (houseDetail.rooms[i].type == "bath") {
-        bath = houseDetail.rooms[i].amount;
-      } else if (houseDetail.rooms[i].type == "bed") {
-        bed = houseDetail.rooms[i].amount;
-      }
-    }
-    total = living + kitchen + bath + bed;
+    isLiked = favorites.contains(house.id);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -186,22 +331,29 @@ class _HouseDetailedState extends State<HouseDetailed> {
                       ),
                       LikeButton(
                         size: buttonSize,
-                        circleColor:
-                            const CircleColor(start: Color(0xff00ddff), end: Color(0xff0099cc)),
+                        circleColor: const CircleColor(
+                            start: Color(0xff00ddff), end: Color(0xff0099cc)),
                         bubblesColor: const BubblesColor(
                           dotPrimaryColor: Color(0xff33b5e5),
                           dotSecondaryColor: Color(0xff0099cc),
                         ),
-                        likeBuilder: (bool isLiked) {
+                        likeBuilder: (isLiked) {
+                          print(isLiked);
                           return Icon(
                             Icons.thumb_up,
-                            color: isLiked ? const Color(0xFF24577A) : Colors.grey,
+                            color:
+                                isLiked ? const Color(0xFF24577A) : Colors.grey,
                             size: buttonSize,
                           );
                         },
-                        likeCount: 665,
+                        likeCount: house.detail!.likes,
                         countBuilder: onCount,
+                        onTap: (isLiked) {
+                          return onLikeButtonTapped(
+                              isLiked, houseId.toString());
+                        },
                       ),
+                      // Button(text: 'text', clickHandler: getDetailHandler),
                     ],
                   ),
                   const SizedBox(
@@ -242,9 +394,10 @@ class _HouseDetailedState extends State<HouseDetailed> {
                     height: 8,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16),
                     child: Text(
-                      houseDetail?.description ?? "No description",
+                      house.detail!.description,
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ),
@@ -259,27 +412,154 @@ class _HouseDetailedState extends State<HouseDetailed> {
                         ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8),
                     child: Column(
                       children: [
-                        _buildDetail(context, "Total Space", houseDetail.totalSize.toString()),
-                        _buildDetail(context, "Rooms", total.toString()),
+                        _buildDetail(context, "Total Space",
+                            house.detail!.totalSize.toString()),
+                        _buildDetail(
+                          context,
+                          "Rooms",
+                          house.detail?.rooms.length == 1
+                              ? house.detail!.rooms[0].amount.toString()
+                              : house.detail?.rooms.length == 2
+                                  ? (house.detail!.rooms[0].amount +
+                                          house.detail!.rooms[1].amount)
+                                      .toString()
+                                  : house.detail?.rooms.length == 3
+                                      ? (house.detail!.rooms[0].amount +
+                                              house.detail!.rooms[1].amount +
+                                              house.detail!.rooms[2].amount)
+                                          .toString()
+                                      : house.detail?.rooms.length == 4
+                                          ? (house.detail!.rooms[0].amount +
+                                                  house
+                                                      .detail!.rooms[1].amount +
+                                                  house
+                                                      .detail!.rooms[2].amount +
+                                                  house.detail!.rooms[3].amount)
+                                              .toString()
+                                          : "0",
+                        ),
                         Row(
                           children: [
-                            _buildDetail(context, "Living romm", living.toString()),
+                            _buildDetail(
+                              context,
+                              "Living romm",
+                              house.detail!.rooms.isNotEmpty &&
+                                      house.detail!.rooms[0].type.toString() ==
+                                          "LIVING ROOM"
+                                  ? house.detail!.rooms[0].amount.toString()
+                                  : house.detail!.rooms.length >= 2 &&
+                                          house.detail!.rooms[1].type
+                                                  .toString() ==
+                                              "LIVING ROOM"
+                                      ? house.detail!.rooms[1].amount.toString()
+                                      : house.detail!.rooms.length >= 3 &&
+                                              house.detail!.rooms[2].type
+                                                      .toString() ==
+                                                  "LIVING ROOM"
+                                          ? house.detail!.rooms[2].amount
+                                              .toString()
+                                          : house.detail!.rooms.length == 4 &&
+                                                  house.detail!.rooms[3].type
+                                                          .toString() ==
+                                                      "LIVING ROOM"
+                                              ? house.detail!.rooms[3].amount
+                                                  .toString()
+                                              : "0",
+                            ),
                             const SizedBox(
                               width: 10,
                             ),
-                            _buildDetail(context, "Bedroom", bed.toString()),
+                            _buildDetail(
+                              context,
+                              "Bedroom",
+                              house.detail!.rooms.isNotEmpty &&
+                                      house.detail!.rooms[0].type.toString() ==
+                                          "BEDROOM"
+                                  ? house.detail!.rooms[0].amount.toString()
+                                  : house.detail!.rooms.length >= 2 &&
+                                          house.detail!.rooms[1].type
+                                                  .toString() ==
+                                              "BEDROOM"
+                                      ? house.detail!.rooms[1].amount.toString()
+                                      : house.detail!.rooms.length >= 3 &&
+                                              house.detail!.rooms[2].type
+                                                      .toString() ==
+                                                  "BEDROOM"
+                                          ? house.detail!.rooms[2].amount
+                                              .toString()
+                                          : house.detail!.rooms.length == 4 &&
+                                                  house.detail!.rooms[3].type
+                                                          .toString() ==
+                                                      "BEDROOM"
+                                              ? house.detail!.rooms[3].amount
+                                                  .toString()
+                                              : "0",
+                            ),
                           ],
                         ),
                         Row(
                           children: [
-                            _buildDetail(context, "Bathroom", bath.toString()),
+                            _buildDetail(
+                              context,
+                              "Bathroom",
+                              house.detail!.rooms.isNotEmpty &&
+                                      house.detail!.rooms[0].type.toString() ==
+                                          "BATHROOM"
+                                  ? house.detail!.rooms[0].amount.toString()
+                                  : house.detail!.rooms.length >= 2 &&
+                                          house.detail!.rooms[1].type
+                                                  .toString() ==
+                                              "BATHROOM"
+                                      ? house.detail!.rooms[1].amount.toString()
+                                      : house.detail!.rooms.length >= 3 &&
+                                              house.detail!.rooms[2].type
+                                                      .toString() ==
+                                                  "BATHROOM"
+                                          ? house.detail!.rooms[2].amount
+                                              .toString()
+                                          : house.detail!.rooms.length == 4 &&
+                                                  house.detail!.rooms[3].type
+                                                          .toString() ==
+                                                      "BATHROOM"
+                                              ? house.detail!.rooms[3].amount
+                                                  .toString()
+                                              : "0",
+                            ),
                             const SizedBox(
                               width: 10,
                             ),
-                            _buildDetail(context, "Kitchen", kitchen.toString()),
+                            _buildDetail(
+                              context,
+                              "Kitchen",
+                              house.detail!.rooms.isNotEmpty &&
+                                      house.detail!.rooms[0].type.toString() ==
+                                          "KITCHEN"
+                                  ? house.detail!.rooms[0].amount.toString()
+                                  : house.detail!.rooms.length >= 2 &&
+                                          house.detail!.rooms[1].type
+                                                  .toString() ==
+                                              "KITCHEN"
+                                      ? house.detail!.rooms[1].amount.toString()
+                                      : house.detail!.rooms.length >= 3 &&
+                                              house.detail!.rooms[2].type
+                                                      .toString() ==
+                                                  "KITCHEN"
+                                          ? house.detail!.rooms[2].amount
+                                              .toString()
+                                          : house.detail!.rooms.length == 4 &&
+                                                  house.detail!.rooms[3].type
+                                                          .toString() ==
+                                                      "KITCHEN" &&
+                                                  house.detail!.rooms.length ==
+                                                      4
+                                              ? house.detail!.rooms[3].amount
+                                                  .toString()
+                                              : "0",
+                            ),
                           ],
                         ),
                       ],
@@ -288,48 +568,55 @@ class _HouseDetailedState extends State<HouseDetailed> {
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, bottom: 8),
                     child: Text("Additional pictures :",
-                        textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline4),
+                        textAlign: TextAlign.left,
+                        style: Theme.of(context).textTheme.headline4),
                   ),
                   SizedBox(
                     height: 200,
                     child: RoomImage(houseDetail: house.detail),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8),
                     child: Column(
                       children: [
                         _buildDetail(
                           context,
                           "Furniture",
-                          houseDetail.facilities.any((e) => e.compareTo("funished") == 0)
+                          house.detail!.facilities
+                                  .any((e) => e.compareTo("funished") == 0)
                               ? "provided"
                               : "No",
                         ),
                         _buildDetail(
                           context,
                           "Fiber internet",
-                          houseDetail.facilities.any((e) => e.compareTo("wifi") == 0)
+                          house.detail!.facilities
+                                  .any((e) => e.compareTo("wifi") == 0)
                               ? "provided"
                               : "No",
                         ),
                         _buildDetail(
                           context,
                           "Water heater",
-                          houseDetail.facilities.any((e) => e.compareTo("water") == 0)
+                          house.detail!.facilities
+                                  .any((e) => e.compareTo("water") == 0)
                               ? "provided"
                               : "No",
                         ),
                         _buildDetail(
                           context,
                           "Air condition",
-                          houseDetail.facilities.any((e) => e.compareTo("air") == 0)
+                          house.detail!.facilities
+                                  .any((e) => e.compareTo("air") == 0)
                               ? "provided"
                               : "No",
                         ),
                         _buildDetail(
                           context,
                           "Fan",
-                          houseDetail.facilities.any((e) => e.compareTo("Fan") == 0)
+                          house.detail!.facilities
+                                  .any((e) => e.compareTo("Fan") == 0)
                               ? "provided"
                               : "No",
                         ),
@@ -349,7 +636,7 @@ class _HouseDetailedState extends State<HouseDetailed> {
                     children: [
                       GestureDetector(
                         onTap: (() {
-                          _showUser(houseDetail.userId.toString());
+                          _showUser(house.detail!.userId.toString());
                         }),
                         child: Row(
                           children: [

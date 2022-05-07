@@ -1,15 +1,28 @@
+import 'package:besthouse/services/api/search.dart';
+import 'package:besthouse/services/location_api.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 //model
 import '../models/house.dart';
 import '../models/location.dart';
 
 //widget
+import '../services/provider/offer.dart';
 import '../widgets/home/house_card.dart';
+import '../widgets/common/button.dart';
 
 //screen
 import '../screens/google_location.dart';
 import '../screens/house_detailed.dart';
+
+//dio
+import 'package:besthouse/models/response/info_response.dart';
+import 'package:besthouse/services/api/user.dart';
+import 'package:besthouse/services/dio.dart';
+import 'package:besthouse/services/share_preference.dart';
+import 'package:besthouse/widgets/common/alert.dart';
+import 'package:dio/dio.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key, required this.onTapHandler}) : super(key: key);
@@ -22,101 +35,58 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _searchController = TextEditingController();
   final controller1 = PageController(initialPage: 1);
-  final List<House> housesFeature = [
-    House(
-      id: "634gf3438",
-      name: "Cosmo Home",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 4000,
-      location: Location(
-        coordinates: [-6.2108, 106.8451],
-      ),
-      address: 'Soi 45 Prachauthid Thungkru, Bangkok',
-      type: 'CONDOMINIUM',
-    ),
-    House(
-      id: "634gf3438",
-      name: "Heliconia House",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 6000,
-      location: Location(
-        coordinates: [13.2108, 107.8451],
-      ),
-      address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    ),
-    House(
-      id: "634gf3438",
-      name: "Heliconia House",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 6000,
-      location: Location(
-        coordinates: [13.2108, 107.8451],
-      ),
-      address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    ),
-    House(
-      id: "634gf3438",
-      name: "Heliconia House",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 6000,
-      location: Location(
-        coordinates: [13.2108, 107.8451],
-      ),
-      address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    ),
-    House(
-      id: "634gf3438",
-      name: "Heliconia House",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 6000,
-      location: Location(
-        coordinates: [13.2108, 107.8451],
-      ),
-      address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    ),
-  ];
+  List<House> housesFeature = [];
 
-  final List<House> housesRec = [
-    House(
-      id: "634gf3438",
-      name: "Spy Home",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 4000,
-      location: Location(
-        coordinates: [-6.2108, 106.8451],
-      ),
-      address: 'Soi 45 Prachauthid Thungkru, Bangkok',
-      type: 'CONDOMINIUM',
-    ),
-    House(
-      id: "634gf3438",
-      name: "Willy House",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 6000,
-      location: Location(
-        coordinates: [13.2108, 107.8451],
-      ),
-      address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    ),
-    House(
-      id: "634gf3438",
-      name: "Jannie House",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 6000,
-      location: Location(
-        coordinates: [13.2108, 107.8451],
-      ),
-      address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    ),
-  ];
+  List<House> housesRec = [];
+
+  void houseHandler() async {
+    try {
+      var location = await LocationApi.getLocation();
+      var result = await SearchApi.getHousesList(location[0], location[1]);
+      if (result is InfoResponse) {
+        List<dynamic> houses = result.data;
+        var temp = houses
+            .map(
+              (e) => House(
+                id: e['_id'],
+                name: e['name'],
+                pictureUrl: e['picture_url'],
+                price: e['price'],
+                address: e['address'],
+                location: Location(coordinates: [
+                  e['location']['coordinates'][1],
+                  e['location']['coordinates'][0]
+                ]),
+              ),
+            )
+            .toList();
+        setState(() {
+          Future.delayed(const Duration(seconds: 0), () {
+            setState(() {
+              housesFeature = temp;
+              housesRec = temp;
+            });
+          });
+        });
+        Alert.successAlert(
+          result,
+          'Success',
+          () => Navigator.of(context).pop(),
+          context,
+        );
+      }
+    } on DioError catch (e) {
+      Alert.errorAlert(e, context);
+    }
+  }
+
+  @override
+  void initState() {
+    if (mounted) {
+      houseHandler();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -222,6 +192,10 @@ class _HomeState extends State<Home> {
                     ),
                   )
                 : const Text('No houses found'),
+            // Button(
+            //   clickHandler: houseHandler,
+            //   text: "Add offer",
+            // ),
           ],
         ),
       ),
@@ -229,6 +203,7 @@ class _HomeState extends State<Home> {
   }
 
   void _showInfo(String id) {
+    context.read<OfferFormProvider>().updateHouseId(id);
     Navigator.of(context).pushNamed(HouseDetailed.routeName, arguments: {
       'id': id,
     });

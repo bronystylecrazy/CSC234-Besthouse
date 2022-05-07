@@ -11,7 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // screens
 import './screens/customer_profile.dart';
-import './screens/favourite.dart';
+import 'screens/favorite.dart';
 import './screens/get_start.dart';
 import './screens/guide.dart';
 import './screens/home.dart';
@@ -104,7 +104,7 @@ class MyApp extends StatelessWidget {
         body: AnimatedSplashScreen(
           duration: 3000,
           centered: true,
-          splash: 'assets/get_start_1.png',
+          splash: 'assets/logo.png',
           nextScreen: const GetStart(),
           splashTransition: SplashTransition.fadeTransition,
           pageTransitionType: PageTransitionType.fade,
@@ -174,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onTapHandler: changeIndex,
       ),
       const Search(),
-      const Favourite(),
+      const Favorite(),
       const CustomerProfile()
     ];
     return Scaffold(

@@ -1,4 +1,12 @@
+import 'package:besthouse/services/api/favorite.dart';
+import 'package:besthouse/widgets/common/button.dart';
 import 'package:flutter/material.dart';
+import 'package:besthouse/widgets/common/alert.dart';
+import 'package:besthouse/models/response/info_response.dart';
+import 'package:dio/dio.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 //model
 import '../models/house.dart';
@@ -8,63 +16,110 @@ import '../screens/house_detailed.dart';
 //widget
 import '../widgets/common/house_detail_card.dart';
 
-class Favourite extends StatefulWidget {
-  const Favourite({Key? key}) : super(key: key);
-  static const routeName = "/favourite";
+class Favorite extends StatefulWidget {
+  const Favorite({Key? key}) : super(key: key);
+  static const routeName = "/favorite";
 
   @override
-  State<Favourite> createState() => _FavouriteState();
+  State<Favorite> createState() => _FavoriteState();
 }
 
-class _FavouriteState extends State<Favourite> {
-  final List<House> houses = [
-    House(
-      id: "634gf3438",
-      name: "Cosmo Home",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 4000,
-      location: Location(
-        coordinates: [-6.2108, 106.8451],
-      ),
-      address: 'Soi 45 Prachauthid Thungkru, Bangkok',
-      type: 'CONDOMINIUM',
-    ),
-    House(
-      id: "634gf3438",
-      name: "Heliconia House",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 6000,
-      location: Location(
-        coordinates: [13.2108, 107.8451],
-      ),
-      address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    ),
-    House(
-      id: "634gf3438",
-      name: "Cosmo Home",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 4000,
-      location: Location(
-        coordinates: [-6.2108, 106.8451],
-      ),
-      address: 'Soi 45 Prachauthid Thungkru, Bangkok',
-      type: 'CONDOMINIUM',
-    ),
-    House(
-      id: "634gf3438",
-      name: "Heliconia House",
-      pictureUrl:
-          "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-      price: 6000,
-      location: Location(
-        coordinates: [13.2108, 107.8451],
-      ),
-      address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    ),
+class _FavoriteState extends State<Favorite> {
+  bool isLoading = false;
+
+  List<House> houses = [
+    // House(
+    //   id: "634gf3438",
+    //   name: "Cosmo Home",
+    //   pictureUrl:
+    //       "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+    //   price: 4000,
+    //   location: Location(
+    //     coordinates: [-6.2108, 106.8451],
+    //   ),
+    //   address: 'Soi 45 Prachauthid Thungkru, Bangkok',
+    //   type: 'CONDOMINIUM',
+    // ),
+    // House(
+    //   id: "634gf3438",
+    //   name: "Heliconia House",
+    //   pictureUrl:
+    //       "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+    //   price: 6000,
+    //   location: Location(
+    //     coordinates: [13.2108, 107.8451],
+    //   ),
+    //   address: 'KMUTT university Prachauthid Thungkru, Bangkok',
+    // ),
+    // House(
+    //   id: "634gf3438",
+    //   name: "Cosmo Home",
+    //   pictureUrl:
+    //       "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+    //   price: 4000,
+    //   location: Location(
+    //     coordinates: [-6.2108, 106.8451],
+    //   ),
+    //   address: 'Soi 45 Prachauthid Thungkru, Bangkok',
+    //   type: 'CONDOMINIUM',
+    // ),
+    // House(
+    //   id: "634gf3438",
+    //   name: "Heliconia House",
+    //   pictureUrl:
+    //       "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
+    //   price: 6000,
+    //   location: Location(
+    //     coordinates: [13.2108, 107.8451],
+    //   ),
+    //   address: 'KMUTT university Prachauthid Thungkru, Bangkok',
+    // ),
   ];
+
+  void _favoriteHandler() async {
+    try {
+      var result = await FavoriteApi.getFavoriteHouseList();
+
+      if (result is InfoResponse) {
+        List<dynamic> housesList = result.data;
+        var temp = housesList
+            .map(
+              (e) => House(
+                id: e['_id'],
+                name: e['name'],
+                pictureUrl: e['picture_url'],
+                price: e['price'],
+                address: e['address'],
+                location: Location(coordinates: [
+                  e['location']['coordinates'][1],
+                  e['location']['coordinates'][0]
+                ]),
+              ),
+            )
+            .toList();
+        setState(() {
+          Future.delayed(const Duration(seconds: 0), () {
+            setState(() {
+              houses = temp;
+            });
+          });
+        });
+      }
+    } on DioError catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      Alert.errorAlert(e, context);
+    }
+  }
+
+  @override
+  void initState() {
+    if (mounted) {
+      _favoriteHandler();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

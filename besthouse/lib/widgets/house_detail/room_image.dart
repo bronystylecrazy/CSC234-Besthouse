@@ -1,4 +1,5 @@
 import 'package:besthouse/models/house_detail.dart';
+import 'package:besthouse/services/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -26,7 +27,7 @@ class RoomImage extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(25),
             child: Image.network(
-              pictures[index],
+              Constants.baseUrl + pictures[index],
               fit: BoxFit.cover,
             ),
           ),
