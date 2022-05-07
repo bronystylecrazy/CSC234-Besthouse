@@ -1,4 +1,4 @@
-import { House, HouseDetail, Favorite } from "@/database/models";
+import { House, HouseDetail, Favorite, User, Profile } from "@/database/models";
 import { OfferPatch } from "@/interface/api/OfferType";
 import { Types } from "mongoose";
 import { FavouritePost } from "@/interface/api/FavoritePost";
@@ -39,12 +39,30 @@ export const GetOffer = async (req: Request) => {
 	}
 };
 
-export const GetOfferInfo = async (house_id: Types.ObjectId) => {
+export const GetOfferInfo = async (house_id: Types.ObjectId, req: Request) => {
 	try {
+		if (!isLogin(req)) {
+			return genericError(
+				"Unauthorize: Login is required to do function",
+				400
+			);
+		}
+		const user_id = req.user.user_id;
 		const house = await House.findById(house_id);
 		const houseDetail = await HouseDetail.findOne({ house_id: house_id });
+		const favourite = await Favorite.find({
+			house_id: house._id,
+			user_id: user_id,
+		});
+		const landlord = await Profile.findOne(
+			{
+				user_id: houseDetail.user_id,
+			},
+			"user_id firstname lastname picture_url"
+		);
+		const isLike = favourite.length != 0;
 
-		return infoResponse({ house, houseDetail });
+		return infoResponse({ house, houseDetail, isLike, landlord });
 	} catch (error) {
 		return genericError(error.message, 500);
 	}
@@ -227,15 +245,16 @@ export const FavoriteHouse = async (body: FavouritePost, req: Request) => {
 			house_id: body.house_id,
 			user_id: user_id,
 		});
+		var house = await HouseDetail.findOne({
+			house_id: body.house_id,
+		}).exec();
 		if (favorite) {
 			await favorite.remove();
+			await house.updateOne({ $set: { likes: house.likes - 1 } });
 			return infoResponse(null, "Removed from favorite");
 		}
 
-		await HouseDetail.findOneAndUpdate(
-			{ house_id: body.house_id },
-			{ $inc: { likes: 1 } }
-		).exec();
+		await house.updateOne({ $set: { likes: house.likes + 1 } });
 
 		await new Favorite({
 			house_id: body.house_id,

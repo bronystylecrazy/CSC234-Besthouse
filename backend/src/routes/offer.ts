@@ -20,7 +20,7 @@ offerRoute.get("/", async (req, res) => {
 offerRoute.get("/:id", async (req, res) => {
 	const { id } = req.params;
 	const house_id = new Types.ObjectId(id);
-	return responseHandler(res, await GetOfferInfo(house_id));
+	return responseHandler(res, await GetOfferInfo(house_id, req));
 });
 
 offerRoute.post("/", async (req, res) => {

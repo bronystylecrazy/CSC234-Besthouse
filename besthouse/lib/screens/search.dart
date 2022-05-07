@@ -1,3 +1,4 @@
+import 'package:besthouse/services/provider/house_lists.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -31,9 +32,6 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  bool _loadingList = true;
-  List<House> houses = [];
-
   RangeValues currentRangeValues = const RangeValues(0, 20000);
 
   List<AccommodationObject> radioList = [
@@ -62,7 +60,7 @@ class _SearchState extends State<Search> {
   }
 
   void _filter([double? lat, double? long]) async {
-    setState(() => _loadingList = true);
+    Provider.of<SearchList>(context, listen: false).changeLoadState(true);
 
     Map<String, dynamic> reqJson = {};
 
@@ -83,6 +81,7 @@ class _SearchState extends State<Search> {
   }
 
   Future<void> _fetchHouses(Map<String, dynamic> reqJson) async {
+    Provider.of<SearchList>(context, listen: false).changeLoadState(true);
     print('fetch houses: $reqJson');
 
     try {
@@ -90,36 +89,24 @@ class _SearchState extends State<Search> {
 
       if (result is InfoResponse) {
         print(result.data);
-        setState(() {
-          houses = [...result.data.map((house) => House.fromJson(house))];
-          _loadingList = false;
-        });
+        Provider.of<SearchList>(context, listen: false)
+            .updateList([...result.data.map((house) => House.fromJson(house))]);
+        Provider.of<SearchList>(context, listen: false).changeLoadState(false);
       }
     } on DioError catch (e) {
       Alert.errorAlert(e, context).then(
         (_) => setState(() {
-          _loadingList = false;
+          Provider.of<SearchList>(context, listen: false)
+              .changeLoadState(false);
         }),
       );
     }
   }
 
-  void _getFirstHouses() {
-    var latitude = Provider.of<CurrentLocation>(context, listen: false).latitude;
-    var longitude = Provider.of<CurrentLocation>(context, listen: false).longitude;
-
-    final reqJson = {
-      "lat": latitude,
-      "long": longitude,
-    };
-
-    _fetchHouses(reqJson);
-  }
-
   @override
   void initState() {
     print('init');
-    _getFirstHouses();
+
     super.initState();
   }
 
@@ -149,10 +136,20 @@ class _SearchState extends State<Search> {
                       GoogleLocation.routeName,
                     ).then((_) {
                       print('search');
-                      print(Provider.of<DesireLocation>(context, listen: false).address);
+                      if (Provider.of<DesireLocation>(context, listen: false)
+                          .isExist) {
+                        _filter(
+                          Provider.of<DesireLocation>(context, listen: false)
+                              .latitude,
+                          Provider.of<DesireLocation>(context, listen: false)
+                              .longitude,
+                        );
+                      }
                       _filter(
-                        Provider.of<DesireLocation>(context, listen: false).latitude,
-                        Provider.of<DesireLocation>(context, listen: false).longitude,
+                        Provider.of<CurrentLocation>(context, listen: false)
+                            .latitude,
+                        Provider.of<CurrentLocation>(context, listen: false)
+                            .longitude,
                       );
                     });
                   },
@@ -175,7 +172,9 @@ class _SearchState extends State<Search> {
                           itemBuilder: (BuildContext context, int index) {
                             return Tag(
                               title: index == 0
-                                  ? radioList.firstWhere((e) => e.type == type).name
+                                  ? radioList
+                                      .firstWhere((e) => e.type == type)
+                                      .name
                                   : selectedFacilities[index - 1],
                             );
                           },
@@ -210,15 +209,24 @@ class _SearchState extends State<Search> {
                     color: Colors.grey,
                   ),
                 ),
-                _loadingList
-                    ? const Expanded(child: SpinKitRing(color: Color(0xFF24577A), size: 50.0))
-                    : houses.isNotEmpty
+                Provider.of<SearchList>(context, listen: true).isLoading
+                    ? const Expanded(
+                        child:
+                            SpinKitRing(color: Color(0xFF24577A), size: 50.0))
+                    : Provider.of<SearchList>(context, listen: true)
+                            .houses
+                            .isNotEmpty
                         ? Expanded(
                             child: ListView.builder(
-                              itemCount: houses.length,
+                              itemCount:
+                                  Provider.of<SearchList>(context, listen: true)
+                                      .houses
+                                      .length,
                               itemBuilder: (BuildContext context, int index) {
                                 return HouseDetailCard(
-                                  house: houses[index],
+                                  house: Provider.of<SearchList>(context,
+                                          listen: true)
+                                      .houses[index],
                                   showInfoHandler: _showInfo,
                                 );
                               },
@@ -255,7 +263,8 @@ class _SearchState extends State<Search> {
             radioList: radioList,
             type: type,
             checkboxList: checkboxList,
-            filterHandler: (RangeValues range, Accommodation t, List<Facilities> facilities) {
+            filterHandler: (RangeValues range, Accommodation t,
+                List<Facilities> facilities) {
               setState(() {
                 currentRangeValues = range;
                 type = t;

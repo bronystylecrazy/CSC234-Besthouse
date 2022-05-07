@@ -4,7 +4,8 @@ import 'package:flutter/foundation.dart';
 import '../location_api.dart';
 
 class CurrentLocation with ChangeNotifier, DiagnosticableTreeMixin {
-  CameraPosition currentLocation = const CameraPosition(target: LatLng(100, 200), zoom: 18);
+  CameraPosition currentLocation =
+      const CameraPosition(target: LatLng(100, 200), zoom: 18);
   String address = "";
 
   get latitude => currentLocation.target.latitude;
@@ -23,8 +24,9 @@ class CurrentLocation with ChangeNotifier, DiagnosticableTreeMixin {
   void resetLocation() {
     LocationApi.getLocation().then((value) {
       var latlong = value;
-      updateLocation(
-          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 18));
+      updateLocation(CameraPosition(
+          target: LatLng(latlong[1] as double, latlong[0] as double),
+          zoom: 18));
       updateAddress("");
       notifyListeners();
     });
@@ -32,12 +34,14 @@ class CurrentLocation with ChangeNotifier, DiagnosticableTreeMixin {
 }
 
 class DesireLocation with ChangeNotifier, DiagnosticableTreeMixin {
-  CameraPosition location = const CameraPosition(target: LatLng(100, 200), zoom: 18);
+  CameraPosition location =
+      const CameraPosition(target: LatLng(100, 200), zoom: 18);
   String address = "";
 
   get latitude => location.target.latitude;
   get longitude => location.target.longitude;
-  get isExist => location.target.latitude != 90.0 && location.target.longitude != -160;
+  get isExist =>
+      location.target.latitude != 90.0 && location.target.longitude != -160;
 
   void updateLocation(CameraPosition newLocation) {
     location = newLocation;

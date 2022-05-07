@@ -14,7 +14,8 @@ class OfferCard extends StatefulWidget {
       required this.isEditable,
       this.deleteHandler,
       required this.id,
-      this.toggleOfferHandler})
+      this.toggleOfferHandler,
+      this.updateOffer})
       : super(key: key);
   final String id;
   final String name;
@@ -22,6 +23,7 @@ class OfferCard extends StatefulWidget {
   final bool isEditable;
   final Function? deleteHandler;
   final Function? toggleOfferHandler;
+  final Function? updateOffer;
 
   @override
   State<OfferCard> createState() => _OfferCardState();
@@ -50,17 +52,22 @@ class _OfferCardState extends State<OfferCard> {
               GestureDetector(
                 child: Text(widget.name),
                 onTap: () {
-                  Navigator.pushNamed(context, HouseDetailed.routeName);
+                  Navigator.pushNamed(context, HouseDetailed.routeName,
+                      arguments: {"id": widget.id});
                 },
               ),
               Row(
                 children: [
                   Card(
                     elevation: 0,
-                    color: widget.isAvailable ? const Color(0xffE1FCEF) : const Color(0xffF0EFEF),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    color: widget.isAvailable
+                        ? const Color(0xffE1FCEF)
+                        : const Color(0xffF0EFEF),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 4.0),
                       child: Row(
                         children: [
                           ClipRRect(
@@ -91,10 +98,12 @@ class _OfferCardState extends State<OfferCard> {
                   widget.isEditable
                       ? PopupMenuButton(
                           padding: const EdgeInsets.all(0),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
                           itemBuilder: (context) => [
                             PopupMenuItem(
-                              child: Text(widget.isAvailable ? "Disable" : "Enable"),
+                              child: Text(
+                                  widget.isAvailable ? "Disable" : "Enable"),
                               onTap: () {
                                 widget.toggleOfferHandler!(widget.id);
                               },
@@ -103,41 +112,52 @@ class _OfferCardState extends State<OfferCard> {
                               child: const Text("Edit"),
                               onTap: () {
                                 Future.delayed(const Duration(seconds: 0), (() {
-                                  context.read<OfferFormProvider>().updateHouseId(widget.id);
+                                  context
+                                      .read<OfferFormProvider>()
+                                      .updateHouseId(widget.id);
                                   Navigator.pushNamed(
                                     context,
                                     OfferForm.routeName,
-                                  );
+                                  ).then((value) => widget.updateOffer!());
                                 }));
                               },
                             ),
                             PopupMenuItem(
                                 child: Text("Delete",
-                                    style:
-                                        GoogleFonts.poppins(color: Theme.of(context).errorColor)),
+                                    style: GoogleFonts.poppins(
+                                        color: Theme.of(context).errorColor)),
                                 onTap: () {
-                                  Future.delayed(const Duration(seconds: 0), (() {
+                                  Future.delayed(const Duration(seconds: 0),
+                                      (() {
                                     showDialog(
                                       context: context,
-                                      builder: (BuildContext context) => AlertDialog(
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
                                         title: const Text('Are you sure?'),
-                                        content: const Text("You cannot undo the action"),
+                                        content: const Text(
+                                            "You cannot undo the action"),
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () {
                                               Navigator.pop(context);
                                             },
                                             child: Text('Cancel',
-                                                style: Theme.of(context).textTheme.subtitle1),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle1),
                                           ),
                                           TextButton(
                                             onPressed: () {
                                               setState(() {
-                                                offset = offset + const Offset(1, 0);
+                                                offset =
+                                                    offset + const Offset(1, 0);
                                               });
                                               Navigator.pop(context);
-                                              Future.delayed(const Duration(seconds: 1), (() {
-                                                widget.deleteHandler!(widget.id);
+                                              Future.delayed(
+                                                  const Duration(seconds: 1),
+                                                  (() {
+                                                widget
+                                                    .deleteHandler!(widget.id);
                                               }));
                                             },
                                             child: Text('OK',

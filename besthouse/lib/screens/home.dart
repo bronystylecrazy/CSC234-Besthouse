@@ -1,5 +1,6 @@
 import 'package:besthouse/services/api/search.dart';
 import 'package:besthouse/services/location_api.dart';
+import 'package:besthouse/services/provider/house_lists.dart';
 import 'package:besthouse/services/provider/location.dart';
 
 import 'package:provider/provider.dart';
@@ -33,48 +34,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _searchController = TextEditingController();
-  final controller1 = PageController(initialPage: 1);
-
-  final List<House> housesFeature = [];
-  final List<House> housesRec = [];
-
-  void houseHandler() async {
-    try {
-      print(Provider.of<CurrentLocation>(context, listen: false).longitude);
-
-      var result = await SearchApi.getHousesList(
-          Provider.of<CurrentLocation>(context, listen: false).longitude,
-          Provider.of<CurrentLocation>(context, listen: false).latitude);
-
-      if (result is InfoResponse) {
-        List<dynamic> houses = result.data;
-        print(houses);
-        for (var e in houses) {
-          setState(() {
-            housesFeature.add(House.fromJson(e));
-            housesRec.add(House.fromJson(e));
-          });
-
-          print(e);
-        }
-      }
-    } on DioError catch (e) {
-      Alert.errorAlert(e, context);
-    }
-  }
-
-  @override
-  void initState() {
-    if (mounted) {
-      houseHandler();
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
+        height: MediaQuery.of(context).size.height,
         color: Colors.white,
         padding: const EdgeInsets.all(15.0),
         child: Column(
@@ -132,30 +97,43 @@ class _HomeState extends State<Home> {
                 textAlign: TextAlign.left,
               ),
             ),
-            housesFeature.isNotEmpty
-                ? SizedBox(
-                    height: 150,
-                    width: double.infinity,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: housesFeature.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return HouseCard(
-                          house: housesFeature[index],
-                          showInfoHandler: _showInfo,
-                        );
-                      },
-                    ),
+            Provider.of<NearbyHousesList>(context, listen: true).isLoading
+                ? const Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: CircularProgressIndicator(),
                   )
-                : Container(
-                    margin: const EdgeInsets.all(10.0),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 30, horizontal: 80),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF173651)),
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
-                    ),
-                    child: const Text('No houses found')),
+                : (Provider.of<NearbyHousesList>(context, listen: true)
+                        .houses
+                        .isNotEmpty
+                    ? SizedBox(
+                        height: 150,
+                        width: double.infinity,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: Provider.of<NearbyHousesList>(context,
+                                  listen: true)
+                              .houses
+                              .length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return HouseCard(
+                              house: Provider.of<NearbyHousesList>(context,
+                                      listen: true)
+                                  .houses[index],
+                              showInfoHandler: _showInfo,
+                            );
+                          },
+                        ),
+                      )
+                    : Container(
+                        margin: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 30, horizontal: 80),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFF173651)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(16)),
+                        ),
+                        child: const Text('No houses found'))),
             const SizedBox(
               height: 20,
             ),
@@ -167,30 +145,43 @@ class _HomeState extends State<Home> {
                 textAlign: TextAlign.left,
               ),
             ),
-            housesRec.isNotEmpty
-                ? SizedBox(
-                    height: 150,
-                    width: double.infinity,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: housesRec.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return HouseCard(
-                          house: housesRec[index],
-                          showInfoHandler: _showInfo,
-                        );
-                      },
-                    ),
+            Provider.of<NearbyHousesList>(context, listen: true).isLoading
+                ? const Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: CircularProgressIndicator(),
                   )
-                : Container(
-                    margin: const EdgeInsets.all(10.0),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 30, horizontal: 80),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF173651)),
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
-                    ),
-                    child: const Text('No houses found')),
+                : (Provider.of<NearbyHousesList>(context, listen: true)
+                        .houses
+                        .isNotEmpty
+                    ? SizedBox(
+                        height: 150,
+                        width: double.infinity,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: Provider.of<NearbyHousesList>(context,
+                                  listen: true)
+                              .houses
+                              .length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return HouseCard(
+                              house: Provider.of<NearbyHousesList>(context,
+                                      listen: true)
+                                  .houses[index],
+                              showInfoHandler: _showInfo,
+                            );
+                          },
+                        ),
+                      )
+                    : Container(
+                        margin: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 30, horizontal: 80),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFF173651)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(16)),
+                        ),
+                        child: const Text('No houses found'))),
           ],
         ),
       ),

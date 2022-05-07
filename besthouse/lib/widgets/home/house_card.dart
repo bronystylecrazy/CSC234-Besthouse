@@ -1,4 +1,5 @@
 import 'package:besthouse/models/house.dart';
+import 'package:besthouse/services/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -32,10 +33,15 @@ class HouseCard extends StatelessWidget {
             ClipRRect(
               borderRadius: borderRadius,
               child: Image.network(
-                house.pictureUrl,
+                Constants.baseUrl + house.pictureUrl,
                 fit: BoxFit.cover,
                 height: 150,
                 width: 300,
+                errorBuilder: (context, error, stackTrace) => Image.network(
+                  'https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640',
+                  fit: BoxFit.cover,
+                  height: 150,
+                ),
               ),
             ),
             Container(

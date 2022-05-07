@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:url_launcher/url_launcher.dart';
 //widget
 import 'package:besthouse/widgets/common/custom_textfield.dart';
 import 'package:besthouse/widgets/common/button.dart';
@@ -18,8 +17,6 @@ class ForgetPassword extends StatefulWidget {
 
 class _ForgetPasswordState extends State<ForgetPassword> {
   final _emailController = TextEditingController();
-
-  
 
   @override
   Widget build(BuildContext context) {

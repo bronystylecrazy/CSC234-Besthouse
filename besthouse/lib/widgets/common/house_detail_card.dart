@@ -32,13 +32,15 @@ class HouseDetailCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: borderRadius,
-              child: Image.network(
-                Constants.baseUrl + house.pictureUrl,
-                fit: BoxFit.cover,
-                height: 140,
-                width: double.infinity,
-                errorBuilder: (context, error, stackTrace) => Container(),
-              ),
+              child: Image.network(Constants.baseUrl + house.pictureUrl,
+                  fit: BoxFit.cover,
+                  height: 140,
+                  width: double.infinity,
+                  errorBuilder: (context, error, stackTrace) => Image.network(
+                        'https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640',
+                        fit: BoxFit.cover,
+                        height: 140,
+                      )),
             ),
             Container(
               padding: const EdgeInsets.all(8.0),

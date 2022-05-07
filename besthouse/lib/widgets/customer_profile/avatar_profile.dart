@@ -17,7 +17,7 @@ class AvatarProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(120),
+      borderRadius: BorderRadius.circular(125),
       child: SizedBox(
         height: 125,
         width: 125,
