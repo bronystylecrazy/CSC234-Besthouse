@@ -1,5 +1,5 @@
 import express from "express";
-import { login, signUp } from "@/services/Authentication";
+import {  login, signUp } from "@/services/Authentication";
 import { SignInPost, SignUpPost } from "@/interface/api/User";
 import { responseHandler } from "@/services/Handler";
 
@@ -15,9 +15,10 @@ userRoute.post("/signup", async (req, res) => {
 	return responseHandler(res, await signUp(data));
 });
 
-userRoute.post("/forgot", (req, res) => {
-	return res.send();
-});
+// userRoute.put("/forgot", async (req, res) => {
+// 	const email = req.body;
+// 	return responseHandler(res, await forgotPassword(email));
+// });
 
 userRoute.patch("/reset", (req, res) => {
 	return res.send();

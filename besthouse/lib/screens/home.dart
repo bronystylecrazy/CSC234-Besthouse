@@ -1,5 +1,8 @@
 import 'package:besthouse/services/api/search.dart';
 import 'package:besthouse/services/location_api.dart';
+import 'package:besthouse/services/provider/location.dart';
+
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 //model
@@ -34,23 +37,35 @@ class _HomeState extends State<Home> {
 
   void houseHandler() async {
     try {
-      var location = await LocationApi.getLocation();
-      var result = await SearchApi.getHousesList(location[0], location[1]);
+      print(Provider.of<CurrentLocation>(context, listen: false).longitude);
+
+      var result = await SearchApi.getHousesList(
+          Provider.of<CurrentLocation>(context, listen: false).longitude,
+          Provider.of<CurrentLocation>(context, listen: false).latitude);
+
       if (result is InfoResponse) {
         List<dynamic> houses = result.data;
-        var temp = houses
-            .map((e) => {housesFeature.add(e), housesRec.add(e)})
-            .toList();
-        Alert.successAlert(
-          result,
-          'Success',
-          () => Navigator.of(context).pop(),
-          context,
-        );
+        print(houses);
+        for (var e in houses) {
+          setState(() {
+            housesFeature.add(House.fromJson(e));
+          housesRec.add(House.fromJson(e));
+          });
+          
+          print(e);
+        }
       }
     } on DioError catch (e) {
       Alert.errorAlert(e, context);
     }
+  }
+
+  @override
+  void initState() {
+    if (mounted) {
+      houseHandler();
+    }
+    super.initState();
   }
 
   @override
@@ -130,13 +145,14 @@ class _HomeState extends State<Home> {
                     ),
                   )
                 : Container(
-                  margin: const EdgeInsets.all(10.0),
-                  padding: const EdgeInsets.symmetric(vertical:30,horizontal: 80),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF173651)),
-                     borderRadius: BorderRadius.all(Radius.circular(16)),
-                  ),
-                  child: const Text('No houses found')),
+                    margin: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 80),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF173651)),
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    child: const Text('No houses found')),
             const SizedBox(
               height: 20,
             ),
@@ -164,13 +180,14 @@ class _HomeState extends State<Home> {
                     ),
                   )
                 : Container(
-                  margin: const EdgeInsets.all(10.0),
-                  padding: const EdgeInsets.symmetric(vertical:30,horizontal: 80),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF173651)),
-                     borderRadius: BorderRadius.all(Radius.circular(16)),
-                  ),
-                  child: const Text('No houses found')),
+                    margin: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 80),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF173651)),
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    child: const Text('No houses found')),
           ],
         ),
       ),
