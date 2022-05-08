@@ -29,7 +29,7 @@ class UserApi {
       "lastname": lastname,
       "tel": tel
     });
-    if (response.statusCode != 200) {
+    if (response.statusCode != 201) {
       return ErrorResponse.fromJson(response.data);
     }
     return InfoResponse.fromJson(response.data);

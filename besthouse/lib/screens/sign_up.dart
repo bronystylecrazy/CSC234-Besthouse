@@ -42,6 +42,7 @@ class _SignUpState extends State<SignUp> {
             _firstnameController.text,
             _lastnameController.text,
             _phoneNumController.text);
+        print(result.message);
         if (result is InfoResponse) {
           Future.delayed(const Duration(seconds: 1), (() {
             setState(() {
@@ -108,7 +109,8 @@ class _SignUpState extends State<SignUp> {
   String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Email can't be empty";
-    } else if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    } else if (!RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(value)) {
       return "Please enter a valid email";
     }
@@ -118,7 +120,8 @@ class _SignUpState extends State<SignUp> {
   String? phoneNumberValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Phone number can't be empty";
-    } else if (!RegExp(r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$').hasMatch(value)) {
+    } else if (!RegExp(r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$')
+        .hasMatch(value)) {
       return "Please enter a valid phone number";
     }
     return null;
@@ -232,7 +235,9 @@ class _SignUpState extends State<SignUp> {
                 Padding(
                     // height: MediaQuery.of(context).size.height * 0.4,
                     padding: const EdgeInsets.all(24),
-                    child: Form(key: _formKey, child: stepScreen.elementAt(_stepIndex))),
+                    child: Form(
+                        key: _formKey,
+                        child: stepScreen.elementAt(_stepIndex))),
                 BottomActions(
                   stepIndex: _stepIndex,
                   next: next,
