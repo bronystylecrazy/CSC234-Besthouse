@@ -1,18 +1,12 @@
 import 'dart:async';
 
-import 'package:besthouse/models/house.dart';
-import 'package:besthouse/models/response/info_response.dart';
-import 'package:besthouse/services/api/search.dart';
-import 'package:besthouse/services/provider/house_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-
 //service
 import '../services/location_api.dart';
 import '../services/provider/location.dart';
-
 //widget
 import '../widgets/google_location/address_search.dart';
 
@@ -34,17 +28,16 @@ class _GoogleLocationState extends State<GoogleLocation> {
       Provider.of<CurrentLocation>(context, listen: false).latitude,
       Provider.of<CurrentLocation>(context, listen: false).longitude,
     );
+
     setState(() {
       _textController.text = "";
-      Provider.of<DesireLocation>(context, listen: false).updateLocation(
-          Provider.of<CurrentLocation>(context, listen: false).currentLocation);
-      Provider.of<DesireLocation>(context, listen: false)
-          .updateAddress(address);
 
-      _controller.future.then((value) => value.animateCamera(
-          CameraUpdate.newCameraPosition(
-              Provider.of<CurrentLocation>(context, listen: false)
-                  .currentLocation)));
+      Provider.of<DesireLocation>(context, listen: false)
+          .updateLocation(Provider.of<CurrentLocation>(context, listen: false).currentLocation);
+      Provider.of<DesireLocation>(context, listen: false).updateAddress(address);
+
+      _controller.future.then((value) => value.animateCamera(CameraUpdate.newCameraPosition(
+          Provider.of<CurrentLocation>(context, listen: false).currentLocation)));
     });
   }
 
@@ -55,13 +48,11 @@ class _GoogleLocationState extends State<GoogleLocation> {
     );
 
     setState(() {
-      Provider.of<DesireLocation>(context, listen: false)
-          .updateLocation(CameraPosition(
+      Provider.of<DesireLocation>(context, listen: false).updateLocation(CameraPosition(
         target: location,
         zoom: 18,
       ));
-      Provider.of<DesireLocation>(context, listen: false)
-          .updateAddress(address);
+      Provider.of<DesireLocation>(context, listen: false).updateAddress(address);
 
       _controller.future.then(
         (value) => value.animateCamera(
@@ -69,8 +60,7 @@ class _GoogleLocationState extends State<GoogleLocation> {
               Provider.of<DesireLocation>(context, listen: false).location),
         ),
       );
-      _textController.text =
-          Provider.of<DesireLocation>(context, listen: false).address;
+      _textController.text = Provider.of<DesireLocation>(context, listen: false).address;
     });
   }
 
@@ -80,8 +70,7 @@ class _GoogleLocationState extends State<GoogleLocation> {
       delegate: AddressSearch(sessionToken),
     ) as Suggestion;
 
-    final placeDetails = await GoogleApiProvider(sessionToken)
-        .getPlaceDetailFromId(result.placeId);
+    final placeDetails = await GoogleApiProvider(sessionToken).getPlaceDetailFromId(result.placeId);
 
     setState(() {
       _textController.text = result.description;

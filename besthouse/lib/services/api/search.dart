@@ -3,8 +3,6 @@ import 'package:besthouse/services/share_preference.dart';
 import '../dio.dart';
 import '../share_preference.dart';
 // models
-import '../../models/house.dart';
-import '../../models/house_detail.dart';
 import '../../models/response/error_response.dart';
 import '../../models/response/info_response.dart';
 

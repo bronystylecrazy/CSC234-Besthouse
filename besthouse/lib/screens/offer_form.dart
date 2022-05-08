@@ -82,13 +82,10 @@ class _OfferFormState extends State<OfferForm> {
 
   void _handleLocationChange() {
     Navigator.of(context).pushNamed(GoogleLocation.routeName).then((value) {
-      final location =
-          Provider.of<DesireLocation>(context, listen: false).location;
+      final location = Provider.of<DesireLocation>(context, listen: false).location;
 
-      offer.location = Location(
-          coordinates: [location.target.longitude, location.target.latitude]);
-      offer.address =
-          Provider.of<DesireLocation>(context, listen: false).address;
+      offer.location = Location(coordinates: [location.target.longitude, location.target.latitude]);
+      offer.address = Provider.of<DesireLocation>(context, listen: false).address;
 
       _locationController.text = offer.address;
     });
@@ -107,15 +104,13 @@ class _OfferFormState extends State<OfferForm> {
     if (offer.rooms.isEmpty) {
       return _buildDialog(context, 'Rooms', 'Please add at least one room');
     } else if (offer.picture == null && offer.pictureUrl.isEmpty) {
-      return _buildDialog(
-          context, 'Exterior Picture', 'Please upload an exterior picture');
+      return _buildDialog(context, 'Exterior Picture', 'Please upload an exterior picture');
     }
 
     if (_formKey.currentState!.validate()) {
       setState(() => _isSubmitting = true);
 
-      offer.facilities =
-          checkboxList.where((e) => e.checked).map((e) => e.name).toList();
+      offer.facilities = checkboxList.where((e) => e.checked).map((e) => e.name).toList();
 
       try {
         var result = _isEdit
@@ -133,9 +128,8 @@ class _OfferFormState extends State<OfferForm> {
             () => Navigator.of(context).pop(),
             context,
           ).then((_) => Navigator.of(context).pop());
-          Provider.of<DesireLocation>(context, listen: false).updateLocation(
-              Provider.of<CurrentLocation>(context, listen: false)
-                  .currentLocation);
+          Provider.of<DesireLocation>(context, listen: false)
+              .updateLocation(Provider.of<CurrentLocation>(context, listen: false).currentLocation);
         }
       } on DioError catch (e) {
         setState(() => _isSubmitting = false);
@@ -145,8 +139,7 @@ class _OfferFormState extends State<OfferForm> {
   }
 
   Future<void> _fetchOfferInfo() async {
-    final houseId =
-        Provider.of<OfferFormProvider>(context, listen: false).houseId;
+    final houseId = Provider.of<OfferFormProvider>(context, listen: false).houseId;
 
     if (houseId.isNotEmpty) {
       try {
@@ -207,11 +200,9 @@ class _OfferFormState extends State<OfferForm> {
           leading: Padding(
             padding: const EdgeInsets.all(8.0),
             child: MyBackButton(
-                onpressedHanlder: () =>
-                    Provider.of<DesireLocation>(context, listen: false)
-                        .updateLocation(
-                            Provider.of<CurrentLocation>(context, listen: false)
-                                .currentLocation)),
+                onpressedHanlder: () => Provider.of<DesireLocation>(context, listen: false)
+                    .updateLocation(
+                        Provider.of<CurrentLocation>(context, listen: false).currentLocation)),
           ),
           actions: <Widget>[
             IconButton(
@@ -219,8 +210,8 @@ class _OfferFormState extends State<OfferForm> {
               icon: const Icon(Icons.menu_book),
               color: Theme.of(context).colorScheme.secondary,
               tooltip: 'Go to guide page',
-              onPressed: () => Navigator.pushNamed(context, Guide.routeName,
-                  arguments: {"type": "seller"}),
+              onPressed: () =>
+                  Navigator.pushNamed(context, Guide.routeName, arguments: {"type": "seller"}),
             ),
           ],
         ),
@@ -231,8 +222,7 @@ class _OfferFormState extends State<OfferForm> {
               )
             : SingleChildScrollView(
                 child: Container(
-                  padding:
-                      const EdgeInsets.only(left: 24, right: 24, bottom: 24),
+                  padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -250,8 +240,7 @@ class _OfferFormState extends State<OfferForm> {
                         const TextLabel('Name'),
                         TextFormField(
                           initialValue: offer.name,
-                          onChanged: (String value) =>
-                              _handleChange('name', value),
+                          onChanged: (String value) => _handleChange('name', value),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter name';
@@ -267,8 +256,7 @@ class _OfferFormState extends State<OfferForm> {
                           list: types,
                           typeValue: offer.type,
                           iconList: typeIcons,
-                          changeHandler: (value) =>
-                              setState(() => offer.type = value),
+                          changeHandler: (value) => setState(() => offer.type = value),
                         ),
                         const TextLabel('Location'),
                         TextFormField(
@@ -293,12 +281,8 @@ class _OfferFormState extends State<OfferForm> {
                         const TextLabel('Exterior Pictures'),
                         (offer.pictureUrl.isNotEmpty || offer.picture != null)
                             ? ListImage(
-                                pictures: offer.pictureUrl.isNotEmpty
-                                    ? [offer.pictureUrl]
-                                    : null,
-                                files: offer.picture != null
-                                    ? [offer.picture!]
-                                    : null,
+                                pictures: offer.pictureUrl.isNotEmpty ? [offer.pictureUrl] : null,
+                                files: offer.picture != null ? [offer.picture!] : null,
                                 deleteHandler: (bool isFile, _) {
                                   setState(() {
                                     if (isFile) {
@@ -311,8 +295,7 @@ class _OfferFormState extends State<OfferForm> {
                               )
                             : Container(
                                 margin: const EdgeInsets.only(bottom: 8),
-                                child: RectangleAddButton(
-                                    clickHandler: getPicture)),
+                                child: RectangleAddButton(clickHandler: getPicture)),
                         const TextLabel("Total space", subLabel: "(Sq.m.)"),
                         TextFormField(
                           initialValue: offer.totalSize.toString(),
@@ -324,25 +307,20 @@ class _OfferFormState extends State<OfferForm> {
                             }
                             return null;
                           },
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(decimalRegex)
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.allow(decimalRegex)],
                           decoration: _decorator,
                         ),
                         const TextLabel("Price per month", subLabel: "(Baht)"),
                         TextFormField(
                           initialValue: offer.price.toString(),
-                          onChanged: (String value) =>
-                              _handleChange('price', int.parse(value)),
+                          onChanged: (String value) => _handleChange('price', int.parse(value)),
                           validator: (value) {
                             if (value == null || double.parse(value) == 0) {
                               return 'Please enter price';
                             }
                             return null;
                           },
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           decoration: _decorator,
                         ),
                         BillsRow(
@@ -354,8 +332,7 @@ class _OfferFormState extends State<OfferForm> {
                         const TextLabel('Description'),
                         TextFormField(
                           initialValue: offer.description,
-                          onChanged: (String value) =>
-                              _handleChange('description', value),
+                          onChanged: (String value) => _handleChange('description', value),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter some detail about your property';
@@ -367,8 +344,7 @@ class _OfferFormState extends State<OfferForm> {
                           ),
                         ),
                         const TextLabel('Rooms'),
-                        RectangleAddButton(
-                            clickHandler: () => _buildModalRoom(context)),
+                        RectangleAddButton(clickHandler: () => _buildModalRoom(context)),
                         ...offer.rooms
                             .asMap()
                             .map((index, room) {
@@ -378,8 +354,7 @@ class _OfferFormState extends State<OfferForm> {
                                   room: room,
                                   index: index,
                                   editHandler: (room, index) => setState(() {
-                                    offer.rooms
-                                        .replaceRange(index, index + 1, [room]);
+                                    offer.rooms.replaceRange(index, index + 1, [room]);
                                   }),
                                   deleteHandler: (index) => setState(() {
                                     offer.rooms.removeAt(index);
@@ -411,9 +386,7 @@ class _OfferFormState extends State<OfferForm> {
                                         ),
                                         Text(
                                           e.name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle1,
+                                          style: Theme.of(context).textTheme.subtitle1,
                                         ),
                                       ],
                                     ))
@@ -484,10 +457,4 @@ class _OfferFormState extends State<OfferForm> {
       ),
     );
   }
-}
-
-class OfferFormArguments {
-  final String? id;
-
-  OfferFormArguments([this.id]);
 }
