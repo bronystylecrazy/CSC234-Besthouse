@@ -66,14 +66,15 @@ class _SearchState extends State<Search> {
 
     reqJson["lat"] = Provider.of<DesireLocation>(context, listen: false).latitude;
     reqJson["long"] = Provider.of<DesireLocation>(context, listen: false).longitude;
+    reqJson["price_low"] = currentRangeValues.start;
+    reqJson["price_high"] = currentRangeValues.end;
+
     if (type != Accommodation.all) {
       reqJson["type"] = type.name.toUpperCase();
     }
     if (selectedFacilities.isNotEmpty) {
       reqJson["facilities"] = selectedFacilities;
     }
-    reqJson["price_low"] = currentRangeValues.start;
-    reqJson["price_high"] = currentRangeValues.end;
 
     _fetchHouses(reqJson);
   }
@@ -92,19 +93,9 @@ class _SearchState extends State<Search> {
         Provider.of<SearchList>(context, listen: false).changeLoadState(false);
       }
     } on DioError catch (e) {
-      Alert.errorAlert(e, context).then(
-        (_) => setState(() {
-          Provider.of<SearchList>(context, listen: false).changeLoadState(false);
-        }),
-      );
+      Alert.errorAlert(e, context)
+          .then((_) => Provider.of<SearchList>(context, listen: false).changeLoadState(false));
     }
-  }
-
-  @override
-  void initState() {
-    print('init');
-
-    super.initState();
   }
 
   @override
@@ -132,7 +123,7 @@ class _SearchState extends State<Search> {
                       context,
                       GoogleLocation.routeName,
                     ).then((_) {
-                      print('search');
+                      print('search map');
                       _filter();
                     });
                   },

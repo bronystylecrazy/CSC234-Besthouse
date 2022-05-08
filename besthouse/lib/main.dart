@@ -82,15 +82,11 @@ class MyApp extends StatelessWidget {
               color: const Color(0xFF24577A),
             ),
             headline2: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF24577A)),
+                fontSize: 20, fontWeight: FontWeight.w600, color: const Color(0xFF24577A)),
             headline1: GoogleFonts.poppins(
-                fontSize: 38,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF022B3A)),
-            headline4: GoogleFonts.poppins(
-                fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+                fontSize: 38, fontWeight: FontWeight.w600, color: const Color(0xFF022B3A)),
+            headline4:
+                GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
             headline5: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.w600,
@@ -102,9 +98,7 @@ class MyApp extends StatelessWidget {
               color: const Color.fromARGB(80, 0, 0, 0),
             ),
             bodyText1: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xff0E2B39)),
+                fontSize: 16, fontWeight: FontWeight.w500, color: const Color(0xff0E2B39)),
             bodyText2: GoogleFonts.poppins(
               fontSize: 14,
               color: const Color(0xFF022B3A),
@@ -123,9 +117,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        HouseDetailed.routeName: (context) => HouseDetailed(
-            args: ModalRoute.of(context)!.settings.arguments
-                as Map<String, dynamic>),
+        HouseDetailed.routeName: (context) =>
+            HouseDetailed(args: ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>),
         GetStart.routeName: (context) => const GetStart(),
         MyHomePage.routeName: (context) => const MyHomePage(),
         SignIn.routeName: (context) => const SignIn(),
@@ -135,8 +128,7 @@ class MyApp extends StatelessWidget {
         ForgetPassword.routeName: (context) => const ForgetPassword(),
         GoogleLocation.routeName: (context) => const GoogleLocation(),
         LandLordProfile.routeName: (context) => LandLordProfile(
-            args: ModalRoute.of(context)!.settings.arguments
-                as Map<String, dynamic>),
+            args: ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>),
       },
     );
   }
@@ -171,24 +163,19 @@ class _MyHomePageState extends State<MyHomePage> {
     Provider.of<SearchList>(context, listen: false).changeLoadState(true);
     LocationApi.getLocation().then((value) {
       var latlong = value;
-      return context.read<CurrentLocation>().updateLocation(CameraPosition(
-          target: LatLng(latlong[1] as double, latlong[0] as double),
-          zoom: 18));
+      return context.read<CurrentLocation>().updateLocation(
+          CameraPosition(target: LatLng(latlong[1] as double, latlong[0] as double), zoom: 18));
     }).then((_) {
-      SearchApi.getNearByHouses(
-              Provider.of<CurrentLocation>(context, listen: false).longitude,
+      SearchApi.getNearByHouses(Provider.of<CurrentLocation>(context, listen: false).longitude,
               Provider.of<CurrentLocation>(context, listen: false).latitude)
           .then((value) {
         if (value is InfoResponse) {
           List<House> temp = [...value.data.map((e) => House.fromJson(e))];
           print(value.data);
-          Provider.of<NearbyHousesList>(context, listen: false)
-              .updateList(temp);
+          Provider.of<NearbyHousesList>(context, listen: false).updateList(temp);
           Provider.of<SearchList>(context, listen: false).updateList(temp);
-          Provider.of<NearbyHousesList>(context, listen: false)
-              .changeLoadState(false);
-          Provider.of<SearchList>(context, listen: false)
-              .changeLoadState(false);
+          Provider.of<NearbyHousesList>(context, listen: false).changeLoadState(false);
+          Provider.of<SearchList>(context, listen: false).changeLoadState(false);
         }
       });
     });
@@ -235,10 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Row(
           children: [
             GestureDetector(
-              child: Image.asset(
-                  _selectedIndex == 3
-                      ? "assets/logo_alt.png"
-                      : "assets/logo.png",
+              child: Image.asset(_selectedIndex == 3 ? "assets/logo_alt.png" : "assets/logo.png",
                   scale: 24),
               onTap: () {
                 setState(() {
@@ -255,9 +239,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textAlign: TextAlign.left,
               style: _selectedIndex == 3
                   ? GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600)
+                      color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)
                   : Theme.of(context).textTheme.bodyText2,
             ),
           ],
@@ -269,26 +251,20 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(
               Icons.menu_book,
             ),
-            color: _selectedIndex == 3
-                ? Colors.white
-                : Theme.of(context).colorScheme.secondary,
+            color: _selectedIndex == 3 ? Colors.white : Theme.of(context).colorScheme.secondary,
             tooltip: 'Go to guide page',
-            onPressed: () => Navigator.pushNamed(context, Guide.routeName,
-                arguments: {"type": "customer"}),
+            onPressed: () =>
+                Navigator.pushNamed(context, Guide.routeName, arguments: {"type": "customer"}),
           ),
         ],
       ),
       body: AnimatedSwitcher(
-        layoutBuilder: (currentChild, previousChildren) =>
-            currentChild as Widget,
+        layoutBuilder: (currentChild, previousChildren) => currentChild as Widget,
         switchInCurve: Curves.easeOutExpo,
         transitionBuilder: (child, animation) => SlideTransition(
           position: isSwapRight
-              ? Tween<Offset>(
-                      begin: const Offset(2, 0), end: const Offset(0, 0))
-                  .animate(animation)
-              : Tween<Offset>(
-                      begin: const Offset(-2, 0), end: const Offset(0, 0))
+              ? Tween<Offset>(begin: const Offset(2, 0), end: const Offset(0, 0)).animate(animation)
+              : Tween<Offset>(begin: const Offset(-2, 0), end: const Offset(0, 0))
                   .animate(animation),
           child: child,
         ),

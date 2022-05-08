@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:besthouse/services/provider/house_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,8 @@ class _GoogleLocationState extends State<GoogleLocation> {
   final sessionToken = const Uuid().v4();
   final _textController = TextEditingController();
   final Completer<GoogleMapController> _controller = Completer();
+
+  List<Marker> markers = [];
 
   void _resetLocation() async {
     final address = await GoogleApiProvider(sessionToken).getAddress(
@@ -54,13 +57,14 @@ class _GoogleLocationState extends State<GoogleLocation> {
       ));
       Provider.of<DesireLocation>(context, listen: false).updateAddress(address);
 
+      _textController.text = Provider.of<DesireLocation>(context, listen: false).address;
+
       _controller.future.then(
         (value) => value.animateCamera(
           CameraUpdate.newCameraPosition(
               Provider.of<DesireLocation>(context, listen: false).location),
         ),
       );
-      _textController.text = Provider.of<DesireLocation>(context, listen: false).address;
     });
   }
 
@@ -80,6 +84,32 @@ class _GoogleLocationState extends State<GoogleLocation> {
 
     CameraUpdate update = CameraUpdate.newCameraPosition(placeDetails.location);
     _controller.future.then((value) => value.animateCamera(update));
+  }
+
+  void _setMarkers() {
+    var tempList = <Marker>[];
+
+    Provider.of<SearchList>(context, listen: false).houses.forEach((house) {
+      tempList.add(Marker(
+        markerId: MarkerId(house.id),
+        position: LatLng(house.location.coordinates[1], house.location.coordinates[0]),
+        infoWindow: InfoWindow(
+          title: house.name,
+          snippet: house.address,
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+      ));
+    });
+
+    setState(() {
+      markers = tempList;
+    });
+  }
+
+  @override
+  void initState() {
+    _setMarkers();
+    super.initState();
   }
 
   @override
@@ -140,7 +170,8 @@ class _GoogleLocationState extends State<GoogleLocation> {
               title: 'You',
               snippet: 'Hello',
             ),
-          )
+          ),
+          ...markers,
         },
         onTap: _onMapTap,
       ),
