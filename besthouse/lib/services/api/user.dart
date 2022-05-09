@@ -35,6 +35,16 @@ class UserApi {
     return InfoResponse.fromJson(response.data);
   }
 
+  static Future<dynamic> resetPass(String email) async {
+    var response = await DioInstance.dio.patch("/user/forgot", data: {
+      "email":email
+    });
+    if (response.statusCode != 201) {
+      return ErrorResponse.fromJson(response.data);
+    }
+    return InfoResponse.fromJson(response.data);
+  }
+
   static Future<dynamic> getUser() async {
     DioInstance.dio.options.headers["authorization"] =
         "Bearer " + SharePreference.prefs.getString("token").toString();

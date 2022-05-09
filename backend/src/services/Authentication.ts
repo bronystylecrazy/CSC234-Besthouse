@@ -10,15 +10,6 @@ import { generateJwtToken } from "@/utils";
 import jwt from "express-jwt";
 
 
-// const DOMAIN = 'sandbox447347814a94474988e3a1881ea197e1.mailgun.org';
-
-// const formData = require('form-data');
-// const Mailgun = require('mailgun-js');
-
-// const mailgun = new Mailgun(formData);
-// const client = mailgun.client({username: 'api', key: process.env.MAILGUN_APIKEY});
-
-
 export const login = async (
 	username: string,
 	password: string
@@ -45,31 +36,68 @@ export const login = async (
 	}
 };
 
-// export const forgotPassword = async (
-// 	email: string,
-// ): ResultHandler => {
-// 	try {
+const nodemailer = require('nodemailer');
+var generator = require('generate-password');
+
+
+
+export const forgotPassword = async (
+	email: string,
+): ResultHandler => {
+	try {
 	
-// 	User.findOne({email}).exec();
-// 	if (!User) return genericError("User is not found!", 400);
+	const myUser = await User.findOne({
+		email,
+	}).exec();
+	if (!myUser) return genericError("User is not found!", 400);
+	else {
+	const newPass = generator.generate({
+		length: 10,
+		numbers: true,
+		lowercase: true,
+		uppercase: true
+	});
+	
+	console.log("new pass for " + email + " : " + newPass);
 
-// 	const newPass = 'aidjed'
-// 	const data = {
-// 		from: 'noreply@besthouse.com',
-// 		to: email,
-// 		subject: 'Reset password',
-// 		html:`
-// 			<h2>Hi, this is Besthouse</h2>
-// 			<p>Your new password is${newPass}</p>
-// 		`
-// 	}
+	let transport = nodemailer.createTransport(
+		 {
+			service: 'gmail',
+			type: "SMTP",
+			host: "smtp.gmail.com",
+			secure: true,
+			auth: {
+				user: 'weareyour.besthouse@gmail.com',
+				pass: 'Besthouse2022'
+			}
+		}
+		);
+	const message = {
+		from: 'weareyour.besthouse@gmail.com', // Sender address
+		to: email,         
+		subject: 'New password for Besthouse', // Subject line
+		text: 'This is your new password : ' + newPass // Plain text body
+	};
+	transport.sendMail(message, function(err, info) {
+		if (err) {
+		  console.log(err)
+		} else {
+		  console.log(info);
+		}
+	});
+	
+	const hashedPassword = await bcrypt.hash(newPass, saltRounds);
+	const updateUser = await User.findOneAndUpdate({ email: email }, {password: hashedPassword}, {
+		new: true,
+	});
 
-// 	const sendemail = client.messages.create(DOMAIN, data)
-// 	return infoResponse(sendemail, "Send email success", 201);
-// } catch (e) {
-// 	return genericError(e.message, 503);
-// }
-// };
+	}
+
+	return infoResponse("", "Send email success! \nPlease check your mail inbox.", 201);
+} catch (e) {
+	return genericError(e.message, 503);
+}
+};
 	
 
 

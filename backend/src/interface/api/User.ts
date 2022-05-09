@@ -12,6 +12,8 @@ export interface SignUpPost {
 	tel: string;
 }
 
-export interface ForgotPost {}
+export interface ForgotPost {
+	email: string;
+}
 
 export interface ResetPatch {}
