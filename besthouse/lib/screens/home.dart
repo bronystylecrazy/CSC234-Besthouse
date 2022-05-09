@@ -97,12 +97,12 @@ class _HomeState extends State<Home> {
                 textAlign: TextAlign.left,
               ),
             ),
-            Provider.of<NearbyHousesList>(context, listen: true).isLoading
+            Provider.of<FeatureHousesList>(context, listen: true).isLoading
                 ? const Padding(
                     padding: EdgeInsets.all(30.0),
                     child: CircularProgressIndicator(),
                   )
-                : (Provider.of<NearbyHousesList>(context, listen: true)
+                : (Provider.of<FeatureHousesList>(context, listen: true)
                         .houses
                         .isNotEmpty
                     ? SizedBox(
@@ -110,7 +110,7 @@ class _HomeState extends State<Home> {
                         width: double.infinity,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: Provider.of<NearbyHousesList>(context,
+                          itemCount: Provider.of<FeatureHousesList>(context,
                                   listen: true)
                               .houses
                               .length,

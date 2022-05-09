@@ -16,6 +16,21 @@ class SearchList with ChangeNotifier, DiagnosticableTreeMixin {
   }
 }
 
+class FeatureHousesList with ChangeNotifier, DiagnosticableTreeMixin {
+  List<House> houses = [];
+  bool isLoading = true;
+
+  void updateList(List<House> newHouses) {
+    houses = newHouses;
+    notifyListeners();
+  }
+
+  void changeLoadState(bool value) {
+    isLoading = value;
+    notifyListeners();
+  }
+}
+
 class NearbyHousesList with ChangeNotifier, DiagnosticableTreeMixin {
   List<House> houses = [];
   bool isLoading = true;

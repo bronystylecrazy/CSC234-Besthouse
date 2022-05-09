@@ -101,3 +101,30 @@ export const SearchNearbyHouse = async (data: NearbySearchGet) => {
 		return genericError(e.message, 503);
 	}
 };
+
+export const GetFeatureHouse = async (data: NearbySearchGet) => {
+	try {
+		if (!data.lat || !data.long)
+			return genericError("Latitude and longtitude is required", 400);
+
+		const houses = await House.find({
+			status: true,
+			is_advertised: true,
+			location: {
+				$near: {
+					$geometry: {
+						type: "Point",
+						coordinates: [data.long, data.lat],
+					},
+					$maxDistance: 5000,
+				},
+			},
+		}).exec();
+
+		if (houses.length === 0) return infoResponse([], "No house found");
+
+		return infoResponse(houses, "Search success");
+	} catch (e) {
+		return genericError(e.message, 503);
+	}
+};

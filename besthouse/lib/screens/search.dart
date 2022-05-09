@@ -64,8 +64,10 @@ class _SearchState extends State<Search> {
 
     Map<String, dynamic> reqJson = {};
 
-    reqJson["lat"] = Provider.of<DesireLocation>(context, listen: false).latitude;
-    reqJson["long"] = Provider.of<DesireLocation>(context, listen: false).longitude;
+    reqJson["lat"] =
+        Provider.of<DesireLocation>(context, listen: false).latitude;
+    reqJson["long"] =
+        Provider.of<DesireLocation>(context, listen: false).longitude;
     reqJson["price_low"] = currentRangeValues.start;
     reqJson["price_high"] = currentRangeValues.end;
 
@@ -87,14 +89,17 @@ class _SearchState extends State<Search> {
       var result = await SearchApi.search(reqJson);
 
       if (result is InfoResponse) {
-        print(result.data);
-        Provider.of<SearchList>(context, listen: false)
-            .updateList([...result.data.map((house) => House.fromJson(house))]);
+        var temp = result.data.map((house) => House.fromJson(house));
+        if (temp != null) {
+          Provider.of<SearchList>(context, listen: false).updateList([...temp]);
+        }
+
         Provider.of<SearchList>(context, listen: false).changeLoadState(false);
       }
     } on DioError catch (e) {
-      Alert.errorAlert(e, context)
-          .then((_) => Provider.of<SearchList>(context, listen: false).changeLoadState(false));
+      Alert.errorAlert(e, context).then((_) =>
+          Provider.of<SearchList>(context, listen: false)
+              .changeLoadState(false));
     }
   }
 
@@ -146,7 +151,9 @@ class _SearchState extends State<Search> {
                           itemBuilder: (BuildContext context, int index) {
                             return Tag(
                               title: index == 0
-                                  ? radioList.firstWhere((e) => e.type == type).name
+                                  ? radioList
+                                      .firstWhere((e) => e.type == type)
+                                      .name
                                   : selectedFacilities[index - 1],
                             );
                           },
@@ -182,16 +189,23 @@ class _SearchState extends State<Search> {
                   ),
                 ),
                 Provider.of<SearchList>(context, listen: true).isLoading
-                    ? const Expanded(child: SpinKitRing(color: Color(0xFF24577A), size: 50.0))
-                    : Provider.of<SearchList>(context, listen: true).houses.isNotEmpty
+                    ? const Expanded(
+                        child:
+                            SpinKitRing(color: Color(0xFF24577A), size: 50.0))
+                    : Provider.of<SearchList>(context, listen: true)
+                            .houses
+                            .isNotEmpty
                         ? Expanded(
                             child: ListView.builder(
                               itemCount:
-                                  Provider.of<SearchList>(context, listen: true).houses.length,
+                                  Provider.of<SearchList>(context, listen: true)
+                                      .houses
+                                      .length,
                               itemBuilder: (BuildContext context, int index) {
                                 return HouseDetailCard(
-                                  house:
-                                      Provider.of<SearchList>(context, listen: true).houses[index],
+                                  house: Provider.of<SearchList>(context,
+                                          listen: true)
+                                      .houses[index],
                                   showInfoHandler: _showInfo,
                                 );
                               },
@@ -228,7 +242,8 @@ class _SearchState extends State<Search> {
             radioList: radioList,
             type: type,
             checkboxList: checkboxList,
-            filterHandler: (RangeValues range, Accommodation t, List<Facilities> facilities) {
+            filterHandler: (RangeValues range, Accommodation t,
+                List<Facilities> facilities) {
               setState(() {
                 currentRangeValues = range;
                 type = t;

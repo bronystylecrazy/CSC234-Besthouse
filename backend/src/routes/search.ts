@@ -1,6 +1,10 @@
 import express from "express";
 import { SearchPost, NearbySearchGet } from "@/interface/api/Search";
-import { searchHouse, SearchNearbyHouse } from "@/services/Search";
+import {
+	GetFeatureHouse,
+	searchHouse,
+	SearchNearbyHouse,
+} from "@/services/Search";
 import { genericError, responseHandler } from "@/services/Handler";
 import { isLogin } from "@/services/Utils";
 // eslint-disable-next-line new-cap
@@ -20,6 +24,12 @@ searchRoute.get("/near", async (req, res) => {
 	const data: NearbySearchGet = req.query;
 
 	return responseHandler(res, await SearchNearbyHouse(data));
+});
+
+searchRoute.get("/feature", async (req, res) => {
+	const data: NearbySearchGet = req.query;
+
+	return responseHandler(res, await GetFeatureHouse(data));
 });
 
 export default searchRoute;
