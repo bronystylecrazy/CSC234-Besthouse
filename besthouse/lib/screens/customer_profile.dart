@@ -45,6 +45,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
   String userPicture = "";
   List<OfferCardModel> offerList = [];
   bool isLoading = true;
+  bool isLogout = false;
 
   Future<void> getProfileHandler() async {
     try {
@@ -271,18 +272,20 @@ class _CustomerProfileState extends State<CustomerProfile> {
                             ElevatedButton(
                                 onPressed: () {
                                   setState(() {
-                                    isLoading = true;
+                                    isLogout = true;
                                   });
                                   Future.delayed(const Duration(seconds: 1),
                                       (() {
-                                    isLoading = false;
+                                    setState(() {
+                                      isLogout = false;
+                                    });
                                     SharePreference.prefs.remove("token");
                                     Navigator.pop(context);
                                   }));
                                 },
                                 style: ElevatedButton.styleFrom(
                                     primary: const Color(0xffB30000)),
-                                child: isLoading
+                                child: isLogout
                                     ? const SpinKitRing(
                                         lineWidth: 2,
                                         color: Colors.white,

@@ -25,7 +25,7 @@ class Favorite extends StatefulWidget {
 }
 
 class _FavoriteState extends State<Favorite> {
-  bool isLoading = false;
+  bool isLoading = true;
 
   List<House> houses = [
     // House(
@@ -85,32 +85,33 @@ class _FavoriteState extends State<Favorite> {
         for (var e in housesList) {
           setState(() {
             houses.add(House.fromJson(e));
+            isLoading = false;
           });
-          }
         }
-        // var temp = housesList
-        //     .map(
-        //       (e) => House(
-        //         id: e['_id'],
-        //         name: e['name'],
-        //         pictureUrl: e['picture_url'],
-        //         price: e['price'],
-        //         address: e['address'],
-        //         location: Location(coordinates: [
-        //           e['location']['coordinates'][1],
-        //           e['location']['coordinates'][0]
-        //         ]),
-        //       ),
-        //     )
-        //     .toList();
-        // setState(() {
-        //   Future.delayed(const Duration(seconds: 0), () {
-        //     setState(() {
-        //       houses = temp;
-        //     });
-        //   });
-        // });
-      
+      }
+      // var temp = housesList
+      //     .map(
+      //       (e) => House(
+      //         id: e['_id'],
+      //         name: e['name'],
+      //         pictureUrl: e['picture_url'],
+      //         price: e['price'],
+      //         address: e['address'],
+      //         location: Location(coordinates: [
+      //           e['location']['coordinates'][1],
+      //           e['location']['coordinates'][0]
+      //         ]),
+      //       ),
+      //     )
+      //     .toList();
+      // setState(() {
+      //   Future.delayed(const Duration(seconds: 0), () {
+      //     setState(() {
+      //       houses = temp;
+      //     });
+      //   });
+      // });
+
     } on DioError catch (e) {
       setState(() {
         isLoading = false;
@@ -157,21 +158,27 @@ class _FavoriteState extends State<Favorite> {
                 ),
               ],
             ),
-            houses.isNotEmpty
-                ? Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: houses.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return HouseDetailCard(
-                          house: houses[index],
-                          showInfoHandler: _showInfo,
-                        );
-                      },
+            isLoading
+                ? const Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
                   )
-                : const Text('No houses found'),
+                : (houses.isNotEmpty
+                    ? Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: houses.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return HouseDetailCard(
+                              house: houses[index],
+                              showInfoHandler: _showInfo,
+                            );
+                          },
+                        ),
+                      )
+                    : const Text('No houses found'))
           ],
         ),
       ),

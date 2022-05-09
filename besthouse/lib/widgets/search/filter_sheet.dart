@@ -112,7 +112,12 @@ class _FilterSheetState extends State<FilterSheet> {
                                   ),
                                   Text(
                                     e.name,
-                                    style: Theme.of(context).textTheme.subtitle1,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        ?.apply(
+                                          fontSizeFactor: 0.9,
+                                        ),
                                   ),
                                 ],
                               ))
@@ -152,7 +157,10 @@ class _FilterSheetState extends State<FilterSheet> {
                                 ),
                                 Text(
                                   e.name,
-                                  style: Theme.of(context).textTheme.subtitle1,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      ?.apply(fontSizeFactor: 0.8),
                                 ),
                               ],
                             ),

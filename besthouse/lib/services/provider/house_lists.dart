@@ -12,7 +12,7 @@ class SearchList with ChangeNotifier, DiagnosticableTreeMixin {
 
   void changeLoadState(bool value) {
     isLoading = value;
-    notifyListeners();
+    // notifyListeners();
   }
 }
 
