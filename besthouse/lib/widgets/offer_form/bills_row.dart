@@ -33,17 +33,20 @@ class BillsRow extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const TextLabel("Electric bill", subLabel: "(Baht)"),
+              const TextLabel("Electric bill", subLabel: "(฿/Unit)"),
               TextFormField(
                 initialValue: electricFee.toString(),
-                onChanged: (String value) => changeHandler('electricFee', double.parse(value)),
+                onChanged: (String value) =>
+                    changeHandler('electricFee', double.parse(value)),
                 validator: (value) {
                   if (value == null || double.parse(value) == 0) {
                     return 'Please enter electric bill';
                   }
                   return null;
                 },
-                inputFormatters: [FilteringTextInputFormatter.allow(decimalRegex)],
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(decimalRegex)
+                ],
                 decoration: InputDecoration(
                   fillColor: Theme.of(context).colorScheme.tertiary,
                   filled: true,
@@ -58,17 +61,20 @@ class BillsRow extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const TextLabel("Water bill", subLabel: "(Baht)"),
+              const TextLabel("Water bill", subLabel: "(฿/Unit)"),
               TextFormField(
                 initialValue: waterFee.toString(),
-                onChanged: (String value) => changeHandler('waterFee', double.parse(value)),
+                onChanged: (String value) =>
+                    changeHandler('waterFee', double.parse(value)),
                 validator: (value) {
                   if (value == null || double.parse(value) == 0) {
                     return 'Please enter water bill';
                   }
                   return null;
                 },
-                inputFormatters: [FilteringTextInputFormatter.allow(decimalRegex)],
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(decimalRegex)
+                ],
                 decoration: InputDecoration(
                   fillColor: Theme.of(context).colorScheme.tertiary,
                   filled: true,

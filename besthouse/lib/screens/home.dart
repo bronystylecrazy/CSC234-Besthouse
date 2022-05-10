@@ -116,7 +116,7 @@ class _HomeState extends State<Home> {
                               .length,
                           itemBuilder: (BuildContext context, int index) {
                             return HouseCard(
-                              house: Provider.of<NearbyHousesList>(context,
+                              house: Provider.of<FeatureHousesList>(context,
                                       listen: true)
                                   .houses[index],
                               showInfoHandler: _showInfo,

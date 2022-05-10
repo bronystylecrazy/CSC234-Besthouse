@@ -132,9 +132,13 @@ class _SearchState extends State<Search> {
                       _filter();
                     });
                   },
-                  child: Image.network(
-                    "https://maps.googleapis.com/maps/api/staticmap?center=${location.target.latitude},${location.target.longitude}&zoom=17&size=${MediaQuery.of(context).size.width.toInt()}x200&key=${Constants.apiKey}",
-                    fit: BoxFit.cover,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    child: Image.network(
+                      "https://maps.googleapis.com/maps/api/staticmap?center=${location.target.latitude},${location.target.longitude}&zoom=17&size=${MediaQuery.of(context).size.width.toInt()}x200&key=${Constants.apiKey}",
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Padding(
