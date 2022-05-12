@@ -27,91 +27,26 @@ class Favorite extends StatefulWidget {
 class _FavoriteState extends State<Favorite> {
   bool isLoading = true;
 
-  List<House> houses = [
-    // House(
-    //   id: "634gf3438",
-    //   name: "Cosmo Home",
-    //   pictureUrl:
-    //       "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-    //   price: 4000,
-    //   location: Location(
-    //     coordinates: [-6.2108, 106.8451],
-    //   ),
-    //   address: 'Soi 45 Prachauthid Thungkru, Bangkok',
-    //   type: 'CONDOMINIUM',
-    // ),
-    // House(
-    //   id: "634gf3438",
-    //   name: "Heliconia House",
-    //   pictureUrl:
-    //       "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-    //   price: 6000,
-    //   location: Location(
-    //     coordinates: [13.2108, 107.8451],
-    //   ),
-    //   address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    // ),
-    // House(
-    //   id: "634gf3438",
-    //   name: "Cosmo Home",
-    //   pictureUrl:
-    //       "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-    //   price: 4000,
-    //   location: Location(
-    //     coordinates: [-6.2108, 106.8451],
-    //   ),
-    //   address: 'Soi 45 Prachauthid Thungkru, Bangkok',
-    //   type: 'CONDOMINIUM',
-    // ),
-    // House(
-    //   id: "634gf3438",
-    //   name: "Heliconia House",
-    //   pictureUrl:
-    //       "https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=108%2C502%2C5038%2C2519&q=45&auto=format&w=1356&h=668&fit=crop",
-    //   price: 6000,
-    //   location: Location(
-    //     coordinates: [13.2108, 107.8451],
-    //   ),
-    //   address: 'KMUTT university Prachauthid Thungkru, Bangkok',
-    // ),
-  ];
+  List<House> houses = [];
 
   void _favoriteHandler() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       var result = await FavoriteApi.getFavoriteHouseList();
 
       if (result is InfoResponse) {
         List<dynamic> housesList = result.data;
+        var temp = [];
         for (var e in housesList) {
-          setState(() {
-            houses.add(House.fromJson(e));
-            isLoading = false;
-          });
+          temp.add(House.fromJson(e));
         }
+        setState(() {
+          houses = [...temp];
+          isLoading = false;
+        });
       }
-      // var temp = housesList
-      //     .map(
-      //       (e) => House(
-      //         id: e['_id'],
-      //         name: e['name'],
-      //         pictureUrl: e['picture_url'],
-      //         price: e['price'],
-      //         address: e['address'],
-      //         location: Location(coordinates: [
-      //           e['location']['coordinates'][1],
-      //           e['location']['coordinates'][0]
-      //         ]),
-      //       ),
-      //     )
-      //     .toList();
-      // setState(() {
-      //   Future.delayed(const Duration(seconds: 0), () {
-      //     setState(() {
-      //       houses = temp;
-      //     });
-      //   });
-      // });
-
     } on DioError catch (e) {
       setState(() {
         isLoading = false;
@@ -188,6 +123,6 @@ class _FavoriteState extends State<Favorite> {
   void _showInfo(String id) {
     Navigator.of(context).pushNamed(HouseDetailed.routeName, arguments: {
       'id': id,
-    });
+    }).then((value) => _favoriteHandler());
   }
 }

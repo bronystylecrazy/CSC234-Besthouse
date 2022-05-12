@@ -210,16 +210,12 @@ export const DeleteOffer = async (house_id: Types.ObjectId, req: Request) => {
 		}
 		const user_id = req.user.user_id;
 
-		const houseDetail = await HouseDetail.findOne({
+		await HouseDetail.findOneAndDelete({
 			user_id: user_id,
 			house_id: house_id,
 		}).exec();
+		await House.findByIdAndRemove(house_id).exec();
 
-		if (houseDetail == null) {
-			return genericError("Unauthorize: User is not own this offer", 400);
-		}
-
-		await houseDetail.delete();
 		return infoResponse(null, "offer deleted!");
 	} catch (error) {
 		return genericError(error.message, 500);

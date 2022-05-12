@@ -237,17 +237,19 @@ class _HouseDetailedState extends State<HouseDetailed> {
                         const SizedBox(
                           height: 20,
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: 40,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: house.tags.length,
-                            itemBuilder: (context, index) {
-                              return Tag(title: house.tags[index]);
-                            },
-                          ),
-                        ),
+                        house.tags.isEmpty
+                            ? Container()
+                            : SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                height: 40,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: house.tags.length,
+                                  itemBuilder: (context, index) {
+                                    return Tag(title: house.tags[index]);
+                                  },
+                                ),
+                              ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -520,7 +522,12 @@ class _HouseDetailedState extends State<HouseDetailed> {
                               _buildDetail(
                                 context,
                                 "Electric Fee",
-                                house.detail?.electricFee.toString() ?? "0",
+                                "${house.detail?.electricFee.toString()} ฿/Unit",
+                              ),
+                              _buildDetail(
+                                context,
+                                "Water Fee",
+                                "${house.detail?.waterFee.toString()} ฿/Unit",
                               ),
                             ],
                           ),
