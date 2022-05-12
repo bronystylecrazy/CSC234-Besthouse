@@ -3,11 +3,10 @@ import { ObjectId } from "mongoose";
 export default interface HouseDetail {
 	house_id: ObjectId;
 	user_id: ObjectId;
-	type: string;
 	rooms: [
 		{
 			type: string;
-			numbers: number;
+			amount: number;
 			pictures: [
 				{
 					url: string;
@@ -16,7 +15,6 @@ export default interface HouseDetail {
 		}
 	];
 	description: string;
-	price: number;
 	facilities: [
 		{
 			name: string;
@@ -24,6 +22,7 @@ export default interface HouseDetail {
 		}
 	];
 	electric_fee: number;
+	water_fee: number;
 	likes: number;
 	total_size: number;
 }

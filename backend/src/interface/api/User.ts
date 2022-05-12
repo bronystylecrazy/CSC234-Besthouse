@@ -1,5 +1,5 @@
 export interface SignInPost {
-	email: string;
+	username: string;
 	password: string;
 }
 
@@ -12,6 +12,8 @@ export interface SignUpPost {
 	tel: string;
 }
 
-export interface ForgotPost {}
+export interface ForgotPost {
+	email: string;
+}
 
 export interface ResetPatch {}

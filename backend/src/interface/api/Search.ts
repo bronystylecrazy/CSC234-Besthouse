@@ -1,10 +1,11 @@
 import { HouseType } from "@/database/models/schema";
 
 export interface SearchPost {
-	pricelow?: number;
-	pricehigh?: number;
+	price_low?: number;
+	price_high?: number;
 	type?: HouseType;
-	facilities?: string;
+	facilities?: string[];
+	address?: string;
 	lat?: number;
 	long?: number;
 }

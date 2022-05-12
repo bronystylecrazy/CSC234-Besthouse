@@ -37,5 +37,5 @@ export const responseHandler = (
 ) => {
 	if (resultOrError[1])
 		return res.status(resultOrError[1].status).json(resultOrError[1]);
-	return res.json(resultOrError[0]);
+	return res.status(resultOrError[0].status).json(resultOrError[0]);
 };

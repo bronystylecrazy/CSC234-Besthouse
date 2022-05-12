@@ -11,13 +11,13 @@
 		"allowJs": true,
 		"sourceMap": true,
 		"outDir": "./dist",
-		"isolatedModules": true,
+		"isolatedModules": false,
 		"esModuleInterop": true,
 		"removeComments": true,
 		"forceConsistentCasingInFileNames": true,
 		"strict": false,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"types": ["jest", "node"]
 	},
-	"include": ["./src", "./global.d.ts"],
-	"exclude": ["./src/test"]
+	"include": ["./src", "./global.d.ts"]
 }

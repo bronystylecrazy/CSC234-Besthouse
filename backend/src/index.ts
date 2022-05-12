@@ -1,5 +1,4 @@
-require("dotenv").config();
-require("module-alias/register");
+import * as chalk from "chalk";
 
 /** Internal Modules */
 import dotenv from "dotenv";
@@ -15,14 +14,14 @@ import profileRoute from "./routes/profile";
 /** Misc */
 import config from "./config";
 
-// import { House, User } from "./database/models/schema";
-import { func } from "joi";
 import mongoose from "mongoose";
-import { User, House } from "./database/models";
+import { House } from "./database/models";
 import favoriteRoute from "./routes/favorite";
 import offerRoute from "./routes/offer";
 import userRoute from "./routes/user";
-import houseRoute from "./routes/house";
+import searchRoute from "./routes/search";
+import storageRoute from "./routes/storage";
+import { log } from "./services";
 
 /** Instantiate Application */
 const app = express();
@@ -33,7 +32,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /** Plugins */
-app.use(cors());
+app.use(
+	cors({
+		origin: "http://localhost:3000",
+		credentials: true,
+	})
+);
 app.use(cookieParser());
 
 /** Json Web Token */
@@ -57,31 +61,36 @@ app.use(
 		},
 	})
 );
+
 /** Routes */
 app.use("/auth", authRoute);
 app.use("/profile", profileRoute);
 app.use("/favorite", favoriteRoute);
 app.use("/offer", offerRoute);
-app.use("/house", houseRoute);
+app.use("/search", searchRoute);
 app.use("/user", userRoute);
+app.use("/storage", storageRoute);
 
-// for test
+// for testing only
 app.get("/api", async (req, res) => {
-	var user1 = new User({
-		email: "float@mail.com",
-		password: "12345678",
-		tel: "0891231234",
-		username: "kasemtan",
-	});
+	// var user1 = new User({
+	// 	email: "float@mail.com",
+	// 	password: "12345678",
+	// 	tel: "0891231234",
+	// 	username: "kasemtan",
+	// });
 	var house1 = new House({
-		name: "Condo1",
+		name: "Korea Condo",
 		picture_url:
 			"https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/ZFZlzPBXT8GEoefOiG62vz0oLFY7n2gkvbzGwcQsE0G.jpeg",
 		location: {
-			address: "---",
-			latitude: "13.736717",
-			longtitude: "100.523186",
+			type: "Point",
+			coordinates: [36.253573, 126.9152424],
 		},
+		price: 8000,
+		status: true,
+		tags: ["Korea", "Condo"],
+		type: "CONDOMINIUM",
 	});
 
 	try {
@@ -98,18 +107,17 @@ app.get("/api", async (req, res) => {
 	}
 });
 
-app.get("/", (req, res) => {
-	return res.send(
-		"Hello, we are Float, Art, Ann, Willy, and Spy (FaawS)<br> We are a team of 5 students from the University of Information Technology, Faculty of Engineering, Department of Computer Engineering. Also called us Fivesome!<br/> <b>This API is sooooo awesome!</b>"
-	);
-});
-
 /** Start a server */
 mongoose
 	.connect(config.MONGODB_HOST)
 	.then(() =>
 		app.listen(config.PORT, "0.0.0.0", () => {
-			console.log(`Server is running on port ${config.PORT}`);
+			log(
+				"Server",
+				`running on port ${chalk.bold(":" + config.PORT)}`,
+				"🚀",
+				"😃"
+			);
 		})
 	)
 	.catch((err) => console.error("What the fuck is going on??", err));

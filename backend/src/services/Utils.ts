@@ -1,6 +1,6 @@
 import { Request } from "express";
 
-export const Islogin = (req: Request) => {
+export const isLogin = (req: Request) => {
 	if (!req.user) {
 		return false;
 	}
