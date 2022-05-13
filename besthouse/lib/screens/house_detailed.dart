@@ -63,7 +63,6 @@ class _HouseDetailedState extends State<HouseDetailed> {
       if (result is InfoResponse) {
         setState(() {
           house = House.fromJson2(result.data);
-          print(result.data['isLike']);
           isLiked = result.data['isLike'];
           landlord = UserProfile.fromJson(result.data['landlord']);
         });
@@ -83,6 +82,7 @@ class _HouseDetailedState extends State<HouseDetailed> {
       }
     } on DioError catch (e) {
       Alert.errorAlert(e, context);
+      throw "Error";
     }
     return !isLiked;
   }
@@ -111,7 +111,7 @@ class _HouseDetailedState extends State<HouseDetailed> {
   void initState() {
     getDetailHandler().then((_) {
       getNearby();
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         setState(() {
           isLoading = false;
         });

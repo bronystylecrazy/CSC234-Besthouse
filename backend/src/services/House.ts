@@ -6,6 +6,7 @@ import { Request } from "express";
 import { Schema } from "mongoose";
 import { genericError, infoResponse } from "./Handler";
 import { isLogin } from "./Utils";
+import { HouseType } from "@/database/models/schema";
 
 export const GetOffer = async (req: Request) => {
 	try {
@@ -209,7 +210,7 @@ export const DeleteOffer = async (house_id: Types.ObjectId, req: Request) => {
 			);
 		}
 		const user_id = req.user.user_id;
-
+		await House.findByIdAndDelete(house_id).exec();
 		await HouseDetail.findOneAndDelete({
 			user_id: user_id,
 			house_id: house_id,
