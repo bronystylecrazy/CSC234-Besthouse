@@ -65,6 +65,7 @@ class _HouseDetailedState extends State<HouseDetailed> {
           house = House.fromJson2(result.data);
           isLiked = result.data['isLike'];
           landlord = UserProfile.fromJson(result.data['landlord']);
+          isLoading = false;
         });
       }
     } on DioError catch (e) {
@@ -111,11 +112,6 @@ class _HouseDetailedState extends State<HouseDetailed> {
   void initState() {
     getDetailHandler().then((_) {
       getNearby();
-      Future.delayed(const Duration(seconds: 1), () {
-        setState(() {
-          isLoading = false;
-        });
-      });
     });
 
     // TODO: implement initState
