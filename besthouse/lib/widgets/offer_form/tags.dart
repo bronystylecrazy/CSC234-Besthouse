@@ -17,9 +17,12 @@ class Tags extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 40,
       padding: const EdgeInsets.only(top: 8),
-      child: Row(
+      child: ListView(
+        scrollDirection: Axis.horizontal,
         children: [
           Padding(
             padding: const EdgeInsets.only(right: 4),
@@ -37,6 +40,7 @@ class Tags extends StatelessWidget {
               );
             }).toList(),
           IconButton(
+            padding: EdgeInsets.only(bottom: 8),
             splashRadius: 16,
             iconSize: 24,
             icon: const Icon(Icons.add),
