@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:besthouse/services/dio.dart';
 import 'package:besthouse/services/provider/offer.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,12 @@ class _CustomerProfileState extends State<CustomerProfile> {
   List<OfferCardModel> offerList = [];
   bool isLoading = true;
   bool isLogout = false;
+
+  TextEditingController curController = TextEditingController();
+
+  TextEditingController newController = TextEditingController();
+
+  bool isPassLoading = false;
 
   Future<void> getProfileHandler() async {
     try {
@@ -266,6 +273,78 @@ class _CustomerProfileState extends State<CustomerProfile> {
                             ),
                             _buildOffers(),
                             _buidProfile(infoList),
+                            TextButton(
+                                child: const Text("Change Password"),
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(15.0))),
+                                    context: context,
+                                    isScrollControlled: true,
+                                    builder: (context) => Padding(
+                                      padding:
+                                          MediaQuery.of(context).viewInsets,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(20),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 250,
+                                        child: Column(
+                                          children: [
+                                            TextField(
+                                              obscureText: true,
+                                              decoration: const InputDecoration(
+                                                  label:
+                                                      Text("Current Password")),
+                                              autofocus: true,
+                                              controller: curController,
+                                            ),
+                                            const SizedBox(height: 20),
+                                            TextField(
+                                              obscureText: true,
+                                              decoration: const InputDecoration(
+                                                  label: Text("New Password")),
+                                              autofocus: true,
+                                              controller: newController,
+                                            ),
+                                            const SizedBox(height: 20),
+                                            ElevatedButton(
+                                                onPressed: () async {
+                                                  setState(() {
+                                                    isPassLoading = true;
+                                                  });
+                                                  try {
+                                                    var _ = await DioInstance
+                                                        .dio
+                                                        .patch("/password",
+                                                            data: {
+                                                          "currentPass":
+                                                              curController
+                                                                  .text,
+                                                          "newPass":
+                                                              newController.text
+                                                        });
+                                                    setState(() {
+                                                      isPassLoading = false;
+                                                    });
+                                                  } on DioError catch (e) {
+                                                    Alert.errorAlert(
+                                                        e, context);
+                                                    setState(() {
+                                                      isPassLoading = false;
+                                                    });
+                                                  }
+                                                },
+                                                child: !isPassLoading
+                                                    ? const Text("Confirm")
+                                                    : const CircularProgressIndicator())
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
                             const SizedBox(
                               height: 20,
                             ),
