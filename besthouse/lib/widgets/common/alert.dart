@@ -25,7 +25,6 @@ class Alert {
   }
 
   static Future<dynamic> errorAlert(DioError e, BuildContext context) {
-    print(e.response?.data);
     if (e.response!.data is Map<String, dynamic>) {
       return showDialog(
         context: context,

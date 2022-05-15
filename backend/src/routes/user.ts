@@ -27,6 +27,8 @@ userRoute.patch("/forgot", async (req, res) => {
 
 userRoute.patch("/password", async (req, res) => {
 	const { currentPass, newPass } = req.body;
+	console.log(currentPass, newPass);
+
 	return responseHandler(
 		res,
 		await changePassword(currentPass, newPass, req)

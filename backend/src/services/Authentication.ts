@@ -57,10 +57,10 @@ export const changePassword = async (
 			return genericError("Password lenght must not less than 4", 400);
 		}
 
-		const myUser = await User.findOne({
-			_id: user_id,
-		});
+		const myUser = await User.findById(user_id);
 		const match = await bcrypt.compare(currentPass, myUser.password);
+		console.log(currentPass, match, myUser.password);
+
 		if (!match)
 			return genericError("Sorry, your password is not correct.", 400);
 

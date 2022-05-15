@@ -52,8 +52,6 @@ class _CustomerProfileState extends State<CustomerProfile> {
 
   TextEditingController newController = TextEditingController();
 
-  bool isPassLoading = false;
-
   Future<void> getProfileHandler() async {
     try {
       var result = await UserApi.getUser();
@@ -310,35 +308,11 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                             ),
                                             const SizedBox(height: 20),
                                             ElevatedButton(
-                                                onPressed: () async {
-                                                  setState(() {
-                                                    isPassLoading = true;
-                                                  });
-                                                  try {
-                                                    var _ = await DioInstance
-                                                        .dio
-                                                        .patch("/password",
-                                                            data: {
-                                                          "currentPass":
-                                                              curController
-                                                                  .text,
-                                                          "newPass":
-                                                              newController.text
-                                                        });
-                                                    setState(() {
-                                                      isPassLoading = false;
-                                                    });
-                                                  } on DioError catch (e) {
-                                                    Alert.errorAlert(
-                                                        e, context);
-                                                    setState(() {
-                                                      isPassLoading = false;
-                                                    });
-                                                  }
+                                                onPressed: () {
+                                                  changePasswordHandler(
+                                                      context);
                                                 },
-                                                child: !isPassLoading
-                                                    ? const Text("Confirm")
-                                                    : const CircularProgressIndicator())
+                                                child: const Text("Confirm"))
                                           ],
                                         ),
                                       ),
@@ -392,6 +366,26 @@ class _CustomerProfileState extends State<CustomerProfile> {
               ],
             ),
           );
+  }
+
+  Future<void> changePasswordHandler(BuildContext context) async {
+    try {
+      DioInstance.dio.options.headers["authorization"] =
+          "Bearer " + SharePreference.prefs.getString("token").toString();
+      var response = await DioInstance.dio.patch("/user/password", data: {
+        "currentPass": curController.text,
+        "newPass": newController.text
+      });
+      var result = InfoResponse.fromJson(response.data);
+      Alert.successAlert(result, "Password Changed", () {
+        Navigator.pop(context);
+      }, context)
+          .then((value) {
+        Navigator.pop(context);
+      });
+    } on DioError catch (e) {
+      Alert.errorAlert(e, context);
+    }
   }
 
   Widget _buidProfile(List<UserProfileCard> infoList) {
